@@ -9,12 +9,12 @@ PAWSIES ≽^•⩊•^≼!! aims to provide the service of accomodation for pets
 
 ## ROUTES
 
+- login/
+- user/
 - owner/
 - cat/
 - dog/
 - booking/
-- accomodation/
-- care-package/
 
 ## AUTHOR
 
