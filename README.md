@@ -1,20 +1,29 @@
 # PAWSIES-BACKEND
 
-'PAWSIES ≽^•⩊•^≼!!' is a Hotel Management for Pets!
-The accomodations includes only cats and dogs, for now.
+'PAWSIES ≽^•⩊•^≼!!' is a Clinic Management for Pets!
+The appointments includes only cats and dogs, for now.
 
 ## INFO
 
-PAWSIES ≽^•⩊•^≼!! aims to provide the service of accomodation for pets, specifically, dogs and cats, when the owners need to leave them behind in the PAWSIES ≽^•⩊•^≼!! hotel. As such, owners of pets can book reservations for the distinct types of accomodations offered for a pet cat or a pet dog. And choose one of the luxury care packages avaliable.
+PAWSIES ≽^•⩊•^≼!! aims to provide the service of healthcare for pets, specifically,
+dogs and cats, when the owners need a medical checkup at the PAWSIES ≽^•⩊•^≼!! Clinic.
+As such, owners of pets can book health checkups according to their distinct needs,
+be those for a pet cat or a pet dog. 
 
 ## ROUTES
 
 - login/
 - user/
+- medic/
 - owner/
-- cat/
-- dog/
-- booking/
+- animal/
+- appointment/
+
+## DOCUMENTATION
+https://docs.google.com/document/d/1g5ns51nin5pzVGHYXFajIOvmjtqIILMpVauncoSklMU/edit?usp=sharing
+
+## SWAGGER API
+- não entendi mas estou tentando colocar.
 
 ## AUTHOR
 
