@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { OwnerRepository } from './interfaces/index';
-import { Owner } from './models/index';
+import { OwnerRepository } from '../interface/index';
+import { Owner } from '../models/index';
 
 export class PrismaOwnerRepository implements OwnerRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -59,10 +59,14 @@ export class PrismaOwnerRepository implements OwnerRepository {
     });
   }
 
-  public async findByEmail(email: string): Promise<Owner | undefined> {
+  public async findOneByEmailAndUsername(
+    email: string,
+    username: string
+  ): Promise<Owner | undefined> {
     const owner = await this.prisma.owner.findUnique({
       where: {
         email,
+        username,
       },
     });
 

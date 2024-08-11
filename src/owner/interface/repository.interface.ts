@@ -6,5 +6,8 @@ export interface OwnerRepository {
   save(Owner: Owner): Promise<Owner>;
   update(id: string, Owner: Owner): Promise<Owner>;
   delete(id: string): Promise<Owner>;
-  // findByEmail(email: string): Promise<Owner | undefined>;
+  findOneByEmailAndUsername(
+    email: string,
+    username: string
+  ): Promise<Owner | undefined>;
 }
