@@ -23,7 +23,7 @@ be those for a pet cat or a pet dog.
 https://docs.google.com/document/d/1g5ns51nin5pzVGHYXFajIOvmjtqIILMpVauncoSklMU/edit?usp=sharing
 
 ## SWAGGER API
-- não entendi mas estou tentando colocar.
+- (https://app.swaggerhub.com/apis/LETICIARR2002/PAWSIES/1.0.0#/pet)
 
 ## AUTHOR
 

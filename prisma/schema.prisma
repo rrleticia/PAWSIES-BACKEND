@@ -33,11 +33,11 @@ model Owner {
 
   name String
 
-  animals Animal[]
+  animals Pet[]
   appointments Appoinment[]
 }
 
-model Animal {
+model Pet {
   id String       @id @default(cuid())
   
   type AnimalType @default(UNKNOWN)
@@ -69,7 +69,7 @@ model Appoinment {
   owner                  Owner @relation(fields: [ownerID], references: [id]) 
 
   animalID                String  
-  animal                  Animal @relation(fields: [animalID], references: [id]) 
+  animal                  Pet @relation(fields: [animalID], references: [id]) 
 }
 
 enum Role {
