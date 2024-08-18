@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { OwnerRepository } from '../interface/index';
-import { Owner } from '../models/index';
+import { OwnerRepository } from '.';
+import { Owner } from '../../../models';
 
 export class PrismaOwnerRepository implements OwnerRepository {
   constructor(private readonly prisma: PrismaClient) {}

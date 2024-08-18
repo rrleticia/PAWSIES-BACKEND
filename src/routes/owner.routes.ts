@@ -1,13 +1,9 @@
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
-import {
-  OwnerController,
-  OwnerService,
-  PrismaOwnerRepository,
-} from './modules';
+import { IOwnerRepository, prisma, PrismaOwnerRepository } from '../infra';
+import { OwnerService } from '../services';
+import { OwnerController } from '../controllers';
 
-const prisma = new PrismaClient();
-const repository = new PrismaOwnerRepository(prisma);
+const repository: IOwnerRepository = new PrismaOwnerRepository(prisma);
 const service = new OwnerService(repository);
 const controller = new OwnerController(service);
 

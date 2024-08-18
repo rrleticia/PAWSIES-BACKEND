@@ -1,7 +1,5 @@
+import { OwnerService } from '../../services';
 import { Request, Response } from 'express';
-import { Owner } from '../models';
-import { OwnerService } from './owner.service';
-import { OwnerAlreadyExistsError, OwnerNotFoundError } from '../error';
 
 export class OwnerController {
   constructor(private readonly service: OwnerService) {}

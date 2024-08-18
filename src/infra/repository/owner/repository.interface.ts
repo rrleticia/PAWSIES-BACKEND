@@ -1,6 +1,6 @@
-import { Owner } from '../models';
+import { Owner } from '../../../models';
 
-export interface OwnerRepository {
+export interface IOwnerRepository {
   findAll(): Promise<Owner[]>;
   findOneByID(id: string): Promise<Owner | undefined>;
   save(Owner: Owner): Promise<Owner>;

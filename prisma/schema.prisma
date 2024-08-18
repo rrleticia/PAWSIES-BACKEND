@@ -13,28 +13,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Medic {
+model Vet {
   id String       @id @default(cuid())
-  role Role        @default(MEDIC)
 
   email String     @unique
   username String  @unique
 
   name String
   specialty Specialty  @default(CAT_DOG)
+
+  appointments Appoinment[]
 }
 
 model Owner {
   id String       @id @default(cuid())
-  role Role        @default(OWNER)
 
   email String     @unique
   username String  @unique
 
   name String
 
-  animals Pet[]
-  appointments Appoinment[]
+  pets Pet[]
+
 }
 
 model Pet {
@@ -59,21 +59,21 @@ model Appoinment {
   id String @id @default(cuid())
 
   date DateTime
-  hour DateTime
+  hour String
   status Boolean @default(false) 
   examination Evaluation @default(ROUTINE)
   
   observations String
+  
+  vetID                String
+  vet                  Vet @relation(fields: [vetID], references: [id]) 
 
-  ownerID                String
-  owner                  Owner @relation(fields: [ownerID], references: [id]) 
-
-  animalID                String  
-  animal                  Pet @relation(fields: [animalID], references: [id]) 
+  petID                String  
+  pet                  Pet @relation(fields: [petID], references: [id]) 
 }
 
 enum Role {
-  MEDIC
+  VET
   OWNER
 }
 

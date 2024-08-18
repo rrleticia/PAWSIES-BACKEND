@@ -1,6 +1,6 @@
-import { OwnerAlreadyExistsError, OwnerNotFoundError } from '../error';
-import { OwnerRepository } from '../interface';
-import { Owner } from '../models/index';
+import { Owner } from '@prisma/client';
+import { OwnerNotFoundError, OwnerAlreadyExistsError } from '../../errors';
+import { OwnerRepository } from '../../infra';
 
 export class OwnerService {
   constructor(private readonly repository: OwnerRepository) {}
