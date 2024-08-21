@@ -1,1 +1,1 @@
-export * from './owner.mapper';
+export * from './owner.model';

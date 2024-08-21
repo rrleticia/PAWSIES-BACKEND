@@ -1,9 +1,8 @@
-import { Owner } from '@prisma/client';
 import { OwnerNotFoundError, OwnerAlreadyExistsError } from '../../errors';
-import { OwnerRepository } from '../../infra';
+import { IOwnerRepository, Owner } from '../../infra';
 
 export class OwnerService {
-  constructor(private readonly repository: OwnerRepository) {}
+  constructor(private readonly repository: IOwnerRepository) {}
 
   public async getAll(): Promise<Owner[]> {
     return await this.repository.findAll();

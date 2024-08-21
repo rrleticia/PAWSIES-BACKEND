@@ -14,7 +14,7 @@ gulp.task('ts-lint', () => {
     .pipe(tslint(config))
     .pipe(
       tslint.report({
-        reportLimit: 5,
+        reportLimit: 0,
       })
     );
 });
@@ -68,3 +68,13 @@ gulp.task(
 
 // BUILD DEV
 gulp.task('dev', gulp.series(['build', 'watch']));
+
+// START
+// gulp.task('start', function (done) {
+//   nodemon({
+//     script: 'server.js',
+//     ext: 'js html',
+//     env: { NODE_ENV: 'development' },
+//     done: done,
+//   });
+// });

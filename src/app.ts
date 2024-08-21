@@ -1,6 +1,6 @@
 import express from 'express';
 import { routes } from './routes';
-import { errorMiddleWare } from './common';
+import { errorMiddleWare } from './shared';
 
 const app = express();
 

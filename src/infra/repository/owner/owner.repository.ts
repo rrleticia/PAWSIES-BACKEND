@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { OwnerRepository } from '.';
-import { Owner } from '../../../models';
+import { IOwnerRepository } from '.';
+import { Owner } from '../../entities';
 
-export class PrismaOwnerRepository implements OwnerRepository {
+export class PrismaOwnerRepository implements IOwnerRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   public async findAll(): Promise<Owner[]> {
@@ -22,7 +22,8 @@ export class PrismaOwnerRepository implements OwnerRepository {
       owner.id,
       owner.name,
       owner.email,
-      owner.username
+      owner.username,
+      owner.password
     );
 
     return parseOwner;
@@ -34,6 +35,7 @@ export class PrismaOwnerRepository implements OwnerRepository {
         email: owner.email,
         username: owner.username,
         name: owner.name,
+        password: owner.password,
       },
     });
   }
@@ -76,7 +78,8 @@ export class PrismaOwnerRepository implements OwnerRepository {
       owner.id,
       owner.name,
       owner.email,
-      owner.username
+      owner.username,
+      owner.password
     );
 
     return parseOwner;

@@ -1,4 +1,4 @@
-import { Owner } from '../../../models';
+import { Owner } from '../../entities';
 
 export interface IOwnerRepository {
   findAll(): Promise<Owner[]>;

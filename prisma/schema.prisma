@@ -17,7 +17,9 @@ model Vet {
   id String       @id @default(cuid())
 
   email String     @unique
+
   username String  @unique
+  password String @unique
 
   name String
   specialty Specialty  @default(CAT_DOG)
@@ -27,14 +29,15 @@ model Vet {
 
 model Owner {
   id String       @id @default(cuid())
-
+  
   email String     @unique
+
   username String  @unique
+  password String @unique
 
   name String
 
   pets Pet[]
-
 }
 
 model Pet {
@@ -70,11 +73,6 @@ model Appoinment {
 
   petID                String  
   pet                  Pet @relation(fields: [petID], references: [id]) 
-}
-
-enum Role {
-  VET
-  OWNER
 }
 
 enum AnimalType {

@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import ownerRoutes from './owner.routes';
 
 export const routes = (app: any) => {
   //Teste de rota base

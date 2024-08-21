@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { IOwnerRepository, prisma, PrismaOwnerRepository } from '../infra';
 import { OwnerService } from '../services';
 import { OwnerController } from '../controllers';
+import { validatorMiddleware } from '../shared';
 
 const repository: IOwnerRepository = new PrismaOwnerRepository(prisma);
 const service = new OwnerService(repository);
@@ -16,7 +17,7 @@ router
   .get('/:id', (request, response) => {
     return controller.getOneByID(request, response);
   })
-  .post('/', (request, response) => {
+  .post('/', validatorMiddleware('OwnerModel'), (request, response) => {
     return controller.create(request, response);
   })
   .put('/', (request, response) => {
