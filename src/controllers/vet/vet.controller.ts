@@ -1,8 +1,8 @@
-import { OwnerService } from '../../services';
 import { Request, Response } from 'express';
+import { VetService } from '../../services';
 
-export class OwnerController {
-  constructor(private readonly service: OwnerService) {}
+export class VetController {
+  constructor(private readonly service: VetService) {}
 
   public async getAll(request: Request, response: Response): Promise<Response> {
     const result = await this.service.getAll();
@@ -19,14 +19,14 @@ export class OwnerController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const owner = request.body.value;
-    const result = await this.service.create(owner);
+    const vet = request.body.value;
+    const result = await this.service.create(vet);
     return response.status(201).json(result);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const owner = request.body.value;
-    const result = await this.service.update(owner);
+    const vet = request.body.value;
+    const result = await this.service.update(vet);
     return response.status(201).json(result);
   }
 

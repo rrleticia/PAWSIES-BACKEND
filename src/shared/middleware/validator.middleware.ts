@@ -4,7 +4,7 @@ import Joi from 'joi';
 import { Validators } from '../../models';
 import { HttpError } from '../errors';
 
-export const validatorMiddleware = (validator: 'OwnerModel') => {
+export const validatorMiddleware = (validator: 'OwnerModel' | 'VetModel') => {
   if (!Validators.hasOwnProperty(validator))
     throw new Error(`'${validator}' validator is not exist`);
 
@@ -20,7 +20,8 @@ export const validatorMiddleware = (validator: 'OwnerModel') => {
       request.body = value;
       next();
     } catch (error: any) {
-      next(new HttpError(error.message, 422));
+      const model = validator.replace('Model', '');
+      next(new HttpError(`Invalid input for a field of ${model}.`, 405));
     }
   };
 };

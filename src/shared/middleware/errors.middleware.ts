@@ -11,7 +11,7 @@ export const errorMiddleWare = (app: any) => {
       next: NextFunction
     ) => {
       response.status(error.status || 500).json({
-        warn: 'Error',
+        // warn: 'Error',
         message: error.message,
         status: error.status,
       });

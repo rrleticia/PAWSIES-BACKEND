@@ -3,7 +3,7 @@ import { Owner } from '../../entities';
 export interface IOwnerRepository {
   findAll(): Promise<Owner[]>;
   findOneByID(id: string): Promise<Owner | undefined>;
-  save(Owner: Owner): Promise<Owner>;
+  save(owner: Owner): Promise<Owner>;
   update(id: string, Owner: Owner): Promise<Owner>;
   delete(id: string): Promise<Owner>;
   findOneByEmailAndUsername(
