@@ -5,8 +5,20 @@ import { Owner } from '../../entities';
 export class PrismaOwnerRepository implements IOwnerRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  public async findAll(): Promise<Owner[]> {
-    return this.prisma.owner.findMany({});
+  public async findAll(): Promise<Owner[] | undefined> {
+    const owners = await this.prisma.owner.findMany({});
+    if (!owners) return undefined;
+
+    const parseOwners = owners.map((owner) => {
+      return new Owner(
+        owner.id,
+        owner.name,
+        owner.email,
+        owner.username,
+        owner.password
+      );
+    });
+    return parseOwners;
   }
 
   public async findOneByID(id: string): Promise<Owner | undefined> {
@@ -30,7 +42,7 @@ export class PrismaOwnerRepository implements IOwnerRepository {
   }
 
   public async save(owner: Owner): Promise<Owner> {
-    return await this.prisma.owner.create({
+    const createdOwner = await this.prisma.owner.create({
       data: {
         email: owner.email,
         username: owner.username,
@@ -38,10 +50,20 @@ export class PrismaOwnerRepository implements IOwnerRepository {
         password: owner.password,
       },
     });
+
+    const parseOwner = new Owner(
+      createdOwner.id,
+      createdOwner.name,
+      createdOwner.email,
+      createdOwner.username,
+      createdOwner.password
+    );
+
+    return parseOwner;
   }
 
   public async update(id: string, owner: Owner): Promise<Owner> {
-    return await this.prisma.owner.update({
+    const updatedOwner = await this.prisma.owner.update({
       where: {
         id: id,
       },
@@ -51,24 +73,53 @@ export class PrismaOwnerRepository implements IOwnerRepository {
         name: owner.name,
       },
     });
+
+    const parseOwner = new Owner(
+      updatedOwner.id,
+      updatedOwner.name,
+      updatedOwner.email,
+      updatedOwner.username,
+      updatedOwner.password
+    );
+
+    return parseOwner;
   }
 
   public async delete(id: string): Promise<Owner> {
-    return await this.prisma.owner.delete({
+    const owner = await this.prisma.owner.delete({
       where: {
         id: id,
       },
     });
+
+    const parseOwner = new Owner(
+      owner.id,
+      owner.name,
+      owner.email,
+      owner.username,
+      owner.password
+    );
+
+    return parseOwner;
   }
 
   public async findOneByEmailAndUsername(
     email: string,
     username: string
   ): Promise<Owner | undefined> {
-    const owner = await this.prisma.owner.findUnique({
+    const parseOwner = new Owner(
+      owner.id,
+      owner.name,
+      owner.email,
+      owner.username,
+      owner.password
+    );
+
+    return parseOwner;
+    await this.prisma.owner.findUnique({
       where: {
-        email,
-        username,
+        email: email,
+        username: username,
       },
     });
 

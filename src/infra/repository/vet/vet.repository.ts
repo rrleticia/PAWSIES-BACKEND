@@ -6,8 +6,22 @@ import { getSpecialtyEnum } from '../../../shared';
 export class PrismaVetRepository implements IVetRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  public async findAll(): Promise<Vet[]> {
-    return this.prisma.vet.findMany({});
+  public async findAll(): Promise<Vet[] | undefined> {
+    const vets = await this.prisma.vet.findMany({});
+
+    if (!vets) return undefined;
+
+    const parseVets = vets.map((vet) => {
+      return new Vet(
+        vet.id,
+        vet.name,
+        vet.email,
+        vet.username,
+        vet.password,
+        vet.specialty
+      );
+    });
+    return parseVets;
   }
 
   public async findOneByID(id: string): Promise<Vet | undefined> {
@@ -32,7 +46,7 @@ export class PrismaVetRepository implements IVetRepository {
   }
 
   public async save(vet: Vet): Promise<Vet> {
-    return await this.prisma.vet.create({
+    const createdVet = await this.prisma.vet.create({
       data: {
         email: vet.email,
         username: vet.username,
@@ -41,10 +55,21 @@ export class PrismaVetRepository implements IVetRepository {
         specialty: getSpecialtyEnum(vet.specialty),
       },
     });
+
+    const parseVet = new Vet(
+      createdVet.id,
+      createdVet.name,
+      createdVet.email,
+      createdVet.username,
+      createdVet.password,
+      createdVet.specialty
+    );
+
+    return parseVet;
   }
 
   public async update(id: string, vet: Vet): Promise<Vet> {
-    return await this.prisma.vet.update({
+    const updatedVet = await this.prisma.vet.update({
       where: {
         id: id,
       },
@@ -55,14 +80,36 @@ export class PrismaVetRepository implements IVetRepository {
         specialty: getSpecialtyEnum(vet.specialty),
       },
     });
+
+    const parseVet = new Vet(
+      updatedVet.id,
+      updatedVet.name,
+      updatedVet.email,
+      updatedVet.username,
+      updatedVet.password,
+      updatedVet.specialty
+    );
+
+    return parseVet;
   }
 
   public async delete(id: string): Promise<Vet> {
-    return await this.prisma.vet.delete({
+    const vet = await this.prisma.vet.delete({
       where: {
         id: id,
       },
     });
+
+    const parseVet = new Vet(
+      vet.id,
+      vet.name,
+      vet.email,
+      vet.username,
+      vet.password,
+      vet.specialty
+    );
+
+    return parseVet;
   }
 
   public async findOneByEmailAndUsername(
@@ -71,8 +118,8 @@ export class PrismaVetRepository implements IVetRepository {
   ): Promise<Vet | undefined> {
     const vet = await this.prisma.vet.findUnique({
       where: {
-        email,
-        username,
+        email: email,
+        username: username,
       },
     });
 

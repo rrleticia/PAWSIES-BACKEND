@@ -4,7 +4,9 @@ import Joi from 'joi';
 import { Validators } from '../../models';
 import { HttpError } from '../errors';
 
-export const validatorMiddleware = (validator: 'OwnerModel' | 'VetModel') => {
+export const validatorMiddleware = (
+  validator: 'OwnerModel' | 'VetModel' | 'PetModel'
+) => {
   if (!Validators.hasOwnProperty(validator))
     throw new Error(`'${validator}' validator is not exist`);
 

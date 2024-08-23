@@ -43,14 +43,14 @@ model Owner {
 model Pet {
   id String       @id @default(cuid())
   
-  type AnimalType @default(UNKNOWN)
+  type PetType @default(UNKNOWN)
 
   name String
   breed String 
   color String
 
   age Int
-  weight Decimal
+  weight Float
 
   ownerID                String
   owner                  Owner @relation(fields: [ownerID], references: [id]) 
@@ -75,7 +75,7 @@ model Appoinment {
   pet                  Pet @relation(fields: [petID], references: [id]) 
 }
 
-enum AnimalType {
+enum PetType {
   CAT
   DOG
   UNKNOWN

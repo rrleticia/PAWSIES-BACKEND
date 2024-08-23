@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import ownerRoutes from './owner.routes';
+import vetRoutes from './vet.routes';
+import petRoutes from './pet.routes';
 
 export const routes = (app: any) => {
   //Teste de rota base
@@ -9,4 +11,6 @@ export const routes = (app: any) => {
   });
 
   app.use(cors()).use(express.json()).use('/owner', ownerRoutes);
+  app.use(cors()).use(express.json()).use('/vet', vetRoutes);
+  app.use(cors()).use(express.json()).use('/pet', petRoutes);
 };
