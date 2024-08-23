@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Vet {
+  id String       @id @default(cuid())
+
+  email String     @unique
+
+  username String  @unique
+  password String @unique
+
+  name String
+  specialty Specialty  @default(CAT_DOG)
+
+  appointments Appointment[]
+}
+
+model Owner {
+  id String       @id @default(cuid())
+  
+  email String     @unique
+
+  username String  @unique
+  password String @unique
+
+  name String
+
+  pets Pet[]
+  appointments Appointment[]
+}
+
+model Pet {
+  id String       @id @default(cuid())
+  
+  type PetType @default(UNKNOWN)
+
+  name String
+  breed String 
+  color String
+
+  age Int
+  weight Float
+
+  ownerID                String
+  owner                  Owner @relation(fields: [ownerID], references: [id]) 
+
+  appointments Appointment[]
+}
+
+model Appointment {
+  id String @id @default(cuid())
+
+  date DateTime
+  hour String
+  status Boolean @default(false) 
+  examination Examination @default(ROUTINE)
+  
+  observations String
+  
+  vetID                String
+  vet                  Vet @relation(fields: [vetID], references: [id]) 
+
+  petID                String  
+  pet                  Pet @relation(fields: [petID], references: [id]) 
+
+  ownerID                String
+  owner                  Owner @relation(fields: [ownerID], references: [id]) 
+}
+
+enum PetType {
+  CAT
+  DOG
+  UNKNOWN
+}
+
+enum Specialty {
+  CAT
+  DOG
+  CAT_DOG
+}
+
+enum Examination {
+  ROUTINE
+  URGENT
+  SURGERY
+}
+
+
