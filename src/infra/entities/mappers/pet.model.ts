@@ -18,7 +18,7 @@ export class Pet {
     color: string,
     age: number,
     weight: number,
-    type: string,
+    type: PetType,
     ownerID: string
   ) {
     this.id = id;
@@ -27,7 +27,7 @@ export class Pet {
     this.color = color;
     this.age = age;
     this.weight = weight;
-    this.type = getPetTypeEnum(type);
+    this.type = type;
     this.ownerID = ownerID;
   }
 }

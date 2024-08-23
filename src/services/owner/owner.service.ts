@@ -55,7 +55,7 @@ export class OwnerService {
           'The owner could not be found in the database.',
           404
         );
-      const result = await this.repository.save(owner);
+      const result = await this.repository.update(owner.id, owner);
       return result;
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);

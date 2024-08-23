@@ -15,13 +15,13 @@ export class Vet {
     email: string,
     username: string,
     password: string,
-    specialty: string
+    specialty: Specialty
   ) {
     this.id = id;
     this.name = name;
     this.email = email;
     this.username = username;
     this.password = password;
-    this.specialty = getSpecialtyEnum(specialty);
+    this.specialty = specialty;
   }
 }

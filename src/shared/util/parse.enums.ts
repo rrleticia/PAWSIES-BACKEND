@@ -1,4 +1,4 @@
-import { Specialty, PetType } from '@prisma/client';
+import { Specialty, PetType, Examination } from '@prisma/client';
 
 export const getSpecialtyEnum = (value: string) => {
   if (value == 'DOG') return Specialty.DOG;
@@ -12,4 +12,11 @@ export const getPetTypeEnum = (value: string) => {
   if (value == 'CAT') return PetType.CAT;
   if (value == 'UNKWON') return PetType.UNKNOWN;
   else return PetType.UNKNOWN;
+};
+
+export const getExaminationEnum = (value: string) => {
+  if (value == 'ROUTINE') return Examination.ROUTINE;
+  if (value == 'URGENT') return Examination.URGENT;
+  if (value == 'SURGERY') return Examination.SURGERY;
+  else return Examination.ROUTINE;
 };

@@ -24,7 +24,7 @@ model Vet {
   name String
   specialty Specialty  @default(CAT_DOG)
 
-  appointments Appoinment[]
+  appointments Appointment[]
 }
 
 model Owner {
@@ -38,6 +38,7 @@ model Owner {
   name String
 
   pets Pet[]
+  appointments Appointment[]
 }
 
 model Pet {
@@ -55,16 +56,16 @@ model Pet {
   ownerID                String
   owner                  Owner @relation(fields: [ownerID], references: [id]) 
 
-  appointments Appoinment[]
+  appointments Appointment[]
 }
 
-model Appoinment {
+model Appointment {
   id String @id @default(cuid())
 
   date DateTime
   hour String
   status Boolean @default(false) 
-  examination Evaluation @default(ROUTINE)
+  examination Examination @default(ROUTINE)
   
   observations String
   
@@ -73,6 +74,9 @@ model Appoinment {
 
   petID                String  
   pet                  Pet @relation(fields: [petID], references: [id]) 
+
+  ownerID                String
+  owner                  Owner @relation(fields: [ownerID], references: [id]) 
 }
 
 enum PetType {
@@ -87,7 +91,7 @@ enum Specialty {
   CAT_DOG
 }
 
-enum Evaluation {
+enum Examination {
   ROUTINE
   URGENT
   SURGERY

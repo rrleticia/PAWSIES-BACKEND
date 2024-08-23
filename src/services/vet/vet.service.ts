@@ -53,7 +53,7 @@ export class VetService {
           'The vet could not be found in the database.',
           404
         );
-      const result = await this.repository.save(vet);
+      const result = await this.repository.update(vet.id, vet);
       return result;
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);

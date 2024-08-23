@@ -66,7 +66,7 @@ export class PetService {
           'The pet could not be found in the database.',
           404
         );
-      const result = await this.repository.save(pet);
+      const result = await this.repository.update(pet.id, pet);
       return result;
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);

@@ -107,16 +107,7 @@ export class PrismaOwnerRepository implements IOwnerRepository {
     email: string,
     username: string
   ): Promise<Owner | undefined> {
-    const parseOwner = new Owner(
-      owner.id,
-      owner.name,
-      owner.email,
-      owner.username,
-      owner.password
-    );
-
-    return parseOwner;
-    await this.prisma.owner.findUnique({
+    const owner = await this.prisma.owner.findUnique({
       where: {
         email: email,
         username: username,

@@ -1,20 +1,21 @@
+import { AppointmentService } from '../../services';
 import { Request, Response } from 'express';
-import { PetService } from '../../services';
+import { parseBoolean } from '../../shared';
 
-export class PetController {
-  constructor(private readonly service: PetService) {}
+export class AppointmentController {
+  constructor(private readonly service: AppointmentService) {}
 
   public async getAll(request: Request, response: Response): Promise<Response> {
     const result = await this.service.getAll();
     return response.status(200).json(result);
   }
 
-  public async getAllByOwnerID(
+  public async getAllByPetID(
     request: Request,
     response: Response
   ): Promise<Response> {
-    const ownerID = request.params.ownerID;
-    const result = await this.service.getAllByOwnerID(ownerID);
+    const petID = request.params.petID;
+    const result = await this.service.getAllByPetID(petID);
     return response.status(200).json(result);
   }
 
@@ -28,14 +29,24 @@ export class PetController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const pet = request.body.value;
-    const result = await this.service.create(pet);
+    const appontiment = request.body.value;
+    const result = await this.service.create(appontiment);
     return response.status(201).json(result);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const pet = request.body.value;
-    const result = await this.service.update(pet);
+    const appontiment = request.body.value;
+    const result = await this.service.update(appontiment);
+    return response.status(201).json(result);
+  }
+
+  public async updateStatus(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
+    const id = request.params.id;
+    const status = parseBoolean(request.params.status);
+    const result = await this.service.updateStatus(id, status);
     return response.status(201).json(result);
   }
 

@@ -77,7 +77,6 @@ export class PrismaPetRepository implements IPetRepository {
   public async save(pet: Pet): Promise<Pet> {
     const createdPet = await this.prisma.pet.create({
       data: {
-        id: pet.id,
         name: pet.name,
         breed: pet.breed,
         color: pet.color,
