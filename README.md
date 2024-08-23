@@ -12,18 +12,22 @@ be those for a pet cat or a pet dog.
 
 ## ROUTES
 
-- login/
-- user/
-- medic/
+- login/ (work in progress)
 - owner/
-- animal/
+- vet/
+- pet/
 - appointment/
 
 ## DOCUMENTATION
-https://docs.google.com/document/d/1g5ns51nin5pzVGHYXFajIOvmjtqIILMpVauncoSklMU/edit?usp=sharing
+- entrega 1 (https://docs.google.com/document/d/1SDKefM5RHEUNsIv23nSw6riFDGCctIojHVoBdAYYDB8/edit?usp=sharing)
 
 ## SWAGGER API
-- (https://app.swaggerhub.com/apis/LETICIARR2002/PAWSIES/1.0.0#/pet)
+- swagger mocked api (https://app.swaggerhub.com/apis/LETICIARR2002/PAWSIES/1.0.0#/pet)
+
+## Important Resources
+- Backend done in Express Typescirpt with libraries such as Prisma, Joi, Jwt and Gulp 
+- Database used is PostgreSQL in a Docker container
+- Frontend done in React.js with Material UI library
 
 ## AUTHOR
 
