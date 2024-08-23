@@ -112,28 +112,44 @@ export class PrismaVetRepository implements IVetRepository {
     return parseVet;
   }
 
-  public async findOneByEmailAndUsername(
+  public async findOneByEmailOrUsername(
     email: string,
     username: string
   ): Promise<Vet | undefined> {
-    const vet = await this.prisma.vet.findUnique({
+    const vetEmail = await this.prisma.vet.findUnique({
       where: {
         email: email,
+      },
+    });
+
+    const vetUsername = await this.prisma.vet.findUnique({
+      where: {
         username: username,
       },
     });
 
-    if (!vet) return undefined;
+    if (vetEmail) {
+      const parseVet = new Vet(
+        vetEmail.id,
+        vetEmail.name,
+        vetEmail.email,
+        vetEmail.username,
+        vetEmail.password,
+        vetEmail.specialty
+      );
 
-    const parseVet = new Vet(
-      vet.id,
-      vet.name,
-      vet.email,
-      vet.username,
-      vet.password,
-      vet.specialty
-    );
+      return parseVet;
+    } else if (vetUsername) {
+      const parseVet = new Vet(
+        vetUsername.id,
+        vetUsername.name,
+        vetUsername.email,
+        vetUsername.username,
+        vetUsername.password,
+        vetUsername.specialty
+      );
 
-    return parseVet;
+      return parseVet;
+    } else return undefined;
   }
 }

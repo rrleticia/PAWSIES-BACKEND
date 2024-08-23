@@ -1,6 +1,6 @@
 import 'express-async-errors';
 import { Request, Response, NextFunction } from 'express';
-import Joi from 'joi';
+import Joi, { ValidationError } from 'joi';
 import { Validators } from '../../models';
 import { HttpError } from '../errors';
 
@@ -20,10 +20,21 @@ export const validatorMiddleware = (
         warnings: true,
       });
       request.body = value;
+
       next();
     } catch (error: any) {
+      error = error as ValidationError;
       const model = validator.replace('Model', '');
-      next(new HttpError(`Invalid input for a field of ${model}.`, 405));
+      next(
+        new HttpError(
+          `Invalid input for a field of ${model}. Joi raises: ${error.details.map(
+            (detail: any) => {
+              return detail.message.replaceAll('"', '');
+            }
+          )}`,
+          405
+        )
+      );
     }
   };
 };

@@ -6,7 +6,7 @@ export interface IVetRepository {
   save(vet: Vet): Promise<Vet>;
   update(id: string, Vet: Vet): Promise<Vet>;
   delete(id: string): Promise<Vet>;
-  findOneByEmailAndUsername(
+  findOneByEmailOrUsername(
     email: string,
     username: string
   ): Promise<Vet | undefined>;

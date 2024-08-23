@@ -1,11 +1,45 @@
-import Joi, { ObjectSchema } from 'joi';
+import Joi from 'joi';
+import coreJoi from 'joi';
+import joiDate from '@joi/date';
+
+const joi = coreJoi.extend(joiDate) as typeof coreJoi;
 
 export const AppointmentModel = Joi.object().keys({
   id: Joi.string(),
-  date: Joi.date().required(),
-  hour: Joi.string().required(),
-  status: Joi.boolean().required(),
-  examination: Joi.string().required(),
+  date: joi.date().format('DD/MM/YYYY').required(),
+  hour: Joi.string()
+    .pattern(new RegExp('[0-9][0-9][H,h]'))
+    // .valid(
+    //   '00H',
+    //   '01H',
+    //   '02H',
+    //   '03H',
+    //   '04H',
+    //   '05H',
+    //   '06H',
+    //   '07H',
+    //   '09H',
+    //   '10H',
+    //   '11H',
+    //   '12H',
+    //   '13H',
+    //   '14H',
+    //   '15H',
+    //   '16H',
+    //   '17H',
+    //   '18H',
+    //   '19H',
+    //   '20H',
+    //   '21H',
+    //   '22H',
+    //   '23H',
+    //   '24H'
+    // )
+    .required(),
+  status: Joi.boolean().valid(true, false).required(),
+  examination: Joi.string()
+    .valid('routine', 'urgent', 'surgery', 'ROUTINE', 'URGENT', 'SURGERY')
+    .required(),
   observations: Joi.string().required(),
   vetID: Joi.string().required(),
   petID: Joi.string().required(),

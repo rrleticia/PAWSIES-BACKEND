@@ -103,27 +103,43 @@ export class PrismaOwnerRepository implements IOwnerRepository {
     return parseOwner;
   }
 
-  public async findOneByEmailAndUsername(
+  public async findOneByEmailOrUsername(
     email: string,
     username: string
   ): Promise<Owner | undefined> {
-    const owner = await this.prisma.owner.findUnique({
+    const ownerEmail = await this.prisma.owner.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    const ownerUsername = await this.prisma.owner.findUnique({
       where: {
         email: email,
         username: username,
       },
     });
 
-    if (!owner) return undefined;
+    if (ownerEmail) {
+      const parseOwner = new Owner(
+        ownerEmail.id,
+        ownerEmail.name,
+        ownerEmail.email,
+        ownerEmail.username,
+        ownerEmail.password
+      );
 
-    const parseOwner = new Owner(
-      owner.id,
-      owner.name,
-      owner.email,
-      owner.username,
-      owner.password
-    );
+      return parseOwner;
+    } else if (ownerUsername) {
+      const parseOwner = new Owner(
+        ownerUsername.id,
+        ownerUsername.name,
+        ownerUsername.email,
+        ownerUsername.username,
+        ownerUsername.password
+      );
 
-    return parseOwner;
+      return parseOwner;
+    } else return undefined;
   }
 }
