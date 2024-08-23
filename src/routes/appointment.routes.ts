@@ -7,6 +7,7 @@ import {
 import { AppointmentService } from '../services';
 import { AppointmentController } from '../controllers';
 import { validatorMiddleware } from '../shared';
+import cors from 'cors';
 
 const repository: IAppointmentRepository = new PrismaAppointmentRepository(
   prisma
