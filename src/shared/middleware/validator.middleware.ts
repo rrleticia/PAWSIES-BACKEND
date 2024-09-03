@@ -5,7 +5,12 @@ import { Validators } from '../../models';
 import { HttpError } from '../errors';
 
 export const validatorMiddleware = (
-  validator: 'OwnerModel' | 'VetModel' | 'PetModel' | 'AppointmentModel'
+  validator:
+    | 'OwnerModel'
+    | 'VetModel'
+    | 'PetModel'
+    | 'AppointmentModel'
+    | 'UserModel'
 ) => {
   if (!Validators.hasOwnProperty(validator))
     throw new Error(`'${validator}' validator is not exist`);

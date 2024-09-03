@@ -31,10 +31,7 @@ export class VetService {
 
   public async create(vet: Vet): Promise<Vet> {
     try {
-      const validation = await this.repository.findOneByEmailAndUsername(
-        vet.email,
-        vet.username
-      );
+      const validation = await this.repository.findOneByName(vet.name);
       if (validation)
         throw new VetAlreadyExistsError(
           'The vet already exists in the database.',

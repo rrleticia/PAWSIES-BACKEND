@@ -10,13 +10,7 @@ export class PrismaOwnerRepository implements IOwnerRepository {
     if (!owners) return undefined;
 
     const parseOwners = owners.map((owner) => {
-      return new Owner(
-        owner.id,
-        owner.name,
-        owner.email,
-        owner.username,
-        owner.password
-      );
+      return new Owner(owner.id, owner.name);
     });
     return parseOwners;
   }
@@ -30,13 +24,7 @@ export class PrismaOwnerRepository implements IOwnerRepository {
 
     if (!owner) return undefined;
 
-    const parseOwner = new Owner(
-      owner.id,
-      owner.name,
-      owner.email,
-      owner.username,
-      owner.password
-    );
+    const parseOwner = new Owner(owner.id, owner.name);
 
     return parseOwner;
   }
@@ -44,20 +32,11 @@ export class PrismaOwnerRepository implements IOwnerRepository {
   public async save(owner: Owner): Promise<Owner> {
     const createdOwner = await this.prisma.owner.create({
       data: {
-        email: owner.email,
-        username: owner.username,
         name: owner.name,
-        password: owner.password,
       },
     });
 
-    const parseOwner = new Owner(
-      createdOwner.id,
-      createdOwner.name,
-      createdOwner.email,
-      createdOwner.username,
-      createdOwner.password
-    );
+    const parseOwner = new Owner(createdOwner.id, createdOwner.name);
 
     return parseOwner;
   }
@@ -68,19 +47,11 @@ export class PrismaOwnerRepository implements IOwnerRepository {
         id: id,
       },
       data: {
-        email: owner.email,
-        username: owner.username,
         name: owner.name,
       },
     });
 
-    const parseOwner = new Owner(
-      updatedOwner.id,
-      updatedOwner.name,
-      updatedOwner.email,
-      updatedOwner.username,
-      updatedOwner.password
-    );
+    const parseOwner = new Owner(updatedOwner.id, updatedOwner.name);
 
     return parseOwner;
   }
@@ -92,54 +63,21 @@ export class PrismaOwnerRepository implements IOwnerRepository {
       },
     });
 
-    const parseOwner = new Owner(
-      owner.id,
-      owner.name,
-      owner.email,
-      owner.username,
-      owner.password
-    );
+    const parseOwner = new Owner(owner.id, owner.name);
 
     return parseOwner;
   }
 
-  public async findOneByEmailOrUsername(
-    email: string,
-    username: string
-  ): Promise<Owner | undefined> {
-    const ownerEmail = await this.prisma.owner.findUnique({
+  public async findOneByName(name: string): Promise<Owner | undefined> {
+    const owner = await this.prisma.owner.findUnique({
       where: {
-        email: email,
+        name: name,
       },
     });
 
-    const ownerUsername = await this.prisma.owner.findUnique({
-      where: {
-        email: email,
-        username: username,
-      },
-    });
+    if (!owner) return undefined;
 
-    if (ownerEmail) {
-      const parseOwner = new Owner(
-        ownerEmail.id,
-        ownerEmail.name,
-        ownerEmail.email,
-        ownerEmail.username,
-        ownerEmail.password
-      );
-
-      return parseOwner;
-    } else if (ownerUsername) {
-      const parseOwner = new Owner(
-        ownerUsername.id,
-        ownerUsername.name,
-        ownerUsername.email,
-        ownerUsername.username,
-        ownerUsername.password
-      );
-
-      return parseOwner;
-    } else return undefined;
+    const parseOwner = new Owner(owner.id, owner.name);
+    return parseOwner;
   }
 }

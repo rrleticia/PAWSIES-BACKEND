@@ -13,32 +13,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Vet {
+model User {
   id String       @id @default(cuid())
 
+  role  Role   @default(UNKNOWN) 
   email String     @unique
 
   username String  @unique
   password String @unique
+ 
+  vetID                String? @unique
+  ownerID                String? @unique
 
-  name String
-  specialty Specialty  @default(CAT_DOG)
+  owner                  Owner? @relation(fields: [ownerID], references: [id]) 
+  vet                    Vet? @relation(fields: [vetID], references: [id]) 
+}
 
-  appointments Appointment[]
+model Vet {
+  id            String         @id @default(cuid())
+
+  name          String         @unique
+  specialty     Specialty      @default(CAT_DOG)
+
+  user          User?          @relation
+  appointments  Appointment[]
 }
 
 model Owner {
-  id String       @id @default(cuid())
+  id            String          @id @default(cuid())
   
-  email String     @unique
+  name          String          @unique
 
-  username String  @unique
-  password String @unique
-
-  name String
-
-  pets Pet[]
-  appointments Appointment[]
+  user          User?          @relation
+  pets          Pet[]
+  appointments  Appointment[]
 }
 
 model Pet {
@@ -77,6 +85,14 @@ model Appointment {
 
   ownerID                String
   owner                  Owner @relation(fields: [ownerID], references: [id]) 
+}
+
+
+enum Role {
+  ADMIN
+  VET 
+  OWNER
+  UNKNOWN
 }
 
 enum PetType {

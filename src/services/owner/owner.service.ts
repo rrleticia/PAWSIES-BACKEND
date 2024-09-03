@@ -31,10 +31,7 @@ export class OwnerService {
 
   public async create(owner: Owner): Promise<Owner> {
     try {
-      const validation = await this.repository.findOneByEmailAndUsername(
-        owner.email,
-        owner.username
-      );
+      const validation = await this.repository.findOneByName(owner.name);
       if (validation)
         throw new OwnerAlreadyExistsError(
           'The owner already exists in the database.',

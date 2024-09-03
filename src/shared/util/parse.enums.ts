@@ -1,4 +1,12 @@
-import { Specialty, PetType, Examination } from '@prisma/client';
+import { Role, Specialty, PetType, Examination } from '@prisma/client';
+
+export const getRoleEnum = (value: string) => {
+  value = value.toUpperCase();
+  if (value == 'ADMIN') return Role.ADMIN;
+  if (value == 'VET') return Role.VET;
+  if (value == 'OWNER') return Role.OWNER;
+  else return Role.UNKNOWN;
+};
 
 export const getSpecialtyEnum = (value: string) => {
   value = value.toUpperCase();
