@@ -20,6 +20,7 @@ be those for a pet cat or a pet dog.
 
 ## DOCUMENTATION
 - entrega 1 (https://docs.google.com/document/d/1SDKefM5RHEUNsIv23nSw6riFDGCctIojHVoBdAYYDB8/edit?usp=sharing)
+- testes (https://docs.google.com/document/d/1iTDN5SrSjk2m8jJwYp8Gxs55PFvXvfZ6nNxrpOkwS8k/edit?usp=sharing)
 
 ## SWAGGER API
 - swagger mocked api (https://app.swaggerhub.com/apis/LETICIARR2002/PAWSIES/1.0.0#/pet)
