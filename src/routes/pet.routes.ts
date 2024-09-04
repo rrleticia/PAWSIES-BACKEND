@@ -41,18 +41,18 @@ router
   )
   .post(
     '/',
+    validatorMiddleware('PetModel'),
     authenticateTokenMiddleware,
     checkPermission(['create_pet, all_pet']),
-    validatorMiddleware('PetModel'),
     (request, response) => {
       return controller.create(request, response);
     }
   )
   .put(
     '/',
+    validatorMiddleware('PetModel'),
     authenticateTokenMiddleware,
     checkPermission(['update_pet, all_pet']),
-    validatorMiddleware('PetModel'),
     (request, response) => {
       return controller.update(request, response);
     }

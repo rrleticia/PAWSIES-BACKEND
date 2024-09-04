@@ -26,6 +26,7 @@ export const validatorMiddleware = (validator: validator) => {
       next();
     } catch (error: any) {
       error = error as ValidationError;
+      console.log(error);
       const model = validator.replace('Model', '');
       next(
         new HttpError(

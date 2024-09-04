@@ -11,9 +11,13 @@ const controller = new UserController(service);
 const router = Router();
 
 router
-  .get('', checkPermission(['view_users, all_users']), (request, response) => {
-    return controller.getAll(request, response);
-  })
+  .get(
+    '',
+    // checkPermission(['view_users, all_users']),
+    (request, response) => {
+      return controller.getAll(request, response);
+    }
+  )
   .get(
     '/:id',
     checkPermission(['view_user, all_users']),

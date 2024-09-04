@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { IVetRepository } from '.';
-import { Vet } from '../../entities';
-import { getSpecialtyEnum } from '../../../shared';
+import { Vet, VetRequest } from '../../entities';
+import { getRoleEnum, getSpecialtyEnum } from '../../../shared';
 
 export class PrismaVetRepository implements IVetRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -31,13 +31,31 @@ export class PrismaVetRepository implements IVetRepository {
     return parseVet;
   }
 
-  public async save(vet: Vet): Promise<Vet> {
-    const createdVet = await this.prisma.vet.create({
+  public async save(vet: VetRequest): Promise<Vet | undefined> {
+    const createdUser = await this.prisma.user.create({
       data: {
-        name: vet.name,
-        specialty: getSpecialtyEnum(vet.specialty),
+        username: vet.username,
+        role: getRoleEnum('VET'),
+        email: vet.email,
+        password: vet.password,
+        vet: {
+          create: {
+            name: vet.name,
+            specialty: getSpecialtyEnum(vet.specialty),
+          },
+        },
       },
     });
+
+    let createdVet;
+    if (createdUser.vetID)
+      createdVet = await this.prisma.vet.findUnique({
+        where: {
+          id: createdUser.vetID,
+        },
+      });
+
+    if (!createdVet) return undefined;
 
     const parseVet = new Vet(
       createdVet.id,

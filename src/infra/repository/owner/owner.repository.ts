@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { IOwnerRepository } from '.';
-import { Owner } from '../../entities';
+import { Owner, OwnerRequest } from '../../entities';
+import { getRoleEnum } from '../../../shared';
 
 export class PrismaOwnerRepository implements IOwnerRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -29,12 +30,26 @@ export class PrismaOwnerRepository implements IOwnerRepository {
     return parseOwner;
   }
 
-  public async save(owner: Owner): Promise<Owner> {
-    const createdOwner = await this.prisma.owner.create({
+  public async save(owner: OwnerRequest): Promise<Owner | undefined> {
+    const createdUser = await this.prisma.user.create({
       data: {
-        name: owner.name,
+        username: owner.username,
+        role: getRoleEnum('OWNER'),
+        email: owner.email,
+        password: owner.password,
+        owner: { create: { name: owner.name } },
       },
     });
+
+    let createdOwner;
+    if (createdUser.ownerID)
+      createdOwner = await this.prisma.owner.findUnique({
+        where: {
+          id: createdUser.ownerID,
+        },
+      });
+    console.log('aaaaaa');
+    if (!createdOwner) return undefined;
 
     const parseOwner = new Owner(createdOwner.id, createdOwner.name);
 

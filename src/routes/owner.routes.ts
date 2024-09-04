@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { IOwnerRepository, prisma, PrismaOwnerRepository } from '../infra';
+import {
+  IOwnerRepository,
+  IUserRepository,
+  prisma,
+  PrismaOwnerRepository,
+  PrismaUserRepository,
+} from '../infra';
 import { OwnerService } from '../services';
 import { OwnerController } from '../controllers';
 import {
@@ -8,8 +14,9 @@ import {
   validatorMiddleware,
 } from '../shared';
 
+const userRepository: IUserRepository = new PrismaUserRepository(prisma);
 const repository: IOwnerRepository = new PrismaOwnerRepository(prisma);
-const service = new OwnerService(repository);
+const service = new OwnerService(repository, userRepository);
 const controller = new OwnerController(service);
 
 const router = Router();
@@ -33,26 +40,26 @@ router
   )
   .post(
     '/',
-    authenticateTokenMiddleware,
-    checkPermission(['create_owner, all_owner']),
     validatorMiddleware('OwnerModel'),
+    authenticateTokenMiddleware,
+    // checkPermission(['create_owner, all_owner']),
     (request, response) => {
       return controller.create(request, response);
     }
   )
   .put(
     '/',
+    validatorMiddleware('OwnerModel'),
     authenticateTokenMiddleware,
     checkPermission(['update_owner, all_owner']),
-    validatorMiddleware('OwnerModel'),
     (request, response) => {
       return controller.update(request, response);
     }
   )
   .delete(
     '/:id',
-    checkPermission(['delete_owner, all_owner']),
     authenticateTokenMiddleware,
+    checkPermission(['delete_owner, all_owner']),
     (request, response) => {
       return controller.delete(request, response);
     }

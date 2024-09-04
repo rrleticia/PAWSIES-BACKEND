@@ -9,4 +9,22 @@ export const VetModel = Joi.object().keys({
   specialty: Joi.string()
     .valid('cat', 'dog', 'cat_dog', 'CAT', 'DOG', 'CAT_DOG')
     .required(),
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: ['com', 'net', 'br'] },
+    })
+    .required(),
+  username: Joi.string().required(),
+  password: joiPassword
+    .string()
+    .min(8)
+    .minOfSpecialCharacters(1)
+    .minOfLowercase(1)
+    .minOfUppercase(1)
+    .minOfNumeric(1)
+    .noWhiteSpaces()
+    .onlyLatinCharacters()
+    .doesNotInclude(['password', '12345678', 'aaaaaaaa'])
+    .required(),
 });

@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { IVetRepository, prisma, PrismaVetRepository } from '../infra';
+import {
+  IUserRepository,
+  IVetRepository,
+  prisma,
+  PrismaUserRepository,
+  PrismaVetRepository,
+} from '../infra';
 import { VetService } from '../services';
 import { VetController } from '../controllers';
 import {
@@ -8,8 +14,9 @@ import {
   validatorMiddleware,
 } from '../shared';
 
+const userRepository: IUserRepository = new PrismaUserRepository(prisma);
 const repository: IVetRepository = new PrismaVetRepository(prisma);
-const service = new VetService(repository);
+const service = new VetService(repository, userRepository);
 const controller = new VetController(service);
 
 const router = Router();
@@ -33,18 +40,18 @@ router
   )
   .post(
     '/',
-    authenticateTokenMiddleware,
-    checkPermission(['create_vet, all_vet']),
     validatorMiddleware('VetModel'),
+    authenticateTokenMiddleware,
+    // checkPermission(['create_vet, all_vet']),
     (request, response) => {
       return controller.create(request, response);
     }
   )
   .put(
     '/',
+    validatorMiddleware('VetModel'),
     authenticateTokenMiddleware,
     checkPermission(['update_vet, all_vet']),
-    validatorMiddleware('VetModel'),
     (request, response) => {
       return controller.update(request, response);
     }

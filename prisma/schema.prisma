@@ -20,7 +20,7 @@ model User {
   email String     @unique
 
   username String  @unique
-  password String @unique
+  password String  
  
   vetID                String? @unique
   ownerID                String? @unique

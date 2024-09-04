@@ -1,9 +1,21 @@
-import { OwnerNotFoundError, OwnerAlreadyExistsError } from '../../errors';
-import { IOwnerRepository, Owner } from '../../infra';
+import {
+  OwnerNotFoundError,
+  OwnerAlreadyExistsError,
+  UserAlreadyExistsError,
+} from '../../errors';
+import {
+  IOwnerRepository,
+  IUserRepository,
+  Owner,
+  OwnerRequest,
+} from '../../infra';
 import { UnknownError } from '../../shared';
 
 export class OwnerService {
-  constructor(private readonly repository: IOwnerRepository) {}
+  constructor(
+    private readonly repository: IOwnerRepository,
+    private readonly userRepository: IUserRepository
+  ) {}
 
   public async getAll(): Promise<Owner[] | undefined> {
     try {
@@ -29,15 +41,28 @@ export class OwnerService {
     }
   }
 
-  public async create(owner: Owner): Promise<Owner> {
+  public async create(owner: OwnerRequest): Promise<Owner> {
     try {
+      const userValidation = await this.userRepository.findOneByEmailOrUsername(
+        owner.email,
+        owner.username
+      );
+      if (userValidation)
+        throw new UserAlreadyExistsError(
+          'The user already exists in the database.',
+          409
+        );
+
       const validation = await this.repository.findOneByName(owner.name);
       if (validation)
         throw new OwnerAlreadyExistsError(
           'The owner already exists in the database.',
           409
         );
+
       const result = await this.repository.save(owner);
+
+      if (!result) throw new UnknownError('Internal Server Error.', 500);
       return result;
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);

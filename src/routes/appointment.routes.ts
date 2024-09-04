@@ -42,18 +42,18 @@ router
   })
   .post(
     '/',
+    validatorMiddleware('AppointmentModel'),
     authenticateTokenMiddleware,
     checkPermission(['create_appointment, all_appointment']),
-    validatorMiddleware('AppointmentModel'),
     (request, response) => {
       return controller.create(request, response);
     }
   )
   .put(
     '/',
+    validatorMiddleware('AppointmentModel'),
     authenticateTokenMiddleware,
     checkPermission(['update_appointment, all_appointment']),
-    validatorMiddleware('AppointmentModel'),
     (request, response) => {
       return controller.update(request, response);
     }

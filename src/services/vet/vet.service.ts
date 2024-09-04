@@ -1,9 +1,16 @@
-import { VetNotFoundError, VetAlreadyExistsError } from '../../errors';
-import { IVetRepository, Vet } from '../../infra';
+import {
+  VetNotFoundError,
+  VetAlreadyExistsError,
+  UserAlreadyExistsError,
+} from '../../errors';
+import { IUserRepository, IVetRepository, Vet, VetRequest } from '../../infra';
 import { UnknownError } from '../../shared';
 
 export class VetService {
-  constructor(private readonly repository: IVetRepository) {}
+  constructor(
+    private readonly repository: IVetRepository,
+    private readonly userRepository: IUserRepository
+  ) {}
 
   public async getAll(): Promise<Vet[]> {
     try {
@@ -29,8 +36,18 @@ export class VetService {
     }
   }
 
-  public async create(vet: Vet): Promise<Vet> {
+  public async create(vet: VetRequest): Promise<Vet> {
     try {
+      const userValidation = await this.userRepository.findOneByEmailOrUsername(
+        vet.email,
+        vet.username
+      );
+      if (userValidation)
+        throw new UserAlreadyExistsError(
+          'The user already exists in the database.',
+          409
+        );
+
       const validation = await this.repository.findOneByName(vet.name);
       if (validation)
         throw new VetAlreadyExistsError(
@@ -38,6 +55,7 @@ export class VetService {
           409
         );
       const result = await this.repository.save(vet);
+      if (!result) throw new UnknownError('Internal Server Error.', 500);
       return result;
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);
