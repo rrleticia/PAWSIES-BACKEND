@@ -17,7 +17,9 @@ export class PrismaUserRepository implements IUserRepository {
         user.username,
         user.role,
         user.email,
-        user.password
+        user.password,
+        user.vetID,
+        user.ownerID
       );
     });
     return parseUsers;
@@ -37,7 +39,9 @@ export class PrismaUserRepository implements IUserRepository {
       user.username,
       user.role,
       user.email,
-      user.password
+      user.password,
+      user.vetID,
+      user.ownerID
     );
 
     return parseUser;
@@ -50,6 +54,8 @@ export class PrismaUserRepository implements IUserRepository {
         role: getRoleEnum(user.role),
         email: user.email,
         password: user.password,
+        vetID: user.vetID,
+        ownerID: user.ownerID,
       },
     });
 
@@ -58,7 +64,9 @@ export class PrismaUserRepository implements IUserRepository {
       createdUser.username,
       createdUser.role,
       createdUser.email,
-      createdUser.password
+      createdUser.password,
+      createdUser.vetID,
+      createdUser.ownerID
     );
 
     return parseUser;
@@ -82,7 +90,9 @@ export class PrismaUserRepository implements IUserRepository {
       updatedUser.username,
       updatedUser.role,
       updatedUser.email,
-      updatedUser.password
+      updatedUser.password,
+      updatedUser.vetID,
+      updatedUser.ownerID
     );
 
     return parseUser;
@@ -100,7 +110,9 @@ export class PrismaUserRepository implements IUserRepository {
       user.username,
       user.role,
       user.email,
-      user.password
+      user.password,
+      user.vetID,
+      user.ownerID
     );
 
     return parseUser;
@@ -120,7 +132,9 @@ export class PrismaUserRepository implements IUserRepository {
       user.username,
       user.role,
       user.email,
-      user.password
+      user.password,
+      user.vetID,
+      user.ownerID
     );
 
     return parseUser;
@@ -148,7 +162,9 @@ export class PrismaUserRepository implements IUserRepository {
         userEmail.username,
         userEmail.role,
         userEmail.email,
-        userEmail.password
+        userEmail.password,
+        userEmail.vetID,
+        userEmail.ownerID
       );
 
       return parseUser;
@@ -158,7 +174,9 @@ export class PrismaUserRepository implements IUserRepository {
         userUsername.username,
         userUsername.role,
         userUsername.email,
-        userUsername.password
+        userUsername.password,
+        userUsername.vetID,
+        userUsername.ownerID
       );
 
       return parseUser;

@@ -1,7 +1,7 @@
 import { UserNotFoundError, UserAlreadyExistsError } from '../../errors';
 import { IUserRepository, User } from '../../infra';
 import { UnknownError } from '../../shared';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 export class UserService {
   constructor(private readonly repository: IUserRepository) {}
@@ -33,18 +33,21 @@ export class UserService {
   public async create(user: User): Promise<User> {
     try {
       const password = user.password;
-      const hashedPassword = await bcrypt.hash(password, 31);
+      const hashedPassword = await bcrypt.hash(password, 11);
       user.password = hashedPassword;
+
       const validation = await this.repository.findOneByEmailOrUsername(
         user.email,
         user.username
       );
+
       if (validation)
         throw new UserAlreadyExistsError(
           'The user already exists in the database.',
           409
         );
       const result = await this.repository.save(user);
+      console.log(result);
       return result;
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);

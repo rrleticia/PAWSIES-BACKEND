@@ -1,8 +1,7 @@
-export interface Validator {
-  validator:
-    | 'OwnerModel'
-    | 'VetModel'
-    | 'PetModel'
-    | 'AppointmentModel'
-    | 'UserModel';
-}
+export type validator =
+  | 'LoginModel'
+  | 'UserModel'
+  | 'OwnerModel'
+  | 'VetModel'
+  | 'PetModel'
+  | 'AppointmentModel';

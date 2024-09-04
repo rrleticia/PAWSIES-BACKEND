@@ -1,14 +1,16 @@
 import { Role, Specialty, PetType, Examination } from '@prisma/client';
 
-export const getRoleEnum = (value: string) => {
+export const getRoleEnum = (value: string | undefined) => {
+  if (!value) return Role.ANONYMOUS;
   value = value.toUpperCase();
   if (value == 'ADMIN') return Role.ADMIN;
   if (value == 'VET') return Role.VET;
   if (value == 'OWNER') return Role.OWNER;
-  else return Role.UNKNOWN;
+  else return Role.ANONYMOUS;
 };
 
-export const getSpecialtyEnum = (value: string) => {
+export const getSpecialtyEnum = (value: string | undefined) => {
+  if (!value) return Specialty.CAT_DOG;
   value = value.toUpperCase();
   if (value == 'DOG') return Specialty.DOG;
   if (value == 'CAT') return Specialty.CAT;
@@ -16,7 +18,8 @@ export const getSpecialtyEnum = (value: string) => {
   else return Specialty.CAT_DOG;
 };
 
-export const getPetTypeEnum = (value: string) => {
+export const getPetTypeEnum = (value: string | undefined) => {
+  if (!value) return PetType.UNKNOWN;
   value = value.toUpperCase();
   if (value.toUpperCase() == 'DOG') return PetType.DOG;
   if (value.toUpperCase() == 'CAT') return PetType.CAT;
@@ -24,7 +27,8 @@ export const getPetTypeEnum = (value: string) => {
   else return PetType.UNKNOWN;
 };
 
-export const getExaminationEnum = (value: string) => {
+export const getExaminationEnum = (value: string | undefined) => {
+  if (!value) return Examination.ROUTINE;
   value = value.toUpperCase();
   if (value == 'ROUTINE') return Examination.ROUTINE;
   if (value == 'URGENT') return Examination.URGENT;

@@ -1,8 +1,10 @@
 import { UserNotFoundError, UserUnauthorizedError } from '../../errors';
 import { IUserRepository, LoginUser, User } from '../../infra';
 import { getToken, UnknownError } from '../../shared';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import { sign } from 'jsonwebtoken';
+
+let refreshTokens = [] as string[];
 
 export class AuthenticationService {
   constructor(private readonly repository: IUserRepository) {}
@@ -39,6 +41,8 @@ export class AuthenticationService {
         }
       );
 
+      refreshTokens.push(token);
+
       const { password: _, ...User } = user;
       return { token: token, loggedUser: User };
     } catch (error) {
@@ -66,17 +70,8 @@ export class AuthenticationService {
 
       const token = auth && auth.split(' ')[1];
 
-      const SECRET_KEY = getToken();
+      refreshTokens = refreshTokens.filter((t) => t !== token);
 
-      sign(
-        {
-          userId: user.id,
-        },
-        SECRET_KEY,
-        {
-          expiresIn: '1s',
-        }
-      );
       return { token: undefined, loggedUser: undefined };
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);

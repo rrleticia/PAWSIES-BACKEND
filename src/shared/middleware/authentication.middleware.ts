@@ -1,21 +1,27 @@
 import jwt from 'jsonwebtoken';
 import { getToken } from '../util';
+import { UserForbiddenError, UserUnauthorizedError } from '../../errors';
+import { NextFunction, Request, Response } from 'express';
 
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+export const authenticateTokenMiddleware = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const authHeader = request.headers['authorization'];
+  const token = authHeader;
 
   if (!token) {
-    return res.sendStatus(401); // Unauthorized
+    throw new UserUnauthorizedError('The user credentials are invalid.', 401);
   }
 
   const SECRET_KEY = getToken();
 
-  jwt.verify(token, SECRET_KEY, (err, user) => {
-    if (err) {
-      return res.sendStatus(403); // Forbidden
+  jwt.verify(token, SECRET_KEY, (error: any, user: any) => {
+    if (error) {
+      next(new UserForbiddenError('The user credentials are invalid.', 403));
     }
-    req.user = user;
+    request.body.user = user;
     next();
   });
 };

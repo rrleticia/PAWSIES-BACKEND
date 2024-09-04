@@ -16,7 +16,7 @@ datasource db {
 model User {
   id String       @id @default(cuid())
 
-  role  Role   @default(UNKNOWN) 
+  role  Role   @default(ANONYMOUS) 
   email String     @unique
 
   username String  @unique
@@ -92,7 +92,7 @@ enum Role {
   ADMIN
   VET 
   OWNER
-  UNKNOWN
+  ANONYMOUS
 }
 
 enum PetType {

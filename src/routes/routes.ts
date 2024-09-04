@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import authRoutes from './authentication.routes';
+import userRoutes from './user.routes';
 import ownerRoutes from './owner.routes';
 import vetRoutes from './vet.routes';
 import petRoutes from './pet.routes';
@@ -11,6 +13,8 @@ export const routes = (app: any) => {
     res.status(200).send({ title: 'Home page Test Json' });
   });
 
+  app.use(cors()).use(express.json()).use('/auth', authRoutes);
+  app.use(cors()).use(express.json()).use('/user', userRoutes);
   app.use(cors()).use(express.json()).use('/owner', ownerRoutes);
   app.use(cors()).use(express.json()).use('/vet', vetRoutes);
   app.use(cors()).use(express.json()).use('/pet', petRoutes);

@@ -3,17 +3,14 @@ import { Request, Response, NextFunction } from 'express';
 import Joi, { ValidationError } from 'joi';
 import { Validators } from '../../models';
 import { HttpError } from '../errors';
+import { validator } from '../interfaces';
 
-export const validatorMiddleware = (
-  validator:
-    | 'OwnerModel'
-    | 'VetModel'
-    | 'PetModel'
-    | 'AppointmentModel'
-    | 'UserModel'
-) => {
+export const validatorMiddleware = (validator: validator) => {
   if (!Validators.hasOwnProperty(validator))
-    throw new Error(`'${validator}' validator is not exist`);
+    throw new HttpError(
+      `Validation Error: '${validator}' validator is not exist`,
+      502
+    );
 
   return async function (
     request: Request,

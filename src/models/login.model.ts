@@ -3,15 +3,13 @@ import { joiPasswordExtendCore } from 'joi-password';
 
 const joiPassword = Joi.extend(joiPasswordExtendCore);
 
-export const UserModel = Joi.object().keys({
-  id: Joi.string(),
+export const LoginModel = Joi.object().keys({
   email: Joi.string()
     .email({
       minDomainSegments: 2,
       tlds: { allow: ['com', 'net', 'br'] },
     })
     .required(),
-  username: Joi.string().required(),
   password: joiPassword
     .string()
     .min(8)
@@ -23,16 +21,5 @@ export const UserModel = Joi.object().keys({
     .onlyLatinCharacters()
     .doesNotInclude(['password', '12345678', 'aaaaaaaa'])
     .required(),
-  role: Joi.string().valid(
-    'ANONYMOUS',
-    'ADMIN',
-    'VET',
-    'OWNER',
-    'anonymous',
-    'admin',
-    'vet',
-    'owner'
-  ),
-  vetId: Joi.string(),
-  ownerId: Joi.string(),
+  access_token: [Joi.string(), Joi.number()],
 });

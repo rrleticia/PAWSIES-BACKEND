@@ -5,6 +5,7 @@
     "target": "ES6", // ou "ES2015"
     "module": "commonjs",
     "strict": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "outDir": "./dist"
