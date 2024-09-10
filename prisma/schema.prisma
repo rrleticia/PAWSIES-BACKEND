@@ -21,6 +21,8 @@ model User {
 
   username String  @unique
   password String  
+
+  current_token String?  @unique
  
   vetID                String? @unique
   ownerID                String? @unique

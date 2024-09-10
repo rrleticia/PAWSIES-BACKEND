@@ -6,6 +6,28 @@ import { getRoleEnum } from '../../../shared';
 export class PrismaUserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
+  public async getUserByToken(token: string): Promise<User | undefined> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        current_token: token,
+      },
+    });
+    if (!user) return undefined;
+    return user;
+  }
+
+  public async updateToken(email: string, token: string): Promise<boolean> {
+    const user = await this.prisma.user.update({
+      where: {
+        email: email,
+      },
+      data: {
+        current_token: token,
+      },
+    });
+    return user ? true : false;
+  }
+
   public async findAll(): Promise<User[] | undefined> {
     const users = await this.prisma.user.findMany({});
 

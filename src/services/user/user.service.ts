@@ -72,11 +72,13 @@ export class UserService {
   public async delete(id: string): Promise<User> {
     try {
       const validation = await this.repository.findOneByID(id);
-      if (!validation)
+
+      if (!validation) {
         throw new UserNotFoundError(
           'The user could not be found in the database.',
           404
         );
+      }
       const result = await this.repository.delete(id);
       return result;
     } catch (error) {

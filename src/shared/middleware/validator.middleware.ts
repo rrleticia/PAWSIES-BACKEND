@@ -1,6 +1,6 @@
 import 'express-async-errors';
 import { Request, Response, NextFunction } from 'express';
-import Joi, { ValidationError } from 'joi';
+import { ValidationError } from 'joi';
 import { Validators } from '../../models';
 import { HttpError } from '../errors';
 import { validator } from '../interfaces';

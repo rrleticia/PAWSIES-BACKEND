@@ -7,7 +7,10 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "ts-node src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:unit": "vitest -c ./vitest.config.unit.ts",
+    "test:unit:ui": "vitest -c ./vitest.config.unit.ts --ui",
+    "prettier": "npx prettier 'src/**/*.ts' --write",
+    "prettier:test": "npx prettier 'test/**/*.ts' --write"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +26,8 @@
     "express-async-errors": "^3.1.1",
     "joi": "^17.13.3",
     "joi-password": "^4.2.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "typescript": "^5.6.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -33,6 +37,7 @@
     "@types/node": "^20.14.11",
     "@typescript-eslint/eslint-plugin": "^7.16.1",
     "@typescript-eslint/parser": "^7.16.1",
+    "@vitest/ui": "^2.0.5",
     "cors": "^2.8.5",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
@@ -46,6 +51,7 @@
     "prisma": "^5.17.0",
     "ts-node": "^10.9.2",
     "tslint": "^6.1.3",
-    "typescript": "^5.5.3"
+    "vitest": "^2.0.5",
+    "vitest-mock-extended": "^2.0.2"
   }
 }

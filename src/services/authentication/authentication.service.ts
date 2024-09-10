@@ -1,4 +1,5 @@
 import { UserNotFoundError, UserUnauthorizedError } from '../../errors';
+import { UserTokenUpdateError } from '../../errors/user/UserTokenUpdateError';
 import { IUserRepository, LoginUser, User } from '../../infra';
 import { getToken, UnknownError } from '../../shared';
 import bcrypt from 'bcrypt';
@@ -44,6 +45,15 @@ export class AuthenticationService {
       refreshTokens.push(token);
 
       const { password: _, ...User } = user;
+
+      const valid = await this.repository.updateToken(email, token);
+      if (!valid) {
+        throw new UserTokenUpdateError(
+          "An unexpexted error ocurred updating the user's current token",
+          500
+        );
+      }
+
       return { token: token, loggedUser: User };
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);
