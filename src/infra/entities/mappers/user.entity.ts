@@ -5,7 +5,7 @@ export class User {
   public readonly username: string;
   public readonly role: Role;
   public readonly email: string;
-  public password: string;
+  public password?: string;
   public readonly vetID: string | null;
   public readonly ownerID: string | null;
 

@@ -1,6 +1,7 @@
 import {
   AppointmentNotFoundError,
   AppointmentAlreadyExistsError,
+  AppointmentStatusFieldError,
 } from '../../errors';
 import { IAppointmentRepository, Appointment } from '../../infra';
 import { UnknownError } from '../../shared';
@@ -23,7 +24,6 @@ export class AppointmentService {
   ): Promise<Appointment[] | undefined> {
     try {
       const result = await this.repository.findAllByPetID(petID);
-      if (!result) throw new UnknownError('Internal Server Error.', 500);
       return result;
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);
@@ -40,6 +40,9 @@ export class AppointmentService {
         );
       return result;
     } catch (error) {
+      if (error instanceof AppointmentNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -61,6 +64,9 @@ export class AppointmentService {
       const result = await this.repository.save(appointment);
       return result;
     } catch (error) {
+      if (error instanceof AppointmentAlreadyExistsError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -76,6 +82,9 @@ export class AppointmentService {
       const result = await this.repository.update(appointment.id, appointment);
       return result;
     } catch (error) {
+      if (error instanceof AppointmentNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -87,8 +96,8 @@ export class AppointmentService {
     try {
       const validation = await this.repository.findOneByID(id);
       if (!status)
-        throw new AppointmentNotFoundError(
-          'Invalid input for a field of Appointment.',
+        throw new AppointmentStatusFieldError(
+          'Invalid input for status field of Appointment.',
           405
         );
       if (!validation)
@@ -99,6 +108,12 @@ export class AppointmentService {
       const result = await this.repository.updateStatus(id, status);
       return result;
     } catch (error) {
+      if (error instanceof AppointmentStatusFieldError) {
+        throw error;
+      }
+      if (error instanceof AppointmentNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -114,6 +129,9 @@ export class AppointmentService {
       const result = await this.repository.delete(id);
       return result;
     } catch (error) {
+      if (error instanceof AppointmentNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }

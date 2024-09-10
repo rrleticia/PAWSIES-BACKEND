@@ -18,7 +18,6 @@ export class PetService {
   public async getAllByOwnerID(ownerID: string): Promise<Pet[] | undefined> {
     try {
       const result = await this.repository.findAllByOwnerID(ownerID);
-      if (!result) throw new UnknownError('Internal Server Error.', 500);
       return result;
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);
@@ -35,6 +34,9 @@ export class PetService {
         );
       return result;
     } catch (error) {
+      if (error instanceof PetNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -54,6 +56,9 @@ export class PetService {
       const result = await this.repository.save(pet);
       return result;
     } catch (error) {
+      if (error instanceof PetAlreadyExistsError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -69,6 +74,9 @@ export class PetService {
       const result = await this.repository.update(pet.id, pet);
       return result;
     } catch (error) {
+      if (error instanceof PetNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -84,6 +92,9 @@ export class PetService {
       const result = await this.repository.delete(id);
       return result;
     } catch (error) {
+      if (error instanceof PetNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }

@@ -1,5 +1,8 @@
-import { UserNotFoundError, UserUnauthorizedError } from '../../errors';
-import { UserTokenUpdateError } from '../../errors/user/UserTokenUpdateError';
+import {
+  UserNotFoundError,
+  UserPasswordFieldError,
+  UserUnauthorizedError,
+} from '../../errors';
 import { IUserRepository, LoginUser, User } from '../../infra';
 import { getToken, UnknownError } from '../../shared';
 import bcrypt from 'bcrypt';
@@ -20,6 +23,12 @@ export class AuthenticationService {
         throw new UserNotFoundError(
           'The user could not be found in the database.',
           404
+        );
+
+      if (!user.password)
+        throw new UserPasswordFieldError(
+          'Invalid input for password field of User.',
+          405
         );
 
       const isMatch = await bcrypt.compare(password, user.password);
@@ -46,16 +55,17 @@ export class AuthenticationService {
 
       const { password: _, ...User } = user;
 
-      const valid = await this.repository.updateToken(email, token);
-      if (!valid) {
-        throw new UserTokenUpdateError(
-          "An unexpexted error ocurred updating the user's current token",
-          500
-        );
-      }
-
       return { token: token, loggedUser: User };
     } catch (error) {
+      if (error instanceof UserNotFoundError) {
+        throw error;
+      }
+      if (error instanceof UserPasswordFieldError) {
+        throw error;
+      }
+      if (error instanceof UserUnauthorizedError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -84,6 +94,12 @@ export class AuthenticationService {
 
       return { token: undefined, loggedUser: undefined };
     } catch (error) {
+      if (error instanceof UserNotFoundError) {
+        throw error;
+      }
+      if (error instanceof UserUnauthorizedError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }

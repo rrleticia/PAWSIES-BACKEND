@@ -32,6 +32,9 @@ export class VetService {
         );
       return result;
     } catch (error) {
+      if (error instanceof VetNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -58,6 +61,12 @@ export class VetService {
       if (!result) throw new UnknownError('Internal Server Error.', 500);
       return result;
     } catch (error) {
+      if (error instanceof UserAlreadyExistsError) {
+        throw error;
+      }
+      if (error instanceof VetNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -73,6 +82,9 @@ export class VetService {
       const result = await this.repository.update(vet.id, vet);
       return result;
     } catch (error) {
+      if (error instanceof VetNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -88,6 +100,9 @@ export class VetService {
       const result = await this.repository.delete(id);
       return result;
     } catch (error) {
+      if (error instanceof VetNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }

@@ -37,6 +37,9 @@ export class OwnerService {
         );
       return result;
     } catch (error) {
+      if (error instanceof OwnerNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -63,8 +66,15 @@ export class OwnerService {
       const result = await this.repository.save(owner);
 
       if (!result) throw new UnknownError('Internal Server Error.', 500);
+
       return result;
     } catch (error) {
+      if (error instanceof UserAlreadyExistsError) {
+        throw error;
+      }
+      if (error instanceof OwnerNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -80,6 +90,9 @@ export class OwnerService {
       const result = await this.repository.update(owner.id, owner);
       return result;
     } catch (error) {
+      if (error instanceof OwnerNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }
@@ -95,6 +108,9 @@ export class OwnerService {
       const result = await this.repository.delete(id);
       return result;
     } catch (error) {
+      if (error instanceof OwnerNotFoundError) {
+        throw error;
+      }
       throw new UnknownError('Internal Server Error.', 500);
     }
   }

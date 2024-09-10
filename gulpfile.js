@@ -7,17 +7,17 @@ const gulp = require('gulp'),
   nodemon = require('gulp-nodemon');
 
 // TSLINT
-// gulp.task('ts-lint', () => {
-//   const config = { formatter: 'verbose' };
-//   return gulp
-//     .src(['src/**/*.ts'])
-//     .pipe(tslint(config))
-//     .pipe(
-//       tslint.report({
-//         reportLimit: 0,
-//       })
-//     );
-// });
+gulp.task('ts-lint', () => {
+  const config = { formatter: 'verbose' };
+  return gulp
+    .src(['src/**/*.ts'])
+    .pipe(tslint(config))
+    .pipe(
+      tslint.report({
+        reportLimit: 0,
+      })
+    );
+});
 
 // COPY FILES
 gulp.task('copy-files', () => {
@@ -27,9 +27,9 @@ gulp.task('copy-files', () => {
 
 // WATCH
 gulp.task('watch', (done) => {
-  gulp.watch('./**/*.ts');
+  gulp.watch('./**/*.ts',);
   nodemon({
-    script: 'dist/server.js',
+    script: 'dist/src/server.js',
     tasks: ['build'],
     ext: 'ts json',
     ignore: ['node_modules/', 'package.json', 'tsconfig.json'],
@@ -53,8 +53,7 @@ gulp.task(
   'build',
   gulp.series(
     [
-      ,
-      // 'ts-lint'
+      'ts-lint',
       'copy-files',
     ],
     function compiler() {
