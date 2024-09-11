@@ -14,8 +14,9 @@ export class PrismaUserRepository implements IUserRepository {
     const parseUsers = users.map((user) => {
       return new User(
         user.id,
-        user.username,
+        user.name,
         user.role,
+        user.username,
         user.email,
         user.password,
         user.vetID,
@@ -36,8 +37,9 @@ export class PrismaUserRepository implements IUserRepository {
 
     const parseUser = new User(
       user.id,
-      user.username,
+      user.name,
       user.role,
+      user.username,
       user.email,
       user.password,
       user.vetID,
@@ -52,8 +54,9 @@ export class PrismaUserRepository implements IUserRepository {
 
     const createdUser = await this.prisma.user.create({
       data: {
-        username: user.username,
+        name: user.role,
         role: getRoleEnum(user.role),
+        username: user.username,
         email: user.email,
         password: user.password,
         vetID: user.vetID,
@@ -63,8 +66,9 @@ export class PrismaUserRepository implements IUserRepository {
 
     const parseUser = new User(
       createdUser.id,
-      createdUser.username,
+      createdUser.name,
       createdUser.role,
+      createdUser.username,
       createdUser.email,
       createdUser.password,
       createdUser.vetID,
@@ -89,8 +93,9 @@ export class PrismaUserRepository implements IUserRepository {
 
     const parseUser = new User(
       updatedUser.id,
-      updatedUser.username,
+      updatedUser.name,
       updatedUser.role,
+      updatedUser.username,
       updatedUser.email,
       updatedUser.password,
       updatedUser.vetID,
@@ -109,8 +114,9 @@ export class PrismaUserRepository implements IUserRepository {
 
     const parseUser = new User(
       user.id,
-      user.username,
+      user.name,
       user.role,
+      user.username,
       user.email,
       user.password,
       user.vetID,
@@ -131,8 +137,9 @@ export class PrismaUserRepository implements IUserRepository {
 
     const parseUser = new User(
       user.id,
-      user.username,
+      user.name,
       user.role,
+      user.username,
       user.email,
       user.password,
       user.vetID,
@@ -161,8 +168,9 @@ export class PrismaUserRepository implements IUserRepository {
     if (userEmail) {
       const parseUser = new User(
         userEmail.id,
-        userEmail.username,
+        userEmail.name,
         userEmail.role,
+        userEmail.username,
         userEmail.email,
         userEmail.password,
         userEmail.vetID,
@@ -173,8 +181,9 @@ export class PrismaUserRepository implements IUserRepository {
     } else if (userUsername) {
       const parseUser = new User(
         userUsername.id,
-        userUsername.username,
+        userUsername.name,
         userUsername.role,
+        userUsername.username,
         userUsername.email,
         userUsername.password,
         userUsername.vetID,

@@ -6,13 +6,23 @@ const joiPassword = Joi.extend(joiPasswordExtendCore);
 export const OwnerModel = Joi.object().keys({
   id: Joi.string(),
   name: Joi.string().required(),
+  role: Joi.string().valid(
+    'ANONYMOUS',
+    'ADMIN',
+    'VET',
+    'OWNER',
+    'anonymous',
+    'admin',
+    'vet',
+    'owner'
+  ),
+  username: Joi.string().required(),
   email: Joi.string()
     .email({
       minDomainSegments: 2,
       tlds: { allow: ['com', 'net', 'br'] },
     })
     .required(),
-  username: Joi.string().required(),
   password: joiPassword
     .string()
     .min(8)
@@ -24,9 +34,4 @@ export const OwnerModel = Joi.object().keys({
     .onlyLatinCharacters()
     .doesNotInclude(['password', '12345678', 'aaaaaaaa'])
     .required(),
-  user: {
-    userId: 'cm0n56ts20000byl4l7umql4y',
-    iat: 1725411066,
-    exp: 1725418266,
-  },
 });

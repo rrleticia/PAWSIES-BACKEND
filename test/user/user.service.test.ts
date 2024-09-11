@@ -35,6 +35,7 @@ describe('user.service', () => {
       const id = '12345678';
       const getUser = {
         id: id,
+        name: 'name',
         role: 'ADMIN' as Role,
         email: 'daenerys@gmail.com',
         username: 'daenerys',
@@ -49,6 +50,7 @@ describe('user.service', () => {
 
       expect(user).toEqual({
         id: '12345678',
+        name: 'name',
         role: 'ADMIN',
         email: 'daenerys@gmail.com',
         username: 'daenerys',
@@ -64,6 +66,7 @@ describe('user.service', () => {
 
       const createdUser = {
         id: id,
+        name: 'name',
         role: 'ADMIN' as Role,
         email: 'rhaenyra@gmail.com',
         username: 'rhaenyra',
@@ -80,6 +83,7 @@ describe('user.service', () => {
 
       expect(user).toEqual({
         id: id,
+        name: 'name',
         role: 'ADMIN' as Role,
         email: 'rhaenyra@gmail.com',
         username: 'rhaenyra',
@@ -95,6 +99,7 @@ describe('user.service', () => {
 
       const updatedUser = {
         id: id,
+        name: 'name',
         role: 'ADMIN' as Role,
         email: 'updated_email@gmail.com',
         username: 'updated_username',
@@ -103,15 +108,15 @@ describe('user.service', () => {
         ownerID: null,
       };
 
-      // Mock finding the user (user exists)
       prisma.user.findUnique.mockResolvedValueOnce(updatedUser);
-      // Mock the update operation
+
       prisma.user.update.mockResolvedValueOnce(updatedUser);
 
       const result = await service.update(updatedUser);
 
       expect(result).toEqual({
         id: id,
+        name: 'name',
         role: 'ADMIN' as Role,
         email: 'updated_email@gmail.com',
         username: 'updated_username',

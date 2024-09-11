@@ -9,7 +9,7 @@ export const getRoleEnum = (value: string | undefined) => {
   else return Role.ANONYMOUS;
 };
 
-export const getSpecialtyEnum = (value: string | undefined) => {
+export const getSpecialtyEnum = (value: string | null) => {
   if (!value) return Specialty.CAT_DOG;
   value = value.toUpperCase();
   if (value == 'DOG') return Specialty.DOG;

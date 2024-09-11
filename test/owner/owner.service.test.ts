@@ -24,7 +24,7 @@ describe('owner.service', () => {
 
   describe('[GET ALL] empty list of owners', () => {
     it('should return a list of owners', async () => {
-      prisma.owner.findMany.mockResolvedValueOnce([]);
+      prisma.user.findMany.mockResolvedValueOnce([]);
 
       const empty = await service.getAll();
 
@@ -32,23 +32,33 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[GET ONE] Owner by :id', () => {
+  describe('[GET ONE] owner by :id', () => {
     it('should return a owner by id', async () => {
       const id = '12345678';
+      const ownerID = '987654321';
+
       const getOwner = {
         id: id,
         role: 'OWNER' as Role,
         email: 'daenerys@gmail.com',
         name: 'daenerys',
+        username: 'rhaenyra',
+        password: 'caraxys123!',
+        ownerID: ownerID,
+        vetID: null,
       };
 
-      prisma.owner.findUnique.mockResolvedValueOnce(getOwner);
+      prisma.user.findUnique.mockResolvedValueOnce(getOwner);
 
       const owner = await service.getOneByID(id);
 
       expect(owner).toEqual({
-        id: '12345678',
+        id: id,
+        role: 'OWNER' as Role,
+        email: 'daenerys@gmail.com',
         name: 'daenerys',
+        username: 'rhaenyra',
+        ownerID: ownerID,
       });
     });
   });
@@ -56,56 +66,70 @@ describe('owner.service', () => {
   describe('[POST] new valid owner', () => {
     it('should create and return a owner', async () => {
       const id = '98765431';
+      const ownerID = '987654321';
 
       const createdOwner = {
         id: id,
+        role: 'OWNER' as Role,
         email: 'rhaenyra@gmail.com',
         name: 'rhaenyra',
         username: 'rhaenyra',
         password: 'caraxys123!',
+        ownerID: ownerID,
+        vetID: null,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(null);
 
-      prisma.owner.findUnique.mockResolvedValueOnce(null);
-
-      prisma.owner.create.mockResolvedValueOnce(createdOwner);
+      prisma.user.create.mockResolvedValueOnce(createdOwner);
 
       const owner = await service.create(createdOwner);
 
       expect(owner).toEqual({
         id: id,
+        role: 'OWNER' as Role,
+        email: 'rhaenyra@gmail.com',
         name: 'rhaenyra',
+        username: 'rhaenyra',
+        ownerID: ownerID,
       });
     });
   });
 
-  describe('[PUT] update Owner that exists', () => {
-    it('should update and return the Owner', async () => {
+  describe('[PUT] update owner that exists', () => {
+    it('should update and return the owner', async () => {
       const id = '12345678';
+      const ownerID = '987654321';
 
       const updatedOwner = {
         id: id,
+        role: 'OWNER' as Role,
         email: 'rhaenyra@gmail.com',
         name: 'rhaenyra',
         username: 'rhaenyra',
         password: 'caraxys123!',
+        ownerID: ownerID,
+        vetID: null,
       };
 
-      prisma.owner.findUnique.mockResolvedValueOnce(updatedOwner);
+      prisma.user.findUnique.mockResolvedValueOnce(updatedOwner);
 
-      prisma.owner.update.mockResolvedValueOnce(updatedOwner);
+      prisma.user.update.mockResolvedValueOnce(updatedOwner);
 
       const result = await service.update(updatedOwner);
 
       expect(result).toEqual({
         id: id,
+        role: 'OWNER' as Role,
+        email: 'rhaenyra@gmail.com',
         name: 'rhaenyra',
+        username: 'rhaenyra',
+        ownerID: ownerID,
       });
     });
   });
 
-  describe('[DELETE] delete Owner that does not exist', () => {
+  describe('[DELETE] delete owner that does not exist', () => {
     it('should throw OwnerNotFoundError', async () => {
       const id = 'non_existent_id';
 

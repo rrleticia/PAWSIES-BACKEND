@@ -14,13 +14,15 @@ datasource db {
 }
 
 model User {
-  id String       @id @default(cuid())
+  id         String     @id @default(cuid())
 
-  role  Role   @default(ANONYMOUS) 
-  email String     @unique
+  name       String     @unique
 
-  username String  @unique
-  password String  
+  role       Role       @default(ANONYMOUS) 
+  username   String     @unique
+
+  email      String     @unique
+  password   String  
  
   vetID                  String? @unique
   ownerID                String? @unique
@@ -31,19 +33,13 @@ model User {
 
 model Vet {
   id            String         @id @default(cuid())
-
-  name          String         @unique
   specialty     Specialty      @default(CAT_DOG)
-
   user          User?          @relation
   appointments  Appointment[]
 }
 
 model Owner {
-  id            String          @id @default(cuid())
-  
-  name          String          @unique
-
+  id            String         @id @default(cuid())
   user          User?          @relation
   pets          Pet[]
   appointments  Appointment[]

@@ -2,9 +2,12 @@ import {
   VetNotFoundError,
   VetAlreadyExistsError,
   UserAlreadyExistsError,
+  OwnerAlreadyExistsError,
+  UserPasswordFieldError,
 } from '../../errors';
-import { IUserRepository, IVetRepository, Vet, VetRequest } from '../../infra';
+import { IUserRepository, IVetRepository, Vet } from '../../infra';
 import { UnknownError } from '../../shared';
+import bcrypt from 'bcrypt';
 
 export class VetService {
   constructor(
@@ -39,40 +42,26 @@ export class VetService {
     }
   }
 
-  public async create(vet: VetRequest): Promise<Vet> {
+  public async create(data: Vet): Promise<Vet> {
     try {
-      const userValidation = await this.userRepository.findOneByEmailOrUsername(
-        vet.email,
-        vet.username
-      );
+      let vet = await this._hashPassword(data);
 
-      if (userValidation && (userValidation.ownerID || userValidation.vetID)) {
-        if (userValidation.ownerID) {
-          throw new UserAlreadyExistsError(
-            'The user already exists in the database. The user is connected to an owner already.',
-            409
-          );
-        } else if (userValidation.ownerID) {
-          throw new UserAlreadyExistsError(
-            'The user already exists in the database. The user is connected to a vet already.',
-            409
-          );
-        }
-        throw new UserAlreadyExistsError(
-          'The user already exists in the database. ',
-          409
-        );
-      }
-      const validation = await this.repository.findOneByName(vet.name);
-      if (validation)
-        throw new VetAlreadyExistsError(
-          'The vet already exists in the database.',
-          409
-        );
+      this._checkValidation(vet.email, vet.username);
+
       const result = await this.repository.save(vet);
+
       if (!result) throw new UnknownError('Internal Server Error.', 500);
       return result;
     } catch (error) {
+      if (error instanceof UserPasswordFieldError) {
+        throw error;
+      }
+      if (error instanceof OwnerAlreadyExistsError) {
+        throw error;
+      }
+      if (error instanceof VetAlreadyExistsError) {
+        throw error;
+      }
       if (error instanceof UserAlreadyExistsError) {
         throw error;
       }
@@ -83,17 +72,22 @@ export class VetService {
     }
   }
 
-  public async update(vet: Vet): Promise<Vet> {
+  public async update(data: Vet): Promise<Vet> {
     try {
-      const validation = await this.repository.findOneByID(vet.id);
+      const validation = await this.repository.findOneByID(data.id);
       if (!validation)
         throw new VetNotFoundError(
           'The vet could not be found in the database.',
           404
         );
+      let vet = data;
+      if (data.password) vet = await this._hashPassword(data);
       const result = await this.repository.update(vet.id, vet);
       return result;
     } catch (error) {
+      if (error instanceof UserPasswordFieldError) {
+        throw error;
+      }
       if (error instanceof VetNotFoundError) {
         throw error;
       }
@@ -116,6 +110,46 @@ export class VetService {
         throw error;
       }
       throw new UnknownError('Internal Server Error.', 500);
+    }
+  }
+
+  private async _hashPassword(owner: Vet): Promise<Vet> {
+    const password = owner.password;
+    if (!password)
+      throw new UserPasswordFieldError(
+        'Invalid input for password field of Vet.',
+        405
+      );
+
+    const hashedPassword = await bcrypt.hash(password, 11);
+    owner.password = hashedPassword;
+    return owner;
+  }
+
+  private async _checkValidation(
+    email: string,
+    username: string
+  ): Promise<void> {
+    const user = await this.userRepository.findOneByEmailOrUsername(
+      email,
+      username
+    );
+    if (user && (user.ownerID || user.vetID)) {
+      if (user.ownerID) {
+        throw new OwnerAlreadyExistsError(
+          'The user already exists in the database. The user is connected to an owner already.',
+          409
+        );
+      } else if (user.ownerID) {
+        throw new VetAlreadyExistsError(
+          'The user already exists in the database. The user is connected to a vet already.',
+          409
+        );
+      }
+      throw new UserAlreadyExistsError(
+        'The user already exists in the database. ',
+        409
+      );
     }
   }
 }
