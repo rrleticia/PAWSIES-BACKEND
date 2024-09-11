@@ -92,7 +92,6 @@ export class PrismaOwnerRepository implements IOwnerRepository {
       },
       data: {
         name: owner.name,
-        role: owner.role,
         username: owner.username,
         email: owner.email,
         password: owner.password,

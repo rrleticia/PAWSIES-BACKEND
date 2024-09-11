@@ -103,7 +103,6 @@ export class PrismaVetRepository implements IVetRepository {
       },
       data: {
         name: vet.name,
-        role: getRoleEnum('VET'),
         username: vet.username,
         email: vet.email,
         password: vet.password,

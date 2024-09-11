@@ -6,16 +6,6 @@ const joiPassword = Joi.extend(joiPasswordExtendCore);
 export const OwnerModel = Joi.object().keys({
   id: Joi.string(),
   name: Joi.string().required(),
-  role: Joi.string().valid(
-    'ANONYMOUS',
-    'ADMIN',
-    'VET',
-    'OWNER',
-    'anonymous',
-    'admin',
-    'vet',
-    'owner'
-  ),
   username: Joi.string().required(),
   email: Joi.string()
     .email({
