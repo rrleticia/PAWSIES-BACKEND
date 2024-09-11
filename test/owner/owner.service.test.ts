@@ -39,9 +39,9 @@ describe('owner.service', () => {
 
       const getOwner = {
         id: id,
+        name: 'daenerys',
         role: 'OWNER' as Role,
         email: 'daenerys@gmail.com',
-        name: 'daenerys',
         username: 'rhaenyra',
         password: 'caraxys123!',
         ownerID: ownerID,
@@ -54,9 +54,9 @@ describe('owner.service', () => {
 
       expect(owner).toEqual({
         id: id,
+        name: 'daenerys',
         role: 'OWNER' as Role,
         email: 'daenerys@gmail.com',
-        name: 'daenerys',
         username: 'rhaenyra',
         ownerID: ownerID,
       });

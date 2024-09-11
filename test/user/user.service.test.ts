@@ -33,6 +33,7 @@ describe('user.service', () => {
   describe('[GET ONE] user by :id', () => {
     it('should return a user by id', async () => {
       const id = '12345678';
+
       const getUser = {
         id: id,
         name: 'name',
