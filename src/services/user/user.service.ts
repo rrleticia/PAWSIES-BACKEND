@@ -55,7 +55,6 @@ export class UserService {
         user.username
       );
 
-      console.log(validation);
       if (validation)
         throw new UserAlreadyExistsError(
           'The user already exists in the database.',

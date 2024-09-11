@@ -8,6 +8,7 @@ import {
   IUserRepository,
   Owner,
   OwnerRequest,
+  User,
 } from '../../infra';
 import { UnknownError } from '../../shared';
 
@@ -50,7 +51,8 @@ export class OwnerService {
         owner.email,
         owner.username
       );
-      if (userValidation)
+
+      if (userValidation && (userValidation.ownerID || userValidation.vetID))
         throw new UserAlreadyExistsError(
           'The user already exists in the database.',
           409
@@ -70,6 +72,9 @@ export class OwnerService {
       return result;
     } catch (error) {
       if (error instanceof UserAlreadyExistsError) {
+        throw error;
+      }
+      if (error instanceof OwnerAlreadyExistsError) {
         throw error;
       }
       if (error instanceof OwnerNotFoundError) {

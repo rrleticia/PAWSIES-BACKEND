@@ -10,14 +10,17 @@ vi.mock('lib/prisma');
 describe('user.service', () => {
   let repository: PrismaUserRepository;
   let service: UserService;
+
   beforeAll(() => {
     repository = new PrismaUserRepository(prisma);
     service = new UserService(repository);
   });
+
   beforeEach(() => {
     vi.restoreAllMocks();
   });
-  describe('[GET ALL] empty list', () => {
+
+  describe('[GET ALL] empty list of users', () => {
     it('should return a list of users', async () => {
       prisma.user.findMany.mockResolvedValueOnce([]);
 
@@ -26,8 +29,9 @@ describe('user.service', () => {
       expect(empty).toStrictEqual([]);
     });
   });
+
   describe('[GET ONE] user by :id', () => {
-    it('should return a list of users', async () => {
+    it('should return a user by id', async () => {
       const id = '12345678';
       const getUser = {
         id: id,
@@ -41,9 +45,9 @@ describe('user.service', () => {
 
       prisma.user.findUnique.mockResolvedValueOnce(getUser);
 
-      const users = await service.getOneByID(id);
+      const user = await service.getOneByID(id);
 
-      expect(users).toEqual({
+      expect(user).toEqual({
         id: '12345678',
         role: 'ADMIN',
         email: 'daenerys@gmail.com',
@@ -53,6 +57,7 @@ describe('user.service', () => {
       });
     });
   });
+
   describe('[POST] new valid user', () => {
     it('should create and return a user', async () => {
       const id = '98765431';
@@ -83,6 +88,7 @@ describe('user.service', () => {
       });
     });
   });
+
   describe('[PUT] update user that exists', () => {
     it('should update and return the user', async () => {
       const id = '12345678';
@@ -114,6 +120,7 @@ describe('user.service', () => {
       });
     });
   });
+
   describe('[DELETE] delete user that does not exist', () => {
     it('should throw UserNotFoundError', async () => {
       const id = 'non_existent_id';

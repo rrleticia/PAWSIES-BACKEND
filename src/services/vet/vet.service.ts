@@ -45,12 +45,24 @@ export class VetService {
         vet.email,
         vet.username
       );
-      if (userValidation)
+
+      if (userValidation && (userValidation.ownerID || userValidation.vetID)) {
+        if (userValidation.ownerID) {
+          throw new UserAlreadyExistsError(
+            'The user already exists in the database. The user is connected to an owner already.',
+            409
+          );
+        } else if (userValidation.ownerID) {
+          throw new UserAlreadyExistsError(
+            'The user already exists in the database. The user is connected to a vet already.',
+            409
+          );
+        }
         throw new UserAlreadyExistsError(
-          'The user already exists in the database.',
+          'The user already exists in the database. ',
           409
         );
-
+      }
       const validation = await this.repository.findOneByName(vet.name);
       if (validation)
         throw new VetAlreadyExistsError(

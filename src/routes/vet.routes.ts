@@ -24,14 +24,9 @@ router
   .get('/:id', authenticateTokenMiddleware, (request, response) => {
     return controller.getOneByID(request, response);
   })
-  .post(
-    '/',
-    validatorMiddleware('VetModel'),
-    authenticateTokenMiddleware,
-    (request, response) => {
-      return controller.create(request, response);
-    }
-  )
+  .post('/', validatorMiddleware('VetModel'), (request, response) => {
+    return controller.create(request, response);
+  })
   .put(
     '/',
     validatorMiddleware('VetModel'),
