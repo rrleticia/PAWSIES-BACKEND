@@ -40,7 +40,7 @@ describe('user.service', () => {
         role: 'ADMIN' as Role,
         email: 'daenerys@gmail.com',
         username: 'daenerys',
-        password: 'drogon123!',
+        password: 'Drogon123!',
         vetID: null,
         ownerID: null,
       };
@@ -61,6 +61,16 @@ describe('user.service', () => {
     });
   });
 
+  describe('[GET ONE] user by :id', () => {
+    it('should throw UserNotFoundError', async () => {
+      const id = 'non_existent_id';
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.getOneByID(id)).rejects.toThrow(UserNotFoundError);
+    });
+  });
+
   describe('[POST] new valid user', () => {
     it('should create and return a user', async () => {
       const id = '98765431';
@@ -71,9 +81,9 @@ describe('user.service', () => {
         role: 'ADMIN' as Role,
         email: 'rhaenyra@gmail.com',
         username: 'rhaenyra',
-        password: 'caraxys123!',
-        vetID: null,
-        ownerID: null,
+        password: 'Caraxys123!',
+        vetID: 'anID',
+        ownerID: 'anID',
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(null);
@@ -88,8 +98,8 @@ describe('user.service', () => {
         role: 'ADMIN' as Role,
         email: 'rhaenyra@gmail.com',
         username: 'rhaenyra',
-        vetID: null,
-        ownerID: null,
+        vetID: 'anID',
+        ownerID: 'anID',
       });
     });
   });
@@ -104,9 +114,9 @@ describe('user.service', () => {
         role: 'ADMIN' as Role,
         email: 'updated_email@gmail.com',
         username: 'updated_username',
-        password: 'new_password',
-        vetID: null,
-        ownerID: null,
+        password: 'Updated_passcode1!',
+        vetID: 'anID',
+        ownerID: 'anID',
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(updatedUser);
@@ -121,8 +131,8 @@ describe('user.service', () => {
         role: 'ADMIN' as Role,
         email: 'updated_email@gmail.com',
         username: 'updated_username',
-        vetID: null,
-        ownerID: null,
+        vetID: 'anID',
+        ownerID: 'anID',
       });
     });
   });

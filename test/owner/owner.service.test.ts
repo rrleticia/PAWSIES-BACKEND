@@ -43,7 +43,7 @@ describe('owner.service', () => {
         role: 'OWNER' as Role,
         email: 'daenerys@gmail.com',
         username: 'rhaenyra',
-        password: 'caraxys123!',
+        password: 'Caraxys123!',
         ownerID: ownerID,
         vetID: null,
       };
@@ -74,7 +74,7 @@ describe('owner.service', () => {
         email: 'rhaenyra@gmail.com',
         name: 'rhaenyra',
         username: 'rhaenyra',
-        password: 'caraxys123!',
+        password: 'Caraxys123!',
         ownerID: ownerID,
         vetID: null,
       };
@@ -83,7 +83,13 @@ describe('owner.service', () => {
 
       prisma.user.create.mockResolvedValueOnce(createdOwner);
 
-      const owner = await service.create(createdOwner);
+      const owner = await service.create({
+        id: id,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+      });
 
       expect(owner).toEqual({
         id: id,
@@ -107,7 +113,7 @@ describe('owner.service', () => {
         email: 'rhaenyra@gmail.com',
         name: 'rhaenyra',
         username: 'rhaenyra',
-        password: 'caraxys123!',
+        password: 'Caraxys123!',
         ownerID: ownerID,
         vetID: null,
       };
@@ -116,7 +122,13 @@ describe('owner.service', () => {
 
       prisma.user.update.mockResolvedValueOnce(updatedOwner);
 
-      const result = await service.update(updatedOwner);
+      const result = await service.update({
+        id: id,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+      });
 
       expect(result).toEqual({
         id: id,

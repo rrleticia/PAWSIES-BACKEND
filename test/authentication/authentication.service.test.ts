@@ -21,10 +21,10 @@ describe('user.service', () => {
   });
 
   describe('[POST LOGIN] login a user', () => {
-    it('should return a list of users', async () => {
+    it('should throw UserUnauthorizedError', async () => {
       const id = '12345678';
       const email = 'daenerys@gmail.com';
-      const password = 'drogon123!';
+      const password = 'Drogon123!';
 
       const user = {
         id: id,
@@ -39,7 +39,7 @@ describe('user.service', () => {
 
       prisma.user.findUnique.mockResolvedValueOnce(user);
 
-      await expect(service.login(email, '12362131278')).rejects.toThrow(
+      await expect(service.login(email, 'Drogon123!')).rejects.toThrow(
         UserUnauthorizedError
       );
     });

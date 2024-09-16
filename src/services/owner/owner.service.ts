@@ -4,10 +4,12 @@ import {
   UserAlreadyExistsError,
   UserPasswordFieldError,
   VetAlreadyExistsError,
+  OwnerValidationError,
 } from '../../errors';
 import { IOwnerRepository, IUserRepository, Owner } from '../../infra';
 import { UnknownError } from '../../shared';
 import bcrypt from 'bcrypt';
+import { schemaOwnerValidation } from '../validation';
 
 export class OwnerService {
   constructor(
@@ -42,9 +44,11 @@ export class OwnerService {
     }
   }
 
-  public async create(data: Owner): Promise<Owner> {
+  public async create(data: any): Promise<Owner> {
     try {
-      let owner = await this._hashPassword(data);
+      let owner = await schemaOwnerValidation(data);
+
+      owner = await this._hashPassword(owner);
 
       this._checkValidation(owner.email, owner.username);
 
@@ -54,6 +58,9 @@ export class OwnerService {
 
       return result;
     } catch (error) {
+      if (error instanceof OwnerValidationError) {
+        throw error;
+      }
       if (error instanceof UserPasswordFieldError) {
         throw error;
       }
@@ -73,19 +80,27 @@ export class OwnerService {
     }
   }
 
-  public async update(data: Owner): Promise<Owner> {
+  public async update(data: any): Promise<Owner> {
     try {
-      const validation = await this.repository.findOneByID(data.id);
+      let owner = await schemaOwnerValidation(data);
+
+      const validation = await this.repository.findOneByID(owner.id);
+
       if (!validation)
         throw new OwnerNotFoundError(
           'The owner could not be found in the database.',
           404
         );
-      let owner = data;
-      if (data.password) owner = await this._hashPassword(data);
+
+      if (owner.password) owner = await this._hashPassword(data);
+
       const result = await this.repository.update(owner.id, owner);
+
       return result;
     } catch (error) {
+      if (error instanceof OwnerValidationError) {
+        throw error;
+      }
       if (error instanceof UserPasswordFieldError) {
         throw error;
       }
@@ -99,12 +114,15 @@ export class OwnerService {
   public async delete(id: string): Promise<Owner> {
     try {
       const validation = await this.repository.findOneByID(id);
+
       if (!validation)
         throw new OwnerNotFoundError(
           'The owner could not be found in the database.',
           404
         );
+
       const result = await this.repository.delete(id);
+
       return result;
     } catch (error) {
       if (error instanceof OwnerNotFoundError) {

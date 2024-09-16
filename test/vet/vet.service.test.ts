@@ -43,8 +43,8 @@ describe('vet.service', () => {
         role: 'VET' as Role,
         email: 'daenerys@gmail.com',
         username: 'rhaenyra',
-        password: 'caraxys123!',
-        ownerID: null,
+        password: 'Caraxys123!',
+        ownerID: 'anID',
         vetID: vetID,
         vet: {
           id: vetID,
@@ -79,7 +79,7 @@ describe('vet.service', () => {
         role: 'VET' as Role,
         email: 'daenerys@gmail.com',
         username: 'rhaenyra',
-        password: 'caraxys123!',
+        password: 'Caraxys123!',
         ownerID: null,
         vetID: vetID,
         vet: {
@@ -96,10 +96,9 @@ describe('vet.service', () => {
         id: id,
         name: 'daenerys',
         specialty: 'CAT_DOG' as Specialty,
-        role: 'VET' as Role,
         email: 'daenerys@gmail.com',
         username: 'rhaenyra',
-        password: 'caraxys123!',
+        password: 'Caraxys123!',
       });
 
       expect(vet).toEqual({
@@ -125,7 +124,7 @@ describe('vet.service', () => {
         role: 'VET' as Role,
         email: 'daenerys@gmail.com',
         username: 'rhaenyra',
-        password: 'caraxys123!',
+        password: 'Caraxys123!',
         ownerID: null,
         vetID: vetID,
         vet: {
@@ -141,10 +140,9 @@ describe('vet.service', () => {
         id: id,
         name: 'daenerys',
         specialty: 'CAT_DOG' as Specialty,
-        role: 'VET' as Role,
         email: 'daenerys@gmail.com',
         username: 'rhaenyra',
-        password: 'caraxys123!',
+        password: 'Caraxys123!',
       });
 
       expect(result).toEqual({

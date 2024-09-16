@@ -1,6 +1,11 @@
-import { PetNotFoundError, PetAlreadyExistsError } from '../../errors';
+import {
+  PetNotFoundError,
+  PetAlreadyExistsError,
+  PetValidationError,
+} from '../../errors';
 import { IPetRepository, Pet } from '../../infra';
 import { UnknownError } from '../../shared';
+import { schemaPetValidation } from '../validation';
 
 export class PetService {
   constructor(private readonly repository: IPetRepository) {}
@@ -41,8 +46,9 @@ export class PetService {
     }
   }
 
-  public async create(pet: Pet): Promise<Pet> {
+  public async create(data: Pet): Promise<Pet> {
     try {
+      let pet = await schemaPetValidation(data);
       const validation = await this.repository.findOneByOwnerWithNameAndType(
         pet.ownerID,
         pet.name,
@@ -56,6 +62,9 @@ export class PetService {
       const result = await this.repository.save(pet);
       return result;
     } catch (error) {
+      if (error instanceof PetValidationError) {
+        throw error;
+      }
       if (error instanceof PetAlreadyExistsError) {
         throw error;
       }
@@ -63,8 +72,9 @@ export class PetService {
     }
   }
 
-  public async update(pet: Pet): Promise<Pet> {
+  public async update(data: Pet): Promise<Pet> {
     try {
+      let pet = await schemaPetValidation(data);
       const validation = await this.repository.findOneByID(pet.id);
       if (!validation)
         throw new PetNotFoundError(
@@ -74,6 +84,9 @@ export class PetService {
       const result = await this.repository.update(pet.id, pet);
       return result;
     } catch (error) {
+      if (error instanceof PetValidationError) {
+        throw error;
+      }
       if (error instanceof PetNotFoundError) {
         throw error;
       }

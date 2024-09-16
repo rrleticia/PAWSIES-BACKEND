@@ -2,9 +2,11 @@ import {
   AppointmentNotFoundError,
   AppointmentAlreadyExistsError,
   AppointmentStatusFieldError,
+  AppointmentValidationError,
 } from '../../errors';
 import { IAppointmentRepository, Appointment } from '../../infra';
 import { UnknownError } from '../../shared';
+import { _schemaAppointmentValidation } from '../validation';
 
 export class AppointmentService {
   constructor(private readonly repository: IAppointmentRepository) {}
@@ -47,8 +49,9 @@ export class AppointmentService {
     }
   }
 
-  public async create(appointment: Appointment): Promise<Appointment> {
+  public async create(data: Appointment): Promise<Appointment> {
     try {
+      let appointment = await _schemaAppointmentValidation(data);
       const validation =
         await this.repository.findAnyByVetAndOwnerWithDateAndHour(
           appointment.vetID,
@@ -64,6 +67,9 @@ export class AppointmentService {
       const result = await this.repository.save(appointment);
       return result;
     } catch (error) {
+      if (error instanceof AppointmentValidationError) {
+        throw error;
+      }
       if (error instanceof AppointmentAlreadyExistsError) {
         throw error;
       }
@@ -71,8 +77,9 @@ export class AppointmentService {
     }
   }
 
-  public async update(appointment: Appointment): Promise<Appointment> {
+  public async update(data: Appointment): Promise<Appointment> {
     try {
+      let appointment = await _schemaAppointmentValidation(data);
       const validation = await this.repository.findOneByID(appointment.id);
       if (!validation)
         throw new AppointmentNotFoundError(
@@ -82,6 +89,9 @@ export class AppointmentService {
       const result = await this.repository.update(appointment.id, appointment);
       return result;
     } catch (error) {
+      if (error instanceof AppointmentValidationError) {
+        throw error;
+      }
       if (error instanceof AppointmentNotFoundError) {
         throw error;
       }

@@ -34,6 +34,6 @@ export const UserModel = Joi.object().keys({
     .onlyLatinCharacters()
     .doesNotInclude(['password', '12345678', 'aaaaaaaa'])
     .required(),
-  vetId: Joi.string(),
-  ownerId: Joi.string(),
+  vetID: Joi.string(),
+  ownerID: Joi.string(),
 });

@@ -1,13 +1,17 @@
+import { ValidationError } from 'joi';
 import {
   VetNotFoundError,
   VetAlreadyExistsError,
   UserAlreadyExistsError,
   OwnerAlreadyExistsError,
   UserPasswordFieldError,
+  VetValidationError,
 } from '../../errors';
 import { IUserRepository, IVetRepository, Vet } from '../../infra';
+import { Validators } from '../../models';
 import { UnknownError } from '../../shared';
 import bcrypt from 'bcrypt';
+import { schemaVetValidation } from '../validation';
 
 export class VetService {
   constructor(
@@ -42,17 +46,23 @@ export class VetService {
     }
   }
 
-  public async create(data: Vet): Promise<Vet> {
+  public async create(data: any): Promise<Vet> {
     try {
-      let vet = await this._hashPassword(data);
+      let vet = await schemaVetValidation(data);
 
-      this._checkValidation(vet.email, vet.username);
+      vet = await this._hashPassword(vet);
+
+      await this._checkValidation(vet.email, vet.username);
 
       const result = await this.repository.save(vet);
 
       if (!result) throw new UnknownError('Internal Server Error.', 500);
+
       return result;
     } catch (error) {
+      if (error instanceof VetValidationError) {
+        throw error;
+      }
       if (error instanceof UserPasswordFieldError) {
         throw error;
       }
@@ -72,19 +82,27 @@ export class VetService {
     }
   }
 
-  public async update(data: Vet): Promise<Vet> {
+  public async update(data: any): Promise<Vet> {
     try {
-      const validation = await this.repository.findOneByID(data.id);
+      let vet = await schemaVetValidation(data);
+
+      const validation = await this.repository.findOneByID(vet.id);
+
       if (!validation)
         throw new VetNotFoundError(
           'The vet could not be found in the database.',
           404
         );
-      let vet = data;
-      if (data.password) vet = await this._hashPassword(data);
+
+      if (vet.password) vet = await this._hashPassword(vet);
+
       const result = await this.repository.update(vet.id, vet);
+
       return result;
     } catch (error) {
+      if (error instanceof VetValidationError) {
+        throw error;
+      }
       if (error instanceof UserPasswordFieldError) {
         throw error;
       }
@@ -113,8 +131,8 @@ export class VetService {
     }
   }
 
-  private async _hashPassword(owner: Vet): Promise<Vet> {
-    const password = owner.password;
+  private async _hashPassword(vet: Vet): Promise<Vet> {
+    const password = vet.password;
     if (!password)
       throw new UserPasswordFieldError(
         'Invalid input for password field of Vet.',
@@ -122,8 +140,8 @@ export class VetService {
       );
 
     const hashedPassword = await bcrypt.hash(password, 11);
-    owner.password = hashedPassword;
-    return owner;
+    vet.password = hashedPassword;
+    return vet;
   }
 
   private async _checkValidation(

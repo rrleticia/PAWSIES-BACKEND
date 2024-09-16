@@ -2,10 +2,12 @@ import {
   UserNotFoundError,
   UserAlreadyExistsError,
   UserPasswordFieldError,
+  UserValidationError,
 } from '../../errors';
 import { IUserRepository, User } from '../../infra';
 import { UnknownError } from '../../shared';
 import bcrypt from 'bcrypt';
+import { schemaUserValidation } from '../validation';
 
 export class UserService {
   constructor(private readonly repository: IUserRepository) {}
@@ -39,27 +41,13 @@ export class UserService {
     }
   }
 
-  public async create(user: User): Promise<User> {
+  public async create(data: User): Promise<User> {
     try {
-      const password = user.password;
-      if (!password)
-        throw new UserPasswordFieldError(
-          'Invalid input for password field of User.',
-          405
-        );
-      const hashedPassword = await bcrypt.hash(password, 11);
-      user.password = hashedPassword;
+      let user = await schemaUserValidation(data);
 
-      const validation = await this.repository.findOneByEmailOrUsername(
-        user.email,
-        user.username
-      );
+      user = await this._hashPassword(user);
 
-      if (validation)
-        throw new UserAlreadyExistsError(
-          'The user already exists in the database.',
-          409
-        );
+      await this._checkValidation(user.email, user.username);
 
       let result = await this.repository.save(user);
 
@@ -73,6 +61,9 @@ export class UserService {
 
       return result;
     } catch (error) {
+      if (error instanceof UserValidationError) {
+        throw error;
+      }
       if (error instanceof UserPasswordFieldError) {
         throw error;
       }
@@ -85,20 +76,27 @@ export class UserService {
     }
   }
 
-  public async update(user: User): Promise<User> {
+  public async update(data: User): Promise<User> {
     try {
+      let user = await schemaUserValidation(data);
+
       const validation = await this.repository.findOneByID(user.id);
+
       if (!validation)
         throw new UserNotFoundError(
           'The user could not be found in the database.',
           404
         );
+
       const result = await this.repository.update(user.id, user);
 
       delete result.password;
 
       return result;
     } catch (error) {
+      if (error instanceof UserValidationError) {
+        throw error;
+      }
       if (error instanceof UserNotFoundError) {
         throw error;
       } else throw new UnknownError('Internal Server Error.', 500);
@@ -108,6 +106,7 @@ export class UserService {
   public async delete(id: string): Promise<User> {
     try {
       const validation = await this.repository.findOneByID(id);
+
       if (!validation) {
         throw new UserNotFoundError(
           'The user could not be found in the database.',
@@ -124,6 +123,35 @@ export class UserService {
         throw error;
       }
       throw new UnknownError('Internal Server Error.', 500);
+    }
+  }
+
+  private async _hashPassword(user: User): Promise<User> {
+    const password = user.password;
+    if (!password)
+      throw new UserPasswordFieldError(
+        'Invalid input for password field of User.',
+        405
+      );
+
+    const hashedPassword = await bcrypt.hash(password, 11);
+    user.password = hashedPassword;
+    return user;
+  }
+
+  private async _checkValidation(
+    email: string,
+    username: string
+  ): Promise<void> {
+    const user = await this.repository.findOneByEmailOrUsername(
+      email,
+      username
+    );
+    if (user) {
+      throw new UserAlreadyExistsError(
+        'The user already exists in the database. ',
+        409
+      );
     }
   }
 }

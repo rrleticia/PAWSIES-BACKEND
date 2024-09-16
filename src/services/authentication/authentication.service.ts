@@ -1,4 +1,5 @@
 import {
+  LoginValidationError,
   UserNotFoundError,
   UserPasswordFieldError,
   UserUnauthorizedError,
@@ -7,6 +8,7 @@ import { IUserRepository, LoginUser, User } from '../../infra';
 import { getToken, UnknownError } from '../../shared';
 import bcrypt from 'bcrypt';
 import { sign } from 'jsonwebtoken';
+import { schemaLoginValidation } from '../validation';
 
 let refreshTokens = [] as string[];
 
@@ -18,6 +20,7 @@ export class AuthenticationService {
     password: string
   ): Promise<{ token: string; loggedUser: LoginUser }> {
     try {
+      await schemaLoginValidation({ email: email, password: password });
       const user = await this.repository.findOneByEmail(email);
       if (!user)
         throw new UserNotFoundError(
@@ -57,6 +60,9 @@ export class AuthenticationService {
 
       return { token: token, loggedUser: User };
     } catch (error) {
+      if (error instanceof LoginValidationError) {
+        throw error;
+      }
       if (error instanceof UserNotFoundError) {
         throw error;
       }
@@ -75,6 +81,7 @@ export class AuthenticationService {
     auth: string | undefined
   ): Promise<{ token: string | undefined; loggedUser: LoginUser | undefined }> {
     try {
+      await schemaLoginValidation({ email: email, token: auth });
       const user = await this.repository.findOneByEmail(email);
       if (!user)
         throw new UserNotFoundError(
@@ -94,6 +101,9 @@ export class AuthenticationService {
 
       return { token: undefined, loggedUser: undefined };
     } catch (error) {
+      if (error instanceof LoginValidationError) {
+        throw error;
+      }
       if (error instanceof UserNotFoundError) {
         throw error;
       }

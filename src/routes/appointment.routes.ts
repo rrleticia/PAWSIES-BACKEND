@@ -6,7 +6,7 @@ import {
 } from '../infra';
 import { AppointmentService } from '../services';
 import { AppointmentController } from '../controllers';
-import { authenticateTokenMiddleware, validatorMiddleware } from '../shared';
+import { authenticateTokenMiddleware } from '../shared';
 
 const repository: IAppointmentRepository = new PrismaAppointmentRepository(
   prisma
@@ -26,22 +26,12 @@ router
   .get('/:id', (request, response) => {
     return controller.getOneByID(request, response);
   })
-  .post(
-    '/',
-    validatorMiddleware('AppointmentModel'),
-    authenticateTokenMiddleware,
-    (request, response) => {
-      return controller.create(request, response);
-    }
-  )
-  .put(
-    '/',
-    validatorMiddleware('AppointmentModel'),
-    authenticateTokenMiddleware,
-    (request, response) => {
-      return controller.update(request, response);
-    }
-  )
+  .post('/', authenticateTokenMiddleware, (request, response) => {
+    return controller.create(request, response);
+  })
+  .put('/', authenticateTokenMiddleware, (request, response) => {
+    return controller.update(request, response);
+  })
   .put(
     '/:id/status/:status',
     authenticateTokenMiddleware,

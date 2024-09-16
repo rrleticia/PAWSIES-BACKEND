@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { IUserRepository, prisma, PrismaUserRepository } from '../infra';
 import { UserService } from '../services';
 import { UserController } from '../controllers';
-import { validatorMiddleware } from '../shared';
 
 const repository: IUserRepository = new PrismaUserRepository(prisma);
 const service = new UserService(repository);
@@ -17,10 +16,10 @@ router
   .get('/:id', (request, response) => {
     return controller.getOneByID(request, response);
   })
-  .post('/', validatorMiddleware('UserModel'), (request, response) => {
+  .post('/', (request, response) => {
     return controller.create(request, response);
   })
-  .put('/', validatorMiddleware('UserModel'), (request, response) => {
+  .put('/', (request, response) => {
     return controller.update(request, response);
   })
   .delete('/:id', (request, response) => {
