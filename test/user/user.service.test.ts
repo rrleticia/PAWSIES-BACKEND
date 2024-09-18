@@ -4,7 +4,7 @@ import {
   UserNotFoundError,
   UserValidationError,
 } from '../../src/errors';
-import { PrismaUserRepository } from '../../src/infra';
+import { IUserRepository, PrismaUserRepository } from '../../src/infra';
 import { UserService } from '../../src/services';
 import prisma from '../lib/__mocks__/prisma';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -12,7 +12,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 vi.mock('lib/prisma');
 
 describe('user.service', () => {
-  let repository: PrismaUserRepository;
+  let repository: IUserRepository;
   let service: UserService;
 
   beforeAll(() => {

@@ -3,13 +3,27 @@ import {
   AppointmentAlreadyExistsError,
   AppointmentStatusFieldError,
   AppointmentValidationError,
+  VetNotFoundError,
+  OwnerNotFoundError,
+  PetNotFoundError,
 } from '../../errors';
-import { IAppointmentRepository, Appointment } from '../../infra';
-import { UnknownError } from '../../shared';
+import {
+  IAppointmentRepository,
+  Appointment,
+  IOwnerRepository,
+  IPetRepository,
+  IVetRepository,
+} from '../../infra';
+import { UnknownError, validateDate } from '../../shared';
 import { _schemaAppointmentValidation } from '../validation';
 
 export class AppointmentService {
-  constructor(private readonly repository: IAppointmentRepository) {}
+  constructor(
+    private readonly repository: IAppointmentRepository,
+    private readonly ownerRepository: IOwnerRepository,
+    private readonly vetRepository: IVetRepository,
+    private readonly petRepository: IPetRepository
+  ) {}
 
   public async getAll(): Promise<Appointment[] | undefined> {
     try {
@@ -52,6 +66,15 @@ export class AppointmentService {
   public async create(data: Appointment): Promise<Appointment> {
     try {
       let appointment = await _schemaAppointmentValidation(data);
+
+      const validateDate = this._checkDate(appointment.date);
+
+      await this._checkOwner(appointment.ownerID);
+
+      await this._checkVet(appointment.vetID);
+
+      await this._checkPet(appointment.petID);
+
       const validation =
         await this.repository.findAnyByVetAndOwnerWithDateAndHour(
           appointment.vetID,
@@ -67,6 +90,15 @@ export class AppointmentService {
       const result = await this.repository.save(appointment);
       return result;
     } catch (error) {
+      if (error instanceof OwnerNotFoundError) {
+        throw error;
+      }
+      if (error instanceof VetNotFoundError) {
+        throw error;
+      }
+      if (error instanceof PetNotFoundError) {
+        throw error;
+      }
       if (error instanceof AppointmentValidationError) {
         throw error;
       }
@@ -80,15 +112,33 @@ export class AppointmentService {
   public async update(data: Appointment): Promise<Appointment> {
     try {
       let appointment = await _schemaAppointmentValidation(data);
+
+      const validateDate = this._checkDate(appointment.date);
+
       const validation = await this.repository.findOneByID(appointment.id);
       if (!validation)
         throw new AppointmentNotFoundError(
           'The Appointment could not be found in the database.',
           404
         );
+
+      await this._checkOwner(appointment.ownerID);
+      await this._checkVet(appointment.vetID);
+      await this._checkPet(appointment.petID);
+
       const result = await this.repository.update(appointment.id, appointment);
+
       return result;
     } catch (error) {
+      if (error instanceof OwnerNotFoundError) {
+        throw error;
+      }
+      if (error instanceof VetNotFoundError) {
+        throw error;
+      }
+      if (error instanceof PetNotFoundError) {
+        throw error;
+      }
       if (error instanceof AppointmentValidationError) {
         throw error;
       }
@@ -144,5 +194,41 @@ export class AppointmentService {
       }
       throw new UnknownError('Internal Server Error.', 500);
     }
+  }
+
+  private _checkDate(date: Date): void {
+    const valid = validateDate(date);
+    if (!valid)
+      throw new AppointmentValidationError(
+        'The date must not be older than the current date.',
+        405
+      );
+  }
+
+  private async _checkOwner(id: string): Promise<void> {
+    const owner = await this.ownerRepository.findOneByID(id);
+    if (!owner)
+      throw new OwnerNotFoundError(
+        'The owner provided for Appointment could not be found in the database.',
+        404
+      );
+  }
+
+  private async _checkVet(id: string): Promise<void> {
+    const vet = await this.vetRepository.findOneByID(id);
+    if (!vet)
+      throw new VetNotFoundError(
+        'The vet provided for Appointment could not be found in the database.',
+        404
+      );
+  }
+
+  private async _checkPet(id: string): Promise<void> {
+    const pet = await this.petRepository.findOneByID(id);
+    if (!pet)
+      throw new PetNotFoundError(
+        'The pet provided for Appointment could not be found in the database.',
+        404
+      );
   }
 }

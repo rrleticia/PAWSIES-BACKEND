@@ -93,7 +93,7 @@ export class OwnerService {
         );
 
       if (owner.password) owner = await this._hashPassword(owner);
-      
+
       const result = await this.repository.update(owner.id, owner);
 
       return result;
@@ -158,7 +158,7 @@ export class OwnerService {
         'The user already exists in the database. The user is connected to an owner already.',
         409
       );
-    if (user && user.ownerID)
+    if (user && user.vetID)
       throw new VetAlreadyExistsError(
         'The user already exists in the database. The user is connected to a vet already.',
         409

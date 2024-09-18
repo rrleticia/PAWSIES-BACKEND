@@ -4,7 +4,12 @@ import {
   OwnerNotFoundError,
   OwnerValidationError,
 } from '../../src/errors';
-import { PrismaOwnerRepository, PrismaUserRepository } from '../../src/infra';
+import {
+  IOwnerRepository,
+  IUserRepository,
+  PrismaOwnerRepository,
+  PrismaUserRepository,
+} from '../../src/infra';
 import { OwnerService } from '../../src/services';
 import prisma from '../lib/__mocks__/prisma';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -12,8 +17,8 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 vi.mock('lib/prisma');
 
 describe('owner.service', () => {
-  let userRepository: PrismaUserRepository;
-  let repository: PrismaOwnerRepository;
+  let userRepository: IUserRepository;
+  let repository: IOwnerRepository;
   let service: OwnerService;
 
   beforeAll(() => {
@@ -122,22 +127,12 @@ describe('owner.service', () => {
     it('should throw OwnerNotFoundError', async () => {
       const id = 'non_existent_id';
 
-      prisma.owner.findUnique.mockResolvedValueOnce(null);
-
-      await expect(service.getOneByID(id)).rejects.toThrow(OwnerNotFoundError);
-    });
-  });
-
-  describe('[GET ONE] owner by :id', () => {
-    it('should throw VetNotFoundError', async () => {
-      const id = 'non_existent_id';
-
       prisma.user.findUnique.mockResolvedValueOnce(null);
 
       await expect(service.getOneByID(id)).rejects.toThrow(OwnerNotFoundError);
     });
   });
-  
+
   describe('[POST] new valid owner', () => {
     it('should create and return a owner', async () => {
       const id = '98765431';
@@ -182,7 +177,7 @@ describe('owner.service', () => {
       const id = '98765431';
       const ownerID = '987654321';
 
-      const createdOwner = {
+      const existingOwner = {
         id: id,
         role: 'OWNER' as Role,
         email: 'rhaenyra@gmail.com',
@@ -193,7 +188,7 @@ describe('owner.service', () => {
         vetID: null,
       };
 
-      prisma.user.findUnique.mockResolvedValueOnce(createdOwner);
+      prisma.user.findUnique.mockResolvedValueOnce(existingOwner);
 
       await expect(
         service.create({

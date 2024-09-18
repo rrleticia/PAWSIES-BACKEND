@@ -41,6 +41,7 @@ export class PrismaVetRepository implements IVetRepository {
     const vet = await this.prisma.user.findUnique({
       where: {
         id: id,
+        role: getRoleEnum('VET'),
       },
       include: { vet: true },
     });

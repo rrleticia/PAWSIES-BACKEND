@@ -37,6 +37,7 @@ export class PrismaOwnerRepository implements IOwnerRepository {
     const owner = await this.prisma.user.findUnique({
       where: {
         id: id,
+        role: getRoleEnum('OWNER'),
       },
     });
 

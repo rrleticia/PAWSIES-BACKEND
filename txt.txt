@@ -1,0 +1,4 @@
+a sprint começou segunda-feira 16/08
+as sprints sempre duram 2 semanas.
+1. entender os problemas mais urgentes que as plataformas tem no ar.
+2. resolver esses problemas mais urgentes da plataforma.

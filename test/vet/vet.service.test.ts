@@ -1,9 +1,15 @@
 import { Role, Specialty } from '@prisma/client';
-import { VetNotFoundError } from '../../src/errors';
+import {
+  VetAlreadyExistsError,
+  VetNotFoundError,
+  VetValidationError,
+} from '../../src/errors';
 import {
   PrismaVetRepository,
   PrismaUserRepository,
   Owner,
+  IUserRepository,
+  IVetRepository,
 } from '../../src/infra';
 import { VetService } from '../../src/services';
 import prisma from '../lib/__mocks__/prisma';
@@ -12,8 +18,8 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 vi.mock('lib/prisma');
 
 describe('vet.service', () => {
-  let userRepository: PrismaUserRepository;
-  let repository: PrismaVetRepository;
+  let userRepository: IUserRepository;
+  let repository: IVetRepository;
   let service: VetService;
 
   beforeAll(() => {
@@ -127,7 +133,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[GET ONE] vet by :id not found', () => {
+  describe('[GET ONE] vet by :id', () => {
     it('should throw VetNotFoundError', async () => {
       const id = 'non_existent_id';
 
@@ -182,6 +188,392 @@ describe('vet.service', () => {
     });
   });
 
+  describe('[POST] new invalid vet', () => {
+    it('should throw VetAlreadyExistsError', async () => {
+      const id = '98765431';
+      const vetID = '123456789';
+
+      const existingVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+        vetID: vetID,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(existingVet);
+
+      await expect(
+        service.create({
+          id: id,
+          email: 'rhaenyra@gmail.com',
+          name: 'rhaenyra',
+          username: 'rhaenyra',
+          password: 'Caraxys123!',
+          specialty: 'CAT_DOG' as Specialty,
+        })
+      ).rejects.toThrow(VetAlreadyExistsError);
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('empty name: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: '',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('blank name: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: '     ',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('invalid role: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'NOT_ROLE' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('invalid empty email: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: '',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('invalid blank email: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: '     ',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('invalid email no @: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: 'rhaenyra.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('invalid email no domain: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: 'rhaenyra@gmail',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('invalid empty username: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: '',
+        password: 'Caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('invalid blank username: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: '    ',
+        password: 'Caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('invalid username min length: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'name',
+        password: 'Caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('invalid password no uppercase: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'caraxys123!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('invalid password no number: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys!',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
+  describe('[POST] new invalid vet', () => {
+    it('invalid password no special character: should throw VetValidationError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const invalidVet = {
+        id: id,
+        role: 'VET' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123',
+        vet: {
+          id: vetID,
+          specialty: 'CAT_DOG',
+        },
+        ownerID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(service.create(invalidVet)).rejects.toThrow(
+        VetValidationError
+      );
+    });
+  });
+
   describe('[PUT] update vet that exists', () => {
     it('should update and return the vet', async () => {
       const id = '12345678';
@@ -226,6 +618,25 @@ describe('vet.service', () => {
     });
   });
 
+  describe('[PUT] update vet that does not exist', () => {
+    it('should throw VetNotFoundError', async () => {
+      const id = '12345678';
+
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+
+      await expect(
+        service.update({
+          id: id,
+          name: 'daenerys',
+          specialty: 'CAT_DOG',
+          email: 'daenerys@gmail.com',
+          username: 'rhaenyra',
+          password: 'Caraxys123!',
+        })
+      ).rejects.toThrow(VetNotFoundError);
+    });
+  });
+
   describe('[DELETE] delete vet that exists', () => {
     it('should delete the vet with vet object', async () => {
       const id = '12345678';
@@ -251,14 +662,15 @@ describe('vet.service', () => {
 
       const result = await service.delete(id);
 
-      expect({
+      expect(result).toEqual({
         id: id,
         name: 'daenerys',
         role: 'VET' as Role,
         email: 'daenerys@gmail.com',
         username: 'rhaenyra',
         specialty: 'CAT_DOG' as Specialty,
-      }).toEqual(vet);
+        vetID: 'vetID',
+      });
     });
   });
 
