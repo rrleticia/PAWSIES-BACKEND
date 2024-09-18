@@ -22,6 +22,7 @@ export class VetService {
   public async getAll(): Promise<Vet[]> {
     try {
       const result = await this.repository.findAll();
+
       if (!result) throw new UnknownError('Internal Server Error.', 500);
       return result;
     } catch (error) {

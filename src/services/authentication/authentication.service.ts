@@ -81,7 +81,7 @@ export class AuthenticationService {
     auth: string | undefined
   ): Promise<{ token: string | undefined; loggedUser: LoginUser | undefined }> {
     try {
-      await schemaLoginValidation({ email: email, token: auth });
+      await schemaLoginValidation({ email: email, access_token: auth });
       const user = await this.repository.findOneByEmail(email);
       if (!user)
         throw new UserNotFoundError(

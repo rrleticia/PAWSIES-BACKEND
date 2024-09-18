@@ -50,7 +50,7 @@ export class OwnerService {
 
       owner = await this._hashPassword(owner);
 
-      this._checkValidation(owner.email, owner.username);
+      await this._checkValidation(owner.email, owner.username);
 
       const result = await this.repository.save(owner);
 
@@ -92,8 +92,8 @@ export class OwnerService {
           404
         );
 
-      if (owner.password) owner = await this._hashPassword(data);
-
+      if (owner.password) owner = await this._hashPassword(owner);
+      
       const result = await this.repository.update(owner.id, owner);
 
       return result;
@@ -153,22 +153,21 @@ export class OwnerService {
       email,
       username
     );
-    if (user && (user.ownerID || user.vetID)) {
-      if (user.ownerID) {
-        throw new OwnerAlreadyExistsError(
-          'The user already exists in the database. The user is connected to an owner already.',
-          409
-        );
-      } else if (user.ownerID) {
-        throw new VetAlreadyExistsError(
-          'The user already exists in the database. The user is connected to a vet already.',
-          409
-        );
-      }
+    if (user && user.ownerID)
+      throw new OwnerAlreadyExistsError(
+        'The user already exists in the database. The user is connected to an owner already.',
+        409
+      );
+    if (user && user.ownerID)
+      throw new VetAlreadyExistsError(
+        'The user already exists in the database. The user is connected to a vet already.',
+        409
+      );
+
+    if (user)
       throw new UserAlreadyExistsError(
         'The user already exists in the database. ',
         409
       );
-    }
   }
 }

@@ -19,7 +19,6 @@ export const LoginModel = Joi.object().keys({
     .minOfNumeric(1)
     .noWhiteSpaces()
     .onlyLatinCharacters()
-    .doesNotInclude(['password', '12345678', 'aaaaaaaa'])
-    .required(),
+    .doesNotInclude(['password', '12345678', 'aaaaaaaa']),
   access_token: [Joi.string(), Joi.number()],
 });

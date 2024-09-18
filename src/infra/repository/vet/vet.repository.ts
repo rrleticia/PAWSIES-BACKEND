@@ -29,9 +29,11 @@ export class PrismaVetRepository implements IVetRepository {
         vet.password,
         vet.vetID
       );
+
       delete parseVet.password;
       return parseVet;
     });
+
     return parseVets;
   }
 

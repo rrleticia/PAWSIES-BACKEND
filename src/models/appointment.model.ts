@@ -5,7 +5,7 @@ import joiDate from '@joi/date';
 const joi = coreJoi.extend(joiDate) as typeof coreJoi;
 
 export const AppointmentModel = Joi.object().keys({
-  id: Joi.string(),
+  id: Joi.string().trim().min(1),
   date: joi.date().format('DD/MM/YYYY').required(),
   hour: Joi.string()
     .pattern(new RegExp('[0-9][0-9][H,h]'))
@@ -38,9 +38,11 @@ export const AppointmentModel = Joi.object().keys({
     .required(),
   status: Joi.boolean().valid(true, false).required(),
   examination: Joi.string()
+    .trim()
+    .min(1)
     .valid('routine', 'urgent', 'surgery', 'ROUTINE', 'URGENT', 'SURGERY')
     .required(),
-  observations: Joi.string().required(),
+  observations: Joi.string().trim().min(1).required(),
   vetID: Joi.string().required(),
   petID: Joi.string().required(),
   ownerID: Joi.string().required(),

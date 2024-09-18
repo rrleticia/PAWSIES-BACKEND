@@ -159,12 +159,6 @@ export class PrismaUserRepository implements IUserRepository {
       },
     });
 
-    const userUsername = await this.prisma.user.findUnique({
-      where: {
-        username: username,
-      },
-    });
-
     if (userEmail) {
       const parseUser = new User(
         userEmail.id,
@@ -178,7 +172,15 @@ export class PrismaUserRepository implements IUserRepository {
       );
 
       return parseUser;
-    } else if (userUsername) {
+    }
+
+    const userUsername = await this.prisma.user.findUnique({
+      where: {
+        username: username,
+      },
+    });
+
+    if (userUsername) {
       const parseUser = new User(
         userUsername.id,
         userUsername.name,
@@ -191,6 +193,8 @@ export class PrismaUserRepository implements IUserRepository {
       );
 
       return parseUser;
-    } else return undefined;
+    }
+
+    return undefined;
   }
 }

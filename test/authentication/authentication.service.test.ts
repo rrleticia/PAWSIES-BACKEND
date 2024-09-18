@@ -47,12 +47,12 @@ describe('user.service', () => {
 
   describe('[POST LOGOUT] logout a user', () => {
     it('should throw UserNotFoundError', async () => {
-      const email = 'non_existent_email';
-      const token = 'non_existent_token';
+      const email = 'non_existent@email.com';
+      const access_token = 'non_existent_token';
 
       prisma.user.findUnique.mockResolvedValueOnce(null);
 
-      await expect(service.logout(email, token)).rejects.toThrow(
+      await expect(service.logout(email, access_token)).rejects.toThrow(
         UserNotFoundError
       );
     });
