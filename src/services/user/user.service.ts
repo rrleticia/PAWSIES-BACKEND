@@ -147,7 +147,7 @@ export class UserService {
       email,
       username
     );
-    if (user) {
+    if (user) { 
       throw new UserAlreadyExistsError(
         'The user already exists in the database. ',
         409

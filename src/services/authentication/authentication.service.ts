@@ -20,7 +20,11 @@ export class AuthenticationService {
     password: string
   ): Promise<{ token: string; loggedUser: LoginUser }> {
     try {
-      await schemaLoginValidation({ email: email, password: password });
+      await schemaLoginValidation({
+        email: email,
+        password: password,
+      });
+
       const user = await this.repository.findOneByEmail(email);
       if (!user)
         throw new UserNotFoundError(
@@ -35,6 +39,7 @@ export class AuthenticationService {
         );
 
       const isMatch = await bcrypt.compare(password, user.password);
+
       if (!isMatch) {
         throw new UserUnauthorizedError(
           'The user credentials are invalid.',

@@ -134,7 +134,6 @@ export class PetService {
 
   private async _checkOwner(id: string): Promise<void> {
     const owner = await this.ownerRepostiory.findOneByID(id);
-    console.log(owner);
     if (!owner)
       throw new OwnerNotFoundError(
         'The owner provided for Pet could not be found in the database.',
