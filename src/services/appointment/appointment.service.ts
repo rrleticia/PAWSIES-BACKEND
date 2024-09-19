@@ -63,11 +63,11 @@ export class AppointmentService {
     }
   }
 
-  public async create(data: Appointment): Promise<Appointment> {
+  public async create(data: any): Promise<Appointment> {
     try {
       let appointment = await _schemaAppointmentValidation(data);
 
-      const validateDate = this._checkDate(appointment.date);
+      this._checkDate(appointment.date);
 
       await this._checkOwner(appointment.ownerID);
 
@@ -82,11 +82,13 @@ export class AppointmentService {
           appointment.date,
           appointment.hour
         );
+
       if (validation)
         throw new AppointmentAlreadyExistsError(
           'The Appointment already exists in the database.',
           409
         );
+
       const result = await this.repository.save(appointment);
       return result;
     } catch (error) {
@@ -109,7 +111,7 @@ export class AppointmentService {
     }
   }
 
-  public async update(data: Appointment): Promise<Appointment> {
+  public async update(data: any): Promise<Appointment> {
     try {
       let appointment = await _schemaAppointmentValidation(data);
 

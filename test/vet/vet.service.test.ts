@@ -1,5 +1,7 @@
 import { Role, Specialty } from '@prisma/client';
 import {
+  OwnerAlreadyExistsError,
+  UserAlreadyExistsError,
   VetAlreadyExistsError,
   VetNotFoundError,
   VetValidationError,
@@ -143,7 +145,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new valid vet', () => {
+  describe('[CREATE] new valid vet', () => {
     it('should create and return a vet', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -188,7 +190,69 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
+    it('should throw UserAlreadyExistsError', async () => {
+      const id = '98765431';
+      const vetID = '123456789';
+
+      const existingUser = {
+        id: id,
+        role: 'ADMIN' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        ownerID: null,
+        vetID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(existingUser);
+
+      await expect(
+        service.create({
+          id: id,
+          email: 'rhaenyra@gmail.com',
+          name: 'rhaenyra',
+          username: 'rhaenyra',
+          password: 'Caraxys123!',
+          specialty: 'CAT_DOG' as Specialty,
+        })
+      ).rejects.toThrow(UserAlreadyExistsError);
+    });
+  });
+
+  describe('[CREATE] new invalid vet', () => {
+    it('should throw OwnerAlreadyExistsError', async () => {
+      const id = '98765431';
+      const ownerID = '123456789';
+
+      const existingOwner = {
+        id: id,
+        role: 'OWNER' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        ownerID: ownerID,
+        vetID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(existingOwner);
+
+      await expect(
+        service.create({
+          id: id,
+          email: 'rhaenyra@gmail.com',
+          name: 'rhaenyra',
+          username: 'rhaenyra',
+          password: 'Caraxys123!',
+          specialty: 'CAT_DOG' as Specialty,
+        })
+      ).rejects.toThrow(OwnerAlreadyExistsError);
+    });
+  });
+
+  describe('[CREATE] new invalid vet', () => {
     it('should throw VetAlreadyExistsError', async () => {
       const id = '98765431';
       const vetID = '123456789';
@@ -223,7 +287,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('empty name: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -250,7 +314,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('blank name: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -277,7 +341,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('invalid role: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -304,7 +368,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('invalid empty email: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -331,7 +395,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('invalid blank email: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -358,7 +422,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('invalid email no @: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -385,7 +449,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('invalid email no domain: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -412,7 +476,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('invalid empty username: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -439,7 +503,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('invalid blank username: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -466,7 +530,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('invalid username min length: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -493,7 +557,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('invalid password no uppercase: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -520,7 +584,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('invalid password no number: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';
@@ -547,7 +611,7 @@ describe('vet.service', () => {
     });
   });
 
-  describe('[POST] new invalid vet', () => {
+  describe('[CREATE] new invalid vet', () => {
     it('invalid password no special character: should throw VetValidationError', async () => {
       const id = '98765431';
       const vetID = '987654321';

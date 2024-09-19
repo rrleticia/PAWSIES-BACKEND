@@ -1,8 +1,10 @@
-import { Role } from '@prisma/client';
+import { Role, Specialty } from '@prisma/client';
 import {
   OwnerAlreadyExistsError,
   OwnerNotFoundError,
   OwnerValidationError,
+  UserAlreadyExistsError,
+  VetAlreadyExistsError,
 } from '../../src/errors';
 import {
   IOwnerRepository,
@@ -133,7 +135,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new valid owner', () => {
+  describe('[CREATE] new valid owner', () => {
     it('should create and return a owner', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -172,7 +174,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('should throw OwnerAlreadyExistsError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -202,7 +204,70 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
+    it('should throw VetAlreadyExistsError', async () => {
+      const id = '98765431';
+      const vetID = '987654321';
+
+      const existingVet = {
+        id: id,
+        role: 'OWNER' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        ownerID: null,
+        vetID: vetID,
+        vet: {
+          id: vetID,
+          specialty: 'CAT' as Specialty,
+        },
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(existingVet);
+
+      await expect(
+        service.create({
+          id: id,
+          email: 'rhaenyra@gmail.com',
+          name: 'rhaenyra',
+          username: 'rhaenyra',
+          password: 'Caraxys123!',
+        })
+      ).rejects.toThrow(VetAlreadyExistsError);
+    });
+  });
+
+  describe('[CREATE] new invalid owner', () => {
+    it('should throw UserAlreadyExistsError', async () => {
+      const id = '98765431';
+
+      const existingUSer = {
+        id: id,
+        role: 'OWNER' as Role,
+        email: 'rhaenyra@gmail.com',
+        name: 'rhaenyra',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        ownerID: null,
+        vetID: null,
+      };
+
+      prisma.user.findUnique.mockResolvedValueOnce(existingUSer);
+
+      await expect(
+        service.create({
+          id: id,
+          email: 'rhaenyra@gmail.com',
+          name: 'rhaenyra',
+          username: 'rhaenyra',
+          password: 'Caraxys123!',
+        })
+      ).rejects.toThrow(UserAlreadyExistsError);
+    });
+  });
+
+  describe('[CREATE] new invalid owner', () => {
     it('empty name: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -226,7 +291,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('blank name: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -250,7 +315,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('invalid role: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -274,7 +339,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('invalid empty email: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -298,7 +363,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('invalid blank email: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -322,7 +387,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('invalid email no @: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -346,7 +411,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('invalid email no domain: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -370,7 +435,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('invalid empty username: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -394,7 +459,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('invalid blank username: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -418,7 +483,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('invalid username min length: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -442,7 +507,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('invalid password no uppercase: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -466,7 +531,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('invalid password no number: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -490,7 +555,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[POST] new invalid owner', () => {
+  describe('[CREATE] new invalid owner', () => {
     it('invalid password no special character: should throw OwnerValidationError', async () => {
       const id = '98765431';
       const ownerID = '987654321';
@@ -514,7 +579,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[PUT] update owner that exists', () => {
+  describe('[UPDATE] update owner that exists', () => {
     it('should update and return the owner', async () => {
       const id = '12345678';
       const ownerID = '987654321';
@@ -553,7 +618,7 @@ describe('owner.service', () => {
     });
   });
 
-  describe('[PUT] update owner that does not exists', () => {
+  describe('[UPDATE] update owner that does not exists', () => {
     it('should throw OwnerNotFoundError', async () => {
       const id = '12345678';
 

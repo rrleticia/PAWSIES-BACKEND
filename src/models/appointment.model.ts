@@ -8,6 +8,7 @@ export const AppointmentModel = Joi.object().keys({
   id: Joi.string().trim().min(1),
   date: joi.date().format('DD/MM/YYYY').required(),
   hour: Joi.string()
+    .uppercase()
     .pattern(new RegExp('[0-9][0-9][H,h]'))
     .valid(
       '00H',

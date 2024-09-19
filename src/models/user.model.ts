@@ -8,6 +8,7 @@ export const UserModel = Joi.object().keys({
   name: Joi.string().trim().min(1).required(),
   role: Joi.string()
     .trim()
+    .uppercase()
     .valid(
       'ANONYMOUS',
       'ADMIN',

@@ -22,6 +22,8 @@ describe('pet.service', () => {
   let ownerRepository: IOwnerRepository;
   let service: PetService;
 
+  const ownerID = '091327246';
+
   beforeAll(() => {
     repository = new PrismaPetRepository(prisma);
     ownerRepository = new PrismaOwnerRepository(prisma);
@@ -54,8 +56,6 @@ describe('pet.service', () => {
 
   describe('[GET ALL] list of pets', () => {
     it('should return a list of pets', async () => {
-      const ownerID = '091327246';
-
       const petsList = [
         {
           id: '1',
@@ -111,7 +111,6 @@ describe('pet.service', () => {
   describe('[GET ONE] pet by :id', () => {
     it('should return a pet by id', async () => {
       const id = '12345678';
-      const ownerID = '091327246';
 
       const getPet = {
         id: id,
@@ -142,10 +141,9 @@ describe('pet.service', () => {
     });
   });
 
-  describe('[POST] new valid pet', () => {
+  describe('[CREATE] new valid pet', () => {
     it('should create and return a pet', async () => {
       const id = '12345678';
-      const ownerID = '091327246';
 
       const createdPet = {
         id: id,
@@ -168,10 +166,8 @@ describe('pet.service', () => {
     });
   });
 
-  describe('[POST] new invalid pet', () => {
+  describe('[CREATE] new invalid pet', () => {
     it('should throw PetAlreadyExistsError', async () => {
-      const ownerID = '091327246';
-
       const existingPet = {
         id: '1',
         name: 'pet',
@@ -191,10 +187,9 @@ describe('pet.service', () => {
     });
   });
 
-  describe('[POST] new invalid pet', () => {
-    it(' empty name: should throw PetValidationError', async () => {
-      const ownerID = '091327246';
-      const petData = {
+  describe('[CREATE] new invalid pet', () => {
+    it('empty name: should throw PetValidationError', async () => {
+      const createdPet = {
         id: '1',
         name: '',
         breed: 'breed',
@@ -205,14 +200,15 @@ describe('pet.service', () => {
         ownerID: ownerID,
       };
 
-      await expect(service.create(petData)).rejects.toThrow(PetValidationError);
+      await expect(service.create(createdPet)).rejects.toThrow(
+        PetValidationError
+      );
     });
   });
 
-  describe('[POST] new invalid pet', () => {
+  describe('[CREATE] new invalid pet', () => {
     it('blank name: should throw PetValidationError', async () => {
-      const ownerID = '091327246';
-      const petData = {
+      const createdPet = {
         id: '1',
         name: '    ',
         breed: 'breed',
@@ -223,14 +219,15 @@ describe('pet.service', () => {
         ownerID: ownerID,
       };
 
-      await expect(service.create(petData)).rejects.toThrow(PetValidationError);
+      await expect(service.create(createdPet)).rejects.toThrow(
+        PetValidationError
+      );
     });
   });
 
-  describe('[POST] new invalid pet', () => {
+  describe('[CREATE] new invalid pet', () => {
     it(' empty breed: should throw PetValidationError', async () => {
-      const ownerID = '091327246';
-      const petData = {
+      const createdPet = {
         id: '1',
         name: 'pet name',
         breed: '',
@@ -241,14 +238,15 @@ describe('pet.service', () => {
         ownerID: ownerID,
       };
 
-      await expect(service.create(petData)).rejects.toThrow(PetValidationError);
+      await expect(service.create(createdPet)).rejects.toThrow(
+        PetValidationError
+      );
     });
   });
 
-  describe('[POST] new invalid pet', () => {
+  describe('[CREATE] new invalid pet', () => {
     it('blank breed: should throw PetValidationError', async () => {
-      const ownerID = '091327246';
-      const petData = {
+      const createdPet = {
         id: '1',
         name: 'pet name',
         breed: '    ',
@@ -259,14 +257,15 @@ describe('pet.service', () => {
         ownerID: ownerID,
       };
 
-      await expect(service.create(petData)).rejects.toThrow(PetValidationError);
+      await expect(service.create(createdPet)).rejects.toThrow(
+        PetValidationError
+      );
     });
   });
 
-  describe('[POST] new invalid pet', () => {
+  describe('[CREATE] new invalid pet', () => {
     it(' empty color: should throw PetValidationError', async () => {
-      const ownerID = '091327246';
-      const petData = {
+      const createdPet = {
         id: '1',
         name: 'pet name',
         breed: 'breed',
@@ -277,14 +276,15 @@ describe('pet.service', () => {
         ownerID: ownerID,
       };
 
-      await expect(service.create(petData)).rejects.toThrow(PetValidationError);
+      await expect(service.create(createdPet)).rejects.toThrow(
+        PetValidationError
+      );
     });
   });
 
-  describe('[POST] new invalid pet', () => {
+  describe('[CREATE] new invalid pet', () => {
     it('blank color: should throw PetValidationError', async () => {
-      const ownerID = '091327246';
-      const petData = {
+      const createdPet = {
         id: '1',
         name: 'pet name',
         breed: 'breed',
@@ -295,14 +295,15 @@ describe('pet.service', () => {
         ownerID: ownerID,
       };
 
-      await expect(service.create(petData)).rejects.toThrow(PetValidationError);
+      await expect(service.create(createdPet)).rejects.toThrow(
+        PetValidationError
+      );
     });
   });
 
-  describe('[POST] new invalid pet', () => {
+  describe('[CREATE] new invalid pet', () => {
     it('invalid type: should throw PetValidationError for', async () => {
-      const ownerID = '091327246';
-      const petData = {
+      const createdPet = {
         id: '1',
         name: 'pet',
         breed: 'breed',
@@ -313,14 +314,15 @@ describe('pet.service', () => {
         ownerID: ownerID,
       };
 
-      await expect(service.create(petData)).rejects.toThrow(PetValidationError);
+      await expect(service.create(createdPet)).rejects.toThrow(
+        PetValidationError
+      );
     });
   });
 
-  describe('[POST] new invalid pet', () => {
+  describe('[CREATE] new invalid pet', () => {
     it('should throw PetValidationError for invalid age', async () => {
-      const ownerID = '091327246';
-      const petData = {
+      const createdPet = {
         id: '1',
         name: 'pet',
         breed: 'breed',
@@ -331,14 +333,15 @@ describe('pet.service', () => {
         ownerID: ownerID,
       };
 
-      await expect(service.create(petData)).rejects.toThrow(PetValidationError);
+      await expect(service.create(createdPet)).rejects.toThrow(
+        PetValidationError
+      );
     });
   });
 
-  describe('[POST] new invalid pet', () => {
+  describe('[CREATE] new invalid pet', () => {
     it('should throw PetValidationError for invalid weight', async () => {
-      const ownerID = '091327246';
-      const petData = {
+      const createdPet = {
         id: '1',
         name: 'pet',
         breed: 'breed',
@@ -349,13 +352,15 @@ describe('pet.service', () => {
         ownerID: ownerID,
       };
 
-      await expect(service.create(petData)).rejects.toThrow(PetValidationError);
+      await expect(service.create(createdPet)).rejects.toThrow(
+        PetValidationError
+      );
     });
   });
 
-  describe('[POST] new invalid pet', () => {
+  describe('[CREATE] new invalid pet', () => {
     it('ownerID invalid: should throw OwnerNotFoundError', async () => {
-      const petData = {
+      const createdPet = {
         id: '1',
         name: 'pet',
         breed: 'breed',
@@ -365,18 +370,19 @@ describe('pet.service', () => {
         type: 'CAT' as PetType,
         ownerID: '4',
       };
-      
+
       vi.restoreAllMocks();
       prisma.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.create(petData)).rejects.toThrow(OwnerNotFoundError);
+      await expect(service.create(createdPet)).rejects.toThrow(
+        OwnerNotFoundError
+      );
     });
   });
 
-  describe('[PUT] update pet that exists', () => {
+  describe('[UPDATE] update pet that exists', () => {
     it('should update and return the pet', async () => {
       const id = '12345678';
-      const ownerID = '091327246';
 
       const updatedpet = {
         id: id,
@@ -399,7 +405,7 @@ describe('pet.service', () => {
     });
   });
 
-  describe('[PUT] update pet that does not exists', () => {
+  describe('[UPDATE] update pet that does not exists', () => {
     it('should throw PetNotFoundError', async () => {
       const id = '12345678';
 
@@ -423,7 +429,6 @@ describe('pet.service', () => {
   describe('[DELETE] delete pet that does exist', () => {
     it('should delete and return the pet', async () => {
       const id = '12345678';
-      const ownerID = '987654321';
 
       const deletedPet = {
         id: id,
