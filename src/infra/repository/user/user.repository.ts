@@ -12,16 +12,7 @@ export class PrismaUserRepository implements IUserRepository {
     if (!users) return undefined;
 
     const parseUsers = users.map((user) => {
-      return new User(
-        user.id,
-        user.name,
-        user.role,
-        user.username,
-        user.email,
-        user.password,
-        user.vetID,
-        user.ownerID
-      );
+      return User.mapFromPrisma(user);
     });
     return parseUsers;
   }
@@ -35,16 +26,7 @@ export class PrismaUserRepository implements IUserRepository {
 
     if (!user) return undefined;
 
-    const parseUser = new User(
-      user.id,
-      user.name,
-      user.role,
-      user.username,
-      user.email,
-      user.password,
-      user.vetID,
-      user.ownerID
-    );
+    const parseUser = User.mapFromPrisma(user);
 
     return parseUser;
   }
@@ -64,16 +46,7 @@ export class PrismaUserRepository implements IUserRepository {
       },
     });
 
-    const parseUser = new User(
-      createdUser.id,
-      createdUser.name,
-      createdUser.role,
-      createdUser.username,
-      createdUser.email,
-      createdUser.password,
-      createdUser.vetID,
-      createdUser.ownerID
-    );
+    const parseUser = User.mapFromPrisma(createdUser);
 
     return parseUser;
   }
@@ -91,16 +64,7 @@ export class PrismaUserRepository implements IUserRepository {
       },
     });
 
-    const parseUser = new User(
-      updatedUser.id,
-      updatedUser.name,
-      updatedUser.role,
-      updatedUser.username,
-      updatedUser.email,
-      updatedUser.password,
-      updatedUser.vetID,
-      updatedUser.ownerID
-    );
+    const parseUser = User.mapFromPrisma(updatedUser);
 
     return parseUser;
   }
@@ -112,16 +76,7 @@ export class PrismaUserRepository implements IUserRepository {
       },
     });
 
-    const parseUser = new User(
-      user.id,
-      user.name,
-      user.role,
-      user.username,
-      user.email,
-      user.password,
-      user.vetID,
-      user.ownerID
-    );
+    const parseUser = User.mapFromPrisma(user);
 
     return parseUser;
   }
@@ -135,16 +90,7 @@ export class PrismaUserRepository implements IUserRepository {
 
     if (!user) return undefined;
 
-    const parseUser = new User(
-      user.id,
-      user.name,
-      user.role,
-      user.username,
-      user.email,
-      user.password,
-      user.vetID,
-      user.ownerID
-    );
+    const parseUser = User.mapFromPrisma(user);
 
     return parseUser;
   }
@@ -160,16 +106,7 @@ export class PrismaUserRepository implements IUserRepository {
     });
 
     if (userEmail) {
-      const parseUser = new User(
-        userEmail.id,
-        userEmail.name,
-        userEmail.role,
-        userEmail.username,
-        userEmail.email,
-        userEmail.password,
-        userEmail.vetID,
-        userEmail.ownerID
-      );
+      const parseUser = User.mapFromPrisma(userEmail);
 
       return parseUser;
     }
@@ -181,17 +118,7 @@ export class PrismaUserRepository implements IUserRepository {
     });
 
     if (userUsername) {
-      const parseUser = new User(
-        userUsername.id,
-        userUsername.name,
-        userUsername.role,
-        userUsername.username,
-        userUsername.email,
-        userUsername.password,
-        userUsername.vetID,
-        userUsername.ownerID
-      );
-
+      const parseUser = User.mapFromPrisma(userUsername);
       return parseUser;
     }
 

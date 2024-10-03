@@ -12,6 +12,9 @@ describe('user.service', () => {
   let repository: PrismaUserRepository;
   let service: AuthenticationService;
 
+  const createdAt = new Date();
+  const updatedAt = new Date();
+
   beforeAll(() => {
     repository = new PrismaUserRepository(prisma);
     service = new AuthenticationService(repository);
@@ -55,6 +58,8 @@ describe('user.service', () => {
         password: hashedPassword,
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(user);
@@ -94,6 +99,8 @@ describe('user.service', () => {
         password: hashedPassword,
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(user);
@@ -132,6 +139,8 @@ describe('user.service', () => {
         password: hashedPassword,
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(user);

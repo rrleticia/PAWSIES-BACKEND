@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { IPetRepository } from '.';
 import { Pet } from '../../entities';
-import { getPetTypeEnum, getSpecialtyEnum } from '../../../shared';
+import { getPetTypeEnum } from '../../../shared';
 
 export class PrismaPetRepository implements IPetRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -11,16 +11,7 @@ export class PrismaPetRepository implements IPetRepository {
     if (!pets) return undefined;
 
     const parsePets = pets.map((pet) => {
-      return new Pet(
-        pet.id,
-        pet.name,
-        pet.breed,
-        pet.color,
-        pet.age,
-        pet.weight,
-        pet.type,
-        pet.ownerID
-      );
+      return Pet.mapFromPrisma(pet);
     });
 
     return parsePets;
@@ -36,16 +27,7 @@ export class PrismaPetRepository implements IPetRepository {
     if (!pets) return undefined;
 
     const parsePets = pets.map((pet) => {
-      return new Pet(
-        pet.id,
-        pet.name,
-        pet.breed,
-        pet.color,
-        pet.age,
-        pet.weight,
-        pet.type,
-        pet.ownerID
-      );
+      return Pet.mapFromPrisma(pet);
     });
 
     return parsePets;
@@ -60,16 +42,7 @@ export class PrismaPetRepository implements IPetRepository {
 
     if (!pet) return undefined;
 
-    const parsePets = new Pet(
-      pet.id,
-      pet.name,
-      pet.breed,
-      pet.color,
-      pet.age,
-      pet.weight,
-      pet.type,
-      pet.ownerID
-    );
+    const parsePets = Pet.mapFromPrisma(pet);
 
     return parsePets;
   }
@@ -82,21 +55,12 @@ export class PrismaPetRepository implements IPetRepository {
         color: pet.color,
         age: pet.age,
         weight: pet.weight,
-        type: pet.type,
+        type: getPetTypeEnum(pet.type),
         ownerID: pet.ownerID,
       },
     });
 
-    const parsePet = new Pet(
-      createdPet.id,
-      createdPet.name,
-      createdPet.breed,
-      createdPet.color,
-      createdPet.age,
-      createdPet.weight,
-      createdPet.type,
-      createdPet.ownerID
-    );
+    const parsePet = Pet.mapFromPrisma(createdPet);
 
     return parsePet;
   }
@@ -117,16 +81,7 @@ export class PrismaPetRepository implements IPetRepository {
       },
     });
 
-    const parsePet = new Pet(
-      updatedPet.id,
-      updatedPet.name,
-      updatedPet.breed,
-      updatedPet.color,
-      updatedPet.age,
-      updatedPet.weight,
-      updatedPet.type,
-      updatedPet.ownerID
-    );
+    const parsePet = Pet.mapFromPrisma(updatedPet);
 
     return parsePet;
   }
@@ -138,16 +93,7 @@ export class PrismaPetRepository implements IPetRepository {
       },
     });
 
-    const parsePet = new Pet(
-      pet.id,
-      pet.name,
-      pet.breed,
-      pet.color,
-      pet.age,
-      pet.weight,
-      pet.type,
-      pet.ownerID
-    );
+    const parsePet = Pet.mapFromPrisma(pet);
 
     return parsePet;
   }
@@ -167,16 +113,7 @@ export class PrismaPetRepository implements IPetRepository {
 
     if (!pet) return undefined;
 
-    const parsePet = new Pet(
-      pet.id,
-      pet.name,
-      pet.breed,
-      pet.color,
-      pet.age,
-      pet.weight,
-      pet.type,
-      pet.ownerID
-    );
+    const parsePet = Pet.mapFromPrisma(pet);
 
     return parsePet;
   }

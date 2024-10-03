@@ -19,16 +19,7 @@ export class PrismaVetRepository implements IVetRepository {
     if (!vets) return undefined;
 
     const parseVets = vets.map((vet) => {
-      let parseVet = new Vet(
-        vet.id,
-        vet.name,
-        vet.vet!.specialty,
-        vet.role,
-        vet.username,
-        vet.email,
-        vet.password,
-        vet.vetID
-      );
+      const parseVet = Vet.mapFromPrisma(vet, vet.vet!);
 
       delete parseVet.password;
       return parseVet;
@@ -48,16 +39,7 @@ export class PrismaVetRepository implements IVetRepository {
 
     if (!vet) return undefined;
 
-    const parseVet = new Vet(
-      vet.id,
-      vet.name,
-      vet.vet!.specialty,
-      vet.role,
-      vet.username,
-      vet.email,
-      vet.password,
-      vet.vetID
-    );
+    const parseVet = Vet.mapFromPrisma(vet, vet.vet!);
 
     delete parseVet.password;
     return parseVet;
@@ -84,16 +66,7 @@ export class PrismaVetRepository implements IVetRepository {
 
     if (!createdVet) return undefined;
 
-    const parseVet = new Vet(
-      createdVet.id,
-      createdVet.name,
-      createdVet.vet!.specialty,
-      createdVet.role,
-      createdVet.username,
-      createdVet.email,
-      createdVet.password,
-      createdVet.vetID
-    );
+    const parseVet = Vet.mapFromPrisma(createdVet, createdVet.vet!);
 
     delete parseVet.password;
     return parseVet;
@@ -118,16 +91,7 @@ export class PrismaVetRepository implements IVetRepository {
       include: { vet: true },
     });
 
-    const parseVet = new Vet(
-      updatedVet.id,
-      updatedVet.name,
-      updatedVet.vet!.specialty,
-      updatedVet.role,
-      updatedVet.username,
-      updatedVet.email,
-      updatedVet.password,
-      updatedVet.vetID
-    );
+    const parseVet = Vet.mapFromPrisma(updatedVet, updatedVet.vet!);
 
     delete parseVet.password;
     return parseVet;
@@ -141,16 +105,7 @@ export class PrismaVetRepository implements IVetRepository {
       include: { vet: true },
     });
 
-    const parseVet = new Vet(
-      vet.id,
-      vet.name,
-      vet.vet!.specialty,
-      vet.role,
-      vet.username,
-      vet.email,
-      vet.password,
-      vet.vetID
-    );
+    const parseVet = Vet.mapFromPrisma(vet, vet.vet!);
 
     delete parseVet.password;
     return parseVet;

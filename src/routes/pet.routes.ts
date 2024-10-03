@@ -1,11 +1,18 @@
 import { Router } from 'express';
-import { IPetRepository, prisma, PrismaPetRepository } from '../infra';
+import {
+  IOwnerRepository,
+  IPetRepository,
+  prisma,
+  PrismaOwnerRepository,
+  PrismaPetRepository,
+} from '../infra';
 import { PetService } from '../services';
 import { PetController } from '../controllers';
 import { authenticateTokenMiddleware } from '../shared';
 
 const repository: IPetRepository = new PrismaPetRepository(prisma);
-const service = new PetService(repository);
+const ownerRepository: IOwnerRepository = new PrismaOwnerRepository(prisma);
+const service = new PetService(repository, ownerRepository);
 const controller = new PetController(service);
 
 const router = Router();

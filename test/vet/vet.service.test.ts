@@ -24,6 +24,9 @@ describe('vet.service', () => {
   let repository: IVetRepository;
   let service: VetService;
 
+  const createdAt = new Date();
+  const updatedAt = new Date();
+
   beforeAll(() => {
     userRepository = new PrismaUserRepository(prisma);
     repository = new PrismaVetRepository(prisma);
@@ -57,6 +60,8 @@ describe('vet.service', () => {
           ownerID: null,
           vetID: 'vet123',
           vet: { id: 'vet123', specialty: 'CAT' as Specialty },
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
         {
           id: '2',
@@ -69,6 +74,8 @@ describe('vet.service', () => {
           ownerID: null,
           vetID: 'vet456',
           vet: { id: 'vet456', specialty: 'DOG' as Specialty },
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
       ];
 
@@ -85,6 +92,8 @@ describe('vet.service', () => {
           email: 'john@example.com',
           username: 'john_doe',
           vetID: 'vet123',
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
         {
           id: '2',
@@ -94,6 +103,8 @@ describe('vet.service', () => {
           email: 'jane@example.com',
           username: 'jane_doe',
           vetID: 'vet456',
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
       ]);
     });
@@ -117,6 +128,8 @@ describe('vet.service', () => {
           id: vetID,
           specialty: 'CAT_DOG' as Specialty,
         },
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(getvet);
@@ -131,6 +144,8 @@ describe('vet.service', () => {
         email: 'daenerys@gmail.com',
         username: 'rhaenyra',
         vetID: vetID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });
@@ -163,6 +178,8 @@ describe('vet.service', () => {
           id: vetID,
           specialty: 'CAT_DOG' as Specialty,
         },
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(null);
@@ -186,6 +203,8 @@ describe('vet.service', () => {
         email: 'daenerys@gmail.com',
         username: 'rhaenyra',
         vetID: vetID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });
@@ -204,6 +223,8 @@ describe('vet.service', () => {
         password: 'Caraxys123!',
         ownerID: null,
         vetID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(existingUser);
@@ -235,6 +256,8 @@ describe('vet.service', () => {
         password: 'Caraxys123!',
         ownerID: ownerID,
         vetID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(existingOwner);
@@ -270,6 +293,8 @@ describe('vet.service', () => {
         },
         ownerID: null,
         vetID: vetID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(existingVet);
@@ -656,6 +681,8 @@ describe('vet.service', () => {
           id: vetID,
           specialty: 'CAT_DOG' as Specialty,
         },
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
       prisma.user.findUnique.mockResolvedValueOnce(updatedvet);
 
@@ -678,6 +705,8 @@ describe('vet.service', () => {
         email: 'daenerys@gmail.com',
         username: 'rhaenyra',
         vetID: vetID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });
@@ -718,6 +747,8 @@ describe('vet.service', () => {
           id: 'vetID',
           specialty: 'CAT_DOG',
         },
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(deletedVet);
@@ -734,6 +765,8 @@ describe('vet.service', () => {
         username: 'rhaenyra',
         specialty: 'CAT_DOG' as Specialty,
         vetID: 'vetID',
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });

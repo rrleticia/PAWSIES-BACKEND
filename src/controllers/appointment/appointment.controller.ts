@@ -45,7 +45,7 @@ export class AppointmentController {
     response: Response
   ): Promise<Response> {
     const id = request.params.id;
-    const status = parseBoolean(request.params.status);
+    const status = request.params.status;
     const result = await this.service.updateStatus(id, status);
     return response.status(201).json(result);
   }

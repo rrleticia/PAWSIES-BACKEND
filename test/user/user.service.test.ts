@@ -15,6 +15,9 @@ describe('user.service', () => {
   let repository: IUserRepository;
   let service: UserService;
 
+  const createdAt = new Date();
+  const updatedAt = new Date();
+
   beforeAll(() => {
     repository = new PrismaUserRepository(prisma);
     service = new UserService(repository);
@@ -46,6 +49,8 @@ describe('user.service', () => {
           password: 'Drogon123!',
           vetID: null,
           ownerID: null,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
         {
           id: '2',
@@ -56,6 +61,8 @@ describe('user.service', () => {
           password: 'Drogon123!',
           vetID: null,
           ownerID: null,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
       ];
       prisma.user.findMany.mockResolvedValueOnce(usersList);
@@ -71,6 +78,8 @@ describe('user.service', () => {
           username: 'daenerys',
           vetID: null,
           ownerID: null,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
         {
           id: '2',
@@ -80,6 +89,8 @@ describe('user.service', () => {
           username: 'daenerys',
           vetID: null,
           ownerID: null,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
       ]);
     });
@@ -98,6 +109,8 @@ describe('user.service', () => {
         password: 'Drogon123!',
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(getUser);
@@ -112,6 +125,8 @@ describe('user.service', () => {
         username: 'daenerys',
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });
@@ -149,13 +164,24 @@ describe('user.service', () => {
         password: 'Caraxys123!',
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(null);
 
       prisma.user.create.mockResolvedValueOnce(createdUser);
 
-      const user = await service.create(createdUser);
+      const user = await service.create({
+        id: id,
+        name: 'name',
+        role: 'ADMIN' as Role,
+        email: 'rhaenyra@gmail.com',
+        username: 'rhaenyra',
+        password: 'Caraxys123!',
+        vetID: null,
+        ownerID: null,
+      });
 
       expect(user).toEqual({
         id: id,
@@ -165,6 +191,8 @@ describe('user.service', () => {
         username: 'rhaenyra',
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });
@@ -182,13 +210,24 @@ describe('user.service', () => {
         password: 'Caraxys123!',
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(createdUser);
 
-      await expect(service.create(createdUser)).rejects.toThrow(
-        UserAlreadyExistsError
-      );
+      await expect(
+        service.create({
+          id: id,
+          name: 'name',
+          role: 'ADMIN' as Role,
+          email: 'rhaenyra@gmail.com',
+          username: 'rhaenyra',
+          password: 'Caraxys123!',
+          vetID: null,
+          ownerID: null,
+        })
+      ).rejects.toThrow(UserAlreadyExistsError);
     });
   });
 
@@ -504,13 +543,24 @@ describe('user.service', () => {
         password: 'Updated_passcode1!',
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(updatedUser);
 
       prisma.user.update.mockResolvedValueOnce(updatedUser);
 
-      const result = await service.update(updatedUser);
+      const result = await service.update({
+        id: id,
+        name: 'name',
+        role: 'ADMIN' as Role,
+        email: 'updated_email@gmail.com',
+        username: 'updated_username',
+        password: 'Updated_passcode1!',
+        vetID: null,
+        ownerID: null,
+      });
 
       expect(result).toEqual({
         id: id,
@@ -520,6 +570,8 @@ describe('user.service', () => {
         username: 'updated_username',
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });
@@ -558,6 +610,8 @@ describe('user.service', () => {
         password: 'Updated_passcode1!',
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(deletedUser);
@@ -574,6 +628,8 @@ describe('user.service', () => {
         username: 'updated_username',
         vetID: null,
         ownerID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });

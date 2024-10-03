@@ -1,8 +1,14 @@
 import { Router } from 'express';
 import {
   IAppointmentRepository,
+  IOwnerRepository,
+  IPetRepository,
+  IVetRepository,
   prisma,
   PrismaAppointmentRepository,
+  PrismaOwnerRepository,
+  PrismaPetRepository,
+  PrismaVetRepository,
 } from '../infra';
 import { AppointmentService } from '../services';
 import { AppointmentController } from '../controllers';
@@ -11,7 +17,20 @@ import { authenticateTokenMiddleware } from '../shared';
 const repository: IAppointmentRepository = new PrismaAppointmentRepository(
   prisma
 );
-const service = new AppointmentService(repository);
+
+const ownerRepository: IOwnerRepository = new PrismaOwnerRepository(prisma);
+
+const vetRepository: IVetRepository = new PrismaVetRepository(prisma);
+
+const petRepository: IPetRepository = new PrismaPetRepository(prisma);
+
+const service = new AppointmentService(
+  repository,
+  ownerRepository,
+  vetRepository,
+  petRepository
+);
+
 const controller = new AppointmentController(service);
 
 const router = Router();

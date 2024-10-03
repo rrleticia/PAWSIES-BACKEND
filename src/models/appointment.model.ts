@@ -37,11 +37,51 @@ export const AppointmentModel = Joi.object().keys({
       '24H'
     )
     .required(),
-  status: Joi.boolean().valid(true, false).required(),
+  status: Joi.string()
+    .trim()
+    .min(1)
+    .valid(
+      'scheduled',
+      'SCHEDULED',
+      'confirmed',
+      'CONFIRMED',
+      'rescheduled',
+      'RESCHEDULED',
+      'cancelled',
+      'CANCELLED',
+      'completed',
+      'COMPLETED',
+      'no_show',
+      'NO_SHOW',
+      'in_progress',
+      'IN_PROGRESS'
+    )
+    .required(),
   examination: Joi.string()
     .trim()
     .min(1)
-    .valid('routine', 'urgent', 'surgery', 'ROUTINE', 'URGENT', 'SURGERY')
+    .valid(
+      'check_up',
+      'CHECK_UP',
+      'follow_up',
+      'FOLLOW_UP',
+      'routine',
+      'ROUTINE',
+      'urgent',
+      'URGENT',
+      'emergency',
+      'EMERGENCY',
+      'lab_tests',
+      'LAB_TESTS',
+      'x_ray',
+      'X_RAY',
+      'ultrasound',
+      'ULTRASOUND',
+      'surgery',
+      'SURGERY',
+      'vaccination',
+      'VACCINATION'
+    )
     .required(),
   observations: Joi.string().trim().min(1).required(),
   vetID: Joi.string().required(),

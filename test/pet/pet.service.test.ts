@@ -23,6 +23,8 @@ describe('pet.service', () => {
   let service: PetService;
 
   const ownerID = '091327246';
+  const createdAt = new Date();
+  const updatedAt = new Date();
 
   beforeAll(() => {
     repository = new PrismaPetRepository(prisma);
@@ -41,6 +43,8 @@ describe('pet.service', () => {
       password: 'Caraxys123!',
       ownerID: '091327246',
       vetID: null,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     });
   });
 
@@ -66,6 +70,8 @@ describe('pet.service', () => {
           weight: 12,
           type: 'CAT' as PetType,
           ownerID: ownerID,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
         {
           id: '2',
@@ -76,6 +82,8 @@ describe('pet.service', () => {
           weight: 12,
           type: 'CAT' as PetType,
           ownerID: ownerID,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
       ];
 
@@ -93,6 +101,8 @@ describe('pet.service', () => {
           weight: 12,
           type: 'CAT' as PetType,
           ownerID: ownerID,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
         {
           id: '2',
@@ -103,6 +113,8 @@ describe('pet.service', () => {
           weight: 12,
           type: 'CAT' as PetType,
           ownerID: ownerID,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
       ]);
     });
@@ -121,6 +133,8 @@ describe('pet.service', () => {
         weight: 12,
         type: 'CAT' as PetType,
         ownerID: ownerID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.pet.findUnique.mockResolvedValueOnce(getPet);
@@ -154,13 +168,24 @@ describe('pet.service', () => {
         weight: 12,
         type: 'CAT' as PetType,
         ownerID: ownerID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.pet.findUnique.mockResolvedValueOnce(null);
 
       prisma.pet.create.mockResolvedValueOnce(createdPet);
 
-      const pet = await service.create(createdPet);
+      const pet = await service.create({
+        id: id,
+        name: 'pet',
+        breed: 'breed',
+        color: 'color',
+        age: 12,
+        weight: 12,
+        type: 'CAT' as PetType,
+        ownerID: ownerID,
+      });
 
       expect(pet).toEqual(createdPet);
     });
@@ -177,13 +202,24 @@ describe('pet.service', () => {
         weight: 12,
         type: 'CAT' as PetType,
         ownerID: ownerID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.pet.findFirst.mockResolvedValueOnce(existingPet);
 
-      await expect(service.create(existingPet)).rejects.toThrow(
-        PetAlreadyExistsError
-      );
+      await expect(
+        service.create({
+          id: '1',
+          name: 'pet',
+          breed: 'breed',
+          color: 'color',
+          age: 12,
+          weight: 12,
+          type: 'CAT' as PetType,
+          ownerID: ownerID,
+        })
+      ).rejects.toThrow(PetAlreadyExistsError);
     });
   });
 
@@ -393,13 +429,24 @@ describe('pet.service', () => {
         weight: 12,
         type: 'CAT' as PetType,
         ownerID: ownerID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.pet.findUnique.mockResolvedValueOnce(updatedpet);
 
       prisma.pet.update.mockResolvedValueOnce(updatedpet);
 
-      const result = await service.update(updatedpet);
+      const result = await service.update({
+        id: id,
+        name: 'pet',
+        breed: 'breed',
+        color: 'color',
+        age: 12,
+        weight: 12,
+        type: 'CAT' as PetType,
+        ownerID: ownerID,
+      });
 
       expect(result).toEqual(updatedpet);
     });
@@ -439,6 +486,8 @@ describe('pet.service', () => {
         weight: 12,
         type: 'CAT' as PetType,
         ownerID: '091327246',
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.pet.findUnique.mockResolvedValueOnce(deletedPet);

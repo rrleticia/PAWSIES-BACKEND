@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { Role, User as PrismaUser } from '@prisma/client';
 
 export class User {
   public readonly id: string;
@@ -9,6 +9,8 @@ export class User {
   public password?: string;
   public readonly vetID: string | null;
   public readonly ownerID: string | null;
+  public readonly createdAt?: Date | null;
+  public readonly updatedAt?: Date | null;
 
   constructor(
     id: string,
@@ -18,7 +20,9 @@ export class User {
     email: string,
     password: string,
     vetID: string | null,
-    ownerID: string | null
+    ownerID: string | null,
+    createdAt: Date | null,
+    updatedAt: Date | null
   ) {
     this.id = id;
     this.name = name;
@@ -28,5 +32,22 @@ export class User {
     this.password = password;
     this.vetID = vetID;
     this.ownerID = ownerID;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  public static mapFromPrisma(prismaUser: PrismaUser): User {
+    return new User(
+      prismaUser.id,
+      prismaUser.name,
+      prismaUser.role,
+      prismaUser.username,
+      prismaUser.email,
+      prismaUser.password,
+      prismaUser.vetID,
+      prismaUser.ownerID,
+      prismaUser.createdAt,
+      prismaUser.updatedAt
+    );
   }
 }

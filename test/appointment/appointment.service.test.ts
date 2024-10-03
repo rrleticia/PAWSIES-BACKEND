@@ -1,4 +1,10 @@
-import { Examination, PetType, Role, Specialty } from '@prisma/client';
+import {
+  AppointmentStatus,
+  Examination,
+  PetType,
+  Role,
+  Specialty,
+} from '@prisma/client';
 import {
   AppointmentAlreadyExistsError,
   AppointmentNotFoundError,
@@ -30,6 +36,9 @@ describe('appointment.service', () => {
   let petRepository: IPetRepository;
   let service: AppointmentService;
 
+  const createdAt = new Date();
+  const updatedAt = new Date();
+
   beforeAll(() => {
     repository = new PrismaAppointmentRepository(prisma);
     ownerRepository = new PrismaOwnerRepository(prisma);
@@ -56,6 +65,8 @@ describe('appointment.service', () => {
           password: 'Caraxys123!',
           ownerID: '3',
           vetID: null,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         });
       } else if (query.where.id === '1') {
         return Promise.resolve({
@@ -71,6 +82,8 @@ describe('appointment.service', () => {
             id: '1',
             specialty: 'CAT_DOG' as Specialty,
           },
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         });
       }
       return Promise.resolve(null);
@@ -84,6 +97,8 @@ describe('appointment.service', () => {
       weight: 12,
       type: 'CAT' as PetType,
       ownerID: '3',
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     });
   });
 
@@ -106,23 +121,27 @@ describe('appointment.service', () => {
           id: '1',
           date: new Date(dateString),
           hour: '10H',
-          status: false,
+          status: 'COMPLETED' as AppointmentStatus,
           examination: 'ROUTINE' as Examination,
           observations: 'Some observations',
           vetID: '1',
           petID: '2',
           ownerID: '3',
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
         {
           id: '2',
           date: new Date(dateString),
           hour: '10H',
-          status: false,
+          status: 'COMPLETED' as AppointmentStatus,
           examination: 'ROUTINE' as Examination,
           observations: 'Some observations',
           vetID: '1',
           petID: '2',
           ownerID: '3',
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
       ];
 
@@ -143,12 +162,14 @@ describe('appointment.service', () => {
         id: id,
         date: new Date(dateString),
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
         petID: '2',
         ownerID: '3',
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.appointment.findUnique.mockResolvedValueOnce(getAppointment);
@@ -179,12 +200,14 @@ describe('appointment.service', () => {
         id: id,
         date: new Date('23/09/2025'),
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
         petID: '2',
         ownerID: '3',
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.appointment.findUnique.mockResolvedValueOnce(null);
@@ -195,7 +218,7 @@ describe('appointment.service', () => {
         id: id,
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -215,12 +238,14 @@ describe('appointment.service', () => {
         id: '12345678',
         date: new Date('23/09/2025'),
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
         petID: '2',
         ownerID: '3',
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.appointment.findFirst.mockImplementation((query): any => {
@@ -230,24 +255,28 @@ describe('appointment.service', () => {
             id: '12345678',
             date: new Date('23/09/2025'),
             hour: '10H',
-            status: false,
+            status: 'COMPLETED' as AppointmentStatus,
             examination: 'ROUTINE' as Examination,
             observations: 'Some observations',
             vetID: '1',
             petID: '2',
             ownerID: '3',
+            createdAt: createdAt,
+            updatedAt: updatedAt,
           });
         } else if (query!.where!.vetID === '1') {
           return Promise.resolve({
             id: '12345678',
             date: new Date('23/09/2025'),
             hour: '10H',
-            status: false,
+            status: 'COMPLETED' as AppointmentStatus,
             examination: 'ROUTINE' as Examination,
             observations: 'Some observations',
             vetID: '1',
             petID: '2',
             ownerID: '3',
+            createdAt: createdAt,
+            updatedAt: updatedAt,
           });
         }
 
@@ -261,7 +290,7 @@ describe('appointment.service', () => {
           id: '12345678',
           date: '23/09/2025',
           hour: '10H',
-          status: false,
+          status: 'COMPLETED' as AppointmentStatus,
           examination: 'ROUTINE' as Examination,
           observations: 'Some observations',
           vetID: '1',
@@ -278,7 +307,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -298,7 +327,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '     ',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -318,7 +347,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23-09-2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -338,7 +367,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '21/09/2021',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -358,7 +387,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23/09/2025',
         hour: '',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -378,7 +407,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23/09/2025',
         hour: '25H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -398,7 +427,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: '' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -418,7 +447,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'INVALID_EXAM' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -438,7 +467,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: '',
         vetID: '1',
@@ -458,7 +487,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '',
@@ -478,7 +507,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -498,7 +527,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -518,7 +547,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -561,7 +590,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -602,7 +631,7 @@ describe('appointment.service', () => {
         id: '12345678',
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -661,12 +690,14 @@ describe('appointment.service', () => {
         id: id,
         date: new Date('23/09/2025'),
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
         petID: '2',
         ownerID: '3',
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.appointment.findUnique.mockResolvedValueOnce(updatedAppointment);
@@ -677,7 +708,7 @@ describe('appointment.service', () => {
         id: id,
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -697,7 +728,7 @@ describe('appointment.service', () => {
         id: id,
         date: '23/09/2025',
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
@@ -721,12 +752,14 @@ describe('appointment.service', () => {
         id: id,
         date: new Date('23/09/2025'),
         hour: '10H',
-        status: false,
+        status: 'COMPLETED' as AppointmentStatus,
         examination: 'ROUTINE' as Examination,
         observations: 'Some observations',
         vetID: '1',
         petID: '2',
         ownerID: '3',
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.appointment.findUnique.mockResolvedValueOnce(deletedAppointment);

@@ -18,15 +18,7 @@ export class PrismaOwnerRepository implements IOwnerRepository {
     if (!owners) return undefined;
 
     const parseOwners = owners.map((owner) => {
-      let parseOwner = new Owner(
-        owner.id,
-        owner.name,
-        owner.role,
-        owner.username,
-        owner.email,
-        owner.password,
-        owner.ownerID
-      );
+      let parseOwner = Owner.mapFromPrisma(owner);
       delete parseOwner.password;
       return parseOwner;
     });
@@ -43,15 +35,7 @@ export class PrismaOwnerRepository implements IOwnerRepository {
 
     if (!owner) return undefined;
 
-    const parseOwner = new Owner(
-      owner.id,
-      owner.name,
-      owner.role,
-      owner.username,
-      owner.email,
-      owner.password,
-      owner.ownerID
-    );
+    const parseOwner = Owner.mapFromPrisma(owner);
     delete parseOwner.password;
     return parseOwner;
   }
@@ -73,15 +57,7 @@ export class PrismaOwnerRepository implements IOwnerRepository {
 
     if (!createdOwner) return undefined;
 
-    const parseOwner = new Owner(
-      createdOwner.id,
-      createdOwner.name,
-      createdOwner.role,
-      createdOwner.username,
-      createdOwner.email,
-      createdOwner.password,
-      createdOwner.ownerID
-    );
+    const parseOwner = Owner.mapFromPrisma(createdOwner);
     delete parseOwner.password;
     return parseOwner;
   }
@@ -101,15 +77,7 @@ export class PrismaOwnerRepository implements IOwnerRepository {
       include: { owner: true },
     });
 
-    const parseOwner = new Owner(
-      updatedOwner.id,
-      updatedOwner.name,
-      updatedOwner.role,
-      updatedOwner.username,
-      updatedOwner.email,
-      updatedOwner.password,
-      updatedOwner.ownerID
-    );
+    const parseOwner = Owner.mapFromPrisma(updatedOwner);
     delete parseOwner.password;
     return parseOwner;
   }
@@ -122,15 +90,7 @@ export class PrismaOwnerRepository implements IOwnerRepository {
       include: { owner: true },
     });
 
-    const parseOwner = new Owner(
-      owner.id,
-      owner.name,
-      owner.role,
-      owner.username,
-      owner.email,
-      owner.password,
-      owner.ownerID
-    );
+    const parseOwner = Owner.mapFromPrisma(owner);
     delete parseOwner.password;
     return parseOwner;
   }

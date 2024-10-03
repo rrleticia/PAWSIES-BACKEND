@@ -23,6 +23,9 @@ describe('owner.service', () => {
   let repository: IOwnerRepository;
   let service: OwnerService;
 
+  const createdAt = new Date();
+  const updatedAt = new Date();
+
   beforeAll(() => {
     userRepository = new PrismaUserRepository(prisma);
     repository = new PrismaOwnerRepository(prisma);
@@ -55,6 +58,8 @@ describe('owner.service', () => {
           username: 'john_doe',
           ownerID: 'vet123',
           vetID: null,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
         {
           id: '2',
@@ -65,6 +70,8 @@ describe('owner.service', () => {
           username: 'jane_doe',
           ownerID: 'vet456',
           vetID: null,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
       ];
 
@@ -78,9 +85,10 @@ describe('owner.service', () => {
           name: 'john',
           role: 'OWNER' as Role,
           email: 'john@example.com',
-
           username: 'john_doe',
           ownerID: 'vet123',
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
         {
           id: '2',
@@ -89,6 +97,8 @@ describe('owner.service', () => {
           email: 'jane@example.com',
           username: 'jane_doe',
           ownerID: 'vet456',
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         },
       ]);
     });
@@ -108,6 +118,8 @@ describe('owner.service', () => {
         password: 'Caraxys123!',
         ownerID: ownerID,
         vetID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(getOwner);
@@ -121,6 +133,8 @@ describe('owner.service', () => {
         email: 'daenerys@gmail.com',
         username: 'rhaenyra',
         ownerID: ownerID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });
@@ -149,6 +163,8 @@ describe('owner.service', () => {
         password: 'Caraxys123!',
         ownerID: ownerID,
         vetID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(null);
@@ -170,6 +186,8 @@ describe('owner.service', () => {
         name: 'rhaenyra',
         username: 'rhaenyra',
         ownerID: ownerID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });
@@ -188,6 +206,8 @@ describe('owner.service', () => {
         password: 'Caraxys123!',
         ownerID: ownerID,
         vetID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(existingOwner);
@@ -222,6 +242,8 @@ describe('owner.service', () => {
           id: vetID,
           specialty: 'CAT' as Specialty,
         },
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(existingVet);
@@ -251,6 +273,8 @@ describe('owner.service', () => {
         password: 'Caraxys123!',
         ownerID: null,
         vetID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(existingUSer);
@@ -593,6 +617,8 @@ describe('owner.service', () => {
         password: 'Caraxys123!',
         ownerID: ownerID,
         vetID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(updatedOwner);
@@ -614,6 +640,8 @@ describe('owner.service', () => {
         name: 'rhaenyra',
         username: 'rhaenyra',
         ownerID: ownerID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });
@@ -650,6 +678,8 @@ describe('owner.service', () => {
         password: 'Caraxys123!',
         ownerID: ownerID,
         vetID: null,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       };
 
       prisma.user.findUnique.mockResolvedValueOnce(deletedOwner);
@@ -665,6 +695,8 @@ describe('owner.service', () => {
         name: 'rhaenyra',
         username: 'rhaenyra',
         ownerID: ownerID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
       });
     });
   });

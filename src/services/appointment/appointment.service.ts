@@ -153,7 +153,7 @@ export class AppointmentService {
 
   public async updateStatus(
     id: string,
-    status: boolean | undefined
+    status: string | undefined
   ): Promise<Appointment> {
     try {
       const validation = await this.repository.findOneByID(id);
