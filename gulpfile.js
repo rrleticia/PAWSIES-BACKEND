@@ -7,17 +7,17 @@ const gulp = require('gulp'),
   nodemon = require('gulp-nodemon');
 
 // TSLINT
-gulp.task('ts-lint', () => {
-  const config = { formatter: 'verbose' };
-  return gulp
-    .src(['src/**/*.ts'])
-    .pipe(tslint(config))
-    .pipe(
-      tslint.report({
-        reportLimit: 0,
-      })
-    );
-});
+// gulp.task('ts-lint', () => {
+//   const config = { formatter: 'verbose' };
+//   return gulp
+//     .src(['src/**/*.ts'])
+//     .pipe(tslint(config))
+//     .pipe(
+//       tslint.report({
+//         reportLimit: 0,
+//       })
+//     );
+// });
 
 // COPY FILES
 gulp.task('copy-files', () => {
@@ -27,7 +27,7 @@ gulp.task('copy-files', () => {
 
 // WATCH
 gulp.task('watch', (done) => {
-  gulp.watch('./**/*.ts',);
+  gulp.watch('./**/*.ts');
   nodemon({
     script: 'dist/src/server.js',
     tasks: ['build'],
@@ -51,36 +51,30 @@ gulp.task('watch', (done) => {
 // BUILD DEFAULT
 gulp.task(
   'build',
-  gulp.series(
-    [
-      'ts-lint',
-      'copy-files',
-    ],
-    function compiler() {
-      const tsProject = ts.createProject('tsconfig.json', {
-        typescript: require('typescript'),
+  gulp.series(['copy-files'], function compiler() {
+    const tsProject = ts.createProject('tsconfig.json', {
+      typescript: require('typescript'),
+    });
+    return tsProject
+      .src()
+      .pipe(tsProject())
+      .js.pipe(gulp.dest('dist'))
+      .on('error', (err) => {
+        console.error('Build error:', err.message);
+        // process.exit(1)
       });
-      return tsProject
-        .src()
-        .pipe(tsProject())
-        .js.pipe(gulp.dest('dist'))
-        .on('error', (err) => {
-          console.error('Build error:', err.message);
-          // process.exit(1)
-        });
-    }
-  )
+  })
 );
 
 // BUILD DEV
 gulp.task('dev', gulp.series(['build', 'watch']));
 
 // START
-// gulp.task('start', function (done) {
-//   nodemon({
-//     script: 'server.js',
-//     ext: 'js html',
-//     env: { NODE_ENV: 'development' },
-//     done: done,
-//   });
-// });
+gulp.task('start', function (done) {
+  nodemon({
+    script: 'server.js',
+    ext: 'js html',
+    env: { NODE_ENV: 'development' },
+    done: done,
+  });
+});

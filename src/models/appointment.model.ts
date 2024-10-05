@@ -5,7 +5,7 @@ import joiDate from '@joi/date';
 const joi = coreJoi.extend(joiDate) as typeof coreJoi;
 
 export const AppointmentModel = Joi.object().keys({
-  id: Joi.string().trim().min(1),
+  id: Joi.string().trim().min(1).allow(''),
   date: joi.date().format('DD/MM/YYYY').required(),
   hour: Joi.string()
     .uppercase()
@@ -87,4 +87,6 @@ export const AppointmentModel = Joi.object().keys({
   vetID: Joi.string().required(),
   petID: Joi.string().required(),
   ownerID: Joi.string().required(),
+  createdAt: Joi.date(),
+  updatedAt: Joi.date(),
 });

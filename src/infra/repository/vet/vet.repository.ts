@@ -81,7 +81,7 @@ export class PrismaVetRepository implements IVetRepository {
         name: vet.name,
         username: vet.username,
         email: vet.email,
-        password: vet.password,
+        password: vet.password || undefined,
         vet: {
           create: {
             specialty: getSpecialtyEnum(vet.specialty),

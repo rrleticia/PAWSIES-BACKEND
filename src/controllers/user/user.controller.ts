@@ -19,13 +19,13 @@ export class UserController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const user = request.body.value;
+    const user = request.body;
     const result = await this.service.create(user);
     return response.status(201).json(result);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const user = request.body.value;
+    const user = request.body;
     const result = await this.service.update(user);
     return response.status(201).json(result);
   }

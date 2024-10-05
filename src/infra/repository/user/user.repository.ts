@@ -60,7 +60,7 @@ export class PrismaUserRepository implements IUserRepository {
         username: user.username,
         role: getRoleEnum(user.role),
         email: user.email,
-        password: user.password,
+        password: user.password || undefined,
       },
     });
 

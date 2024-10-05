@@ -2,7 +2,9 @@ import {
   AppointmentStatus,
   Examination,
   Appointment as PrismaAppointment,
+  Pet as PrismaPet,
 } from '@prisma/client';
+import { Pet } from './pet.entity';
 
 export class Appointment {
   public readonly id: string;
@@ -16,6 +18,7 @@ export class Appointment {
   public readonly ownerID: string;
   public readonly createdAt?: Date | null;
   public readonly updatedAt?: Date | null;
+  public readonly pet: Pet;
 
   constructor(
     id: string,
@@ -28,7 +31,8 @@ export class Appointment {
     petID: string,
     ownerID: string,
     createdAt: Date | null,
-    updatedAt: Date | null
+    updatedAt: Date | null,
+    pet: Pet
   ) {
     this.id = id;
     this.date = date;
@@ -41,10 +45,12 @@ export class Appointment {
     this.ownerID = ownerID;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.pet = pet;
   }
 
   public static mapFromPrisma(
-    prismaAppointment: PrismaAppointment
+    prismaAppointment: PrismaAppointment,
+    prismaPet: PrismaPet
   ): Appointment {
     return new Appointment(
       prismaAppointment.id,
@@ -57,7 +63,8 @@ export class Appointment {
       prismaAppointment.petID,
       prismaAppointment.ownerID,
       prismaAppointment.createdAt,
-      prismaAppointment.updatedAt
+      prismaAppointment.updatedAt,
+      Pet.mapFromPrisma(prismaPet)
     );
   }
 }

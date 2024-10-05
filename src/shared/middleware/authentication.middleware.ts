@@ -9,19 +9,33 @@ export const authenticateTokenMiddleware = (
   next: NextFunction
 ) => {
   const authHeader = request.headers['authorization'];
-  const token = authHeader;
+  const token = authHeader as string;
 
   if (!token) {
-    throw new UserUnauthorizedError('The user credentials are invalid.', 401);
+    return next(
+      new UserUnauthorizedError(
+        'The user credentials are invalid. No token provided.',
+        401
+      )
+    );
   }
 
   const SECRET_KEY = getToken();
 
   jwt.verify(token, SECRET_KEY, (error: any, user: any) => {
     if (error) {
-      next(new UserForbiddenError('The user credentials are invalid.', 403));
+      console.log(error);
+      return next(
+        new UserForbiddenError(
+          'The user credentials are invalid. There was an error verifying the token.',
+          403
+        )
+      );
     }
-    request.body.user = user;
+
+    // request.body.user = user;
+    // delete request.body.user;
+
     next();
   });
 };

@@ -50,7 +50,7 @@ export class PetService {
     }
   }
 
-  public async create(data: Pet): Promise<Pet> {
+  public async create(data: any): Promise<Pet> {
     try {
       let pet = await schemaPetValidation(data);
 
@@ -84,7 +84,7 @@ export class PetService {
     }
   }
 
-  public async update(data: Pet): Promise<Pet> {
+  public async update(data: any): Promise<Pet> {
     try {
       let pet = await schemaPetValidation(data);
 

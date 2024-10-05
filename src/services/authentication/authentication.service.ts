@@ -18,7 +18,7 @@ export class AuthenticationService {
   public async login(
     email: string,
     password: string
-  ): Promise<{ token: string; loggedUser: LoginUser }> {
+  ): Promise<{ token: string; loggedUser: LoginUser; expiresIn: string }> {
     try {
       await schemaLoginValidation({
         email: email,
@@ -42,12 +42,14 @@ export class AuthenticationService {
 
       if (!isMatch) {
         throw new UserUnauthorizedError(
-          'The user credentials are invalid.',
+          'The user credentials are invalid. There was an error matching the password.',
           401
         );
       }
 
       const SECRET_KEY = getToken();
+
+      const expirationDate = '31d';
 
       const token = sign(
         {
@@ -55,7 +57,7 @@ export class AuthenticationService {
         },
         SECRET_KEY,
         {
-          expiresIn: '2h',
+          expiresIn: expirationDate,
         }
       );
 
@@ -63,7 +65,7 @@ export class AuthenticationService {
 
       const { password: _, ...User } = user;
 
-      return { token: token, loggedUser: User };
+      return { token: token, loggedUser: User, expiresIn: expirationDate };
     } catch (error) {
       if (error instanceof LoginValidationError) {
         throw error;
@@ -84,7 +86,11 @@ export class AuthenticationService {
   public async logout(
     email: string,
     auth: string | undefined
-  ): Promise<{ token: string | undefined; loggedUser: LoginUser | undefined }> {
+  ): Promise<{
+    token: string | undefined;
+    loggedUser: LoginUser | undefined;
+    expiresIn: string | undefined;
+  }> {
     try {
       await schemaLoginValidation({ email: email, access_token: auth });
       const user = await this.repository.findOneByEmail(email);
@@ -104,7 +110,7 @@ export class AuthenticationService {
 
       refreshTokens = refreshTokens.filter((t) => t !== token);
 
-      return { token: undefined, loggedUser: undefined };
+      return { token: undefined, loggedUser: undefined, expiresIn: undefined };
     } catch (error) {
       if (error instanceof LoginValidationError) {
         throw error;

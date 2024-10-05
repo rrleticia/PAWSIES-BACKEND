@@ -31,7 +31,7 @@ export const schemaLoginValidation = async (data: any): Promise<LoginUser> => {
   }
 };
 
-export const schemaUserValidation = async (data: User): Promise<User> => {
+export const schemaUserValidation = async (data: any): Promise<User> => {
   try {
     const body = await Validators['UserModel'].validateAsync(data, {
       warnings: true,
@@ -52,7 +52,7 @@ export const schemaUserValidation = async (data: User): Promise<User> => {
   }
 };
 
-export const schemaVetValidation = async (data: Vet): Promise<Vet> => {
+export const schemaVetValidation = async (data: any): Promise<Vet> => {
   try {
     const body = await Validators['VetModel'].validateAsync(data, {
       warnings: true,
@@ -72,7 +72,7 @@ export const schemaVetValidation = async (data: Vet): Promise<Vet> => {
   }
 };
 
-export const schemaOwnerValidation = async (data: Owner): Promise<Owner> => {
+export const schemaOwnerValidation = async (data: any): Promise<Owner> => {
   try {
     const body = await Validators['OwnerModel'].validateAsync(data, {
       warnings: true,
@@ -81,7 +81,7 @@ export const schemaOwnerValidation = async (data: Owner): Promise<Owner> => {
     return body.value as Owner;
   } catch (error: any) {
     error = error as ValidationError;
-
+    console.log(error);
     throw new OwnerValidationError(
       `Invalid input for a field of Owner. Joi raises: ${error.details.map(
         (detail: any) => {
@@ -93,7 +93,7 @@ export const schemaOwnerValidation = async (data: Owner): Promise<Owner> => {
   }
 };
 
-export const schemaPetValidation = async (data: Pet): Promise<Pet> => {
+export const schemaPetValidation = async (data: any): Promise<Pet> => {
   try {
     const body = await Validators['PetModel'].validateAsync(data, {
       warnings: true,
@@ -115,7 +115,7 @@ export const schemaPetValidation = async (data: Pet): Promise<Pet> => {
 };
 
 export const _schemaAppointmentValidation = async (
-  data: Appointment
+  data: any
 ): Promise<Appointment> => {
   try {
     const body = await Validators['AppointmentModel'].validateAsync(data, {

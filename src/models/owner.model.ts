@@ -4,7 +4,7 @@ import { joiPasswordExtendCore } from 'joi-password';
 const joiPassword = Joi.extend(joiPasswordExtendCore);
 
 export const OwnerModel = Joi.object().keys({
-  id: Joi.string(),
+  id: Joi.string().trim().min(1).allow(''),
   name: Joi.string().trim().min(1).required(),
   username: Joi.string().trim().min(6).required(),
   email: Joi.string()
@@ -25,6 +25,9 @@ export const OwnerModel = Joi.object().keys({
     .minOfNumeric(1)
     .noWhiteSpaces()
     .onlyLatinCharacters()
-    .doesNotInclude(['password', '12345678', 'aaaaaaaa'])
-    .required(),
+    .doesNotInclude(['password', '12345678', 'aaaaaaaa']),
+  role: Joi.string().trim().uppercase().valid('OWNER'),
+  ownerID: Joi.string(),
+  createdAt: Joi.date(),
+  updatedAt: Joi.date(),
 });

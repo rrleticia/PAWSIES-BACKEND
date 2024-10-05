@@ -28,13 +28,13 @@ export class PetController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const pet = request.body.value;
+    const pet = request.body;
     const result = await this.service.create(pet);
     return response.status(201).json(result);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const pet = request.body.value;
+    const pet = request.body;
     const result = await this.service.update(pet);
     return response.status(201).json(result);
   }

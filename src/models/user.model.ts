@@ -4,7 +4,8 @@ import { joiPasswordExtendCore } from 'joi-password';
 const joiPassword = Joi.extend(joiPasswordExtendCore);
 
 export const UserModel = Joi.object().keys({
-  id: Joi.string(),
+  id: Joi.string().trim().min(1).allow(''),
+
   name: Joi.string().trim().min(1).required(),
   role: Joi.string()
     .trim()
@@ -40,4 +41,6 @@ export const UserModel = Joi.object().keys({
     .required(),
   vetID: Joi.string().allow(null),
   ownerID: Joi.string().allow(null),
+  createdAt: Joi.date(),
+  updatedAt: Joi.date(),
 });

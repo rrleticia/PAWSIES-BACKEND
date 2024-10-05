@@ -41,12 +41,14 @@ export class UserService {
     }
   }
 
-  public async create(data: User): Promise<User> {
+  public async create(data: any): Promise<User> {
     try {
+      console.log(data);
       let user = await schemaUserValidation(data);
+      console.log(user);
 
       user = await this._hashPassword(user);
-
+      console.log(user);
       await this._checkValidation(user.email, user.username);
 
       let result = await this.repository.save(user);
@@ -76,7 +78,7 @@ export class UserService {
     }
   }
 
-  public async update(data: User): Promise<User> {
+  public async update(data: any): Promise<User> {
     try {
       let user = await schemaUserValidation(data);
 
@@ -147,7 +149,7 @@ export class UserService {
       email,
       username
     );
-    if (user) { 
+    if (user) {
       throw new UserAlreadyExistsError(
         'The user already exists in the database. ',
         409

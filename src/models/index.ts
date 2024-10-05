@@ -1,6 +1,6 @@
 import { UserModel } from './user.model';
 import { LoginModel } from './login.model';
-import { OwnerModel } from './owner.models';
+import { OwnerModel } from './owner.model';
 import { VetModel } from './vet.model';
 import { PetModel } from './pet.model';
 import { AppointmentModel } from './appointment.model';

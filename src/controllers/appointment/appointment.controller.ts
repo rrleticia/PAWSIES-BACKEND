@@ -29,13 +29,13 @@ export class AppointmentController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const appontiment = request.body.value;
+    const appontiment = request.body;
     const result = await this.service.create(appontiment);
     return response.status(201).json(result);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const appontiment = request.body.value;
+    const appontiment = request.body;
     const result = await this.service.update(appontiment);
     return response.status(201).json(result);
   }

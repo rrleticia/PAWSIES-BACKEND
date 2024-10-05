@@ -39,7 +39,7 @@ router
   .get('', authenticateTokenMiddleware, (request, response) => {
     return controller.getAll(request, response);
   })
-  .get('/:petID', authenticateTokenMiddleware, (request, response) => {
+  .get('/pet/:petID', authenticateTokenMiddleware, (request, response) => {
     return controller.getAllByPetID(request, response);
   })
   .get('/:id', (request, response) => {

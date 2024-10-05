@@ -21,8 +21,8 @@ router
   .get('', authenticateTokenMiddleware, (request, response) => {
     return controller.getAll(request, response);
   })
-  .get('/:ownerID', authenticateTokenMiddleware, (request, response) => {
-    return controller.getOneByID(request, response);
+  .get('/owner/:ownerID', authenticateTokenMiddleware, (request, response) => {
+    return controller.getAllByOwnerID(request, response);
   })
   .get('/:id', authenticateTokenMiddleware, (request, response) => {
     return controller.getOneByID(request, response);

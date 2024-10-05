@@ -5,7 +5,7 @@ export class AuthenticationController {
   constructor(private readonly service: AuthenticationService) {}
 
   public async login(request: Request, response: Response): Promise<Response> {
-    const login = request.body.value;
+    const login = request.body;
     const email = login.email;
     const password = login.password;
     const result = await this.service.login(email, password);
@@ -13,7 +13,7 @@ export class AuthenticationController {
   }
 
   public async logout(request: Request, response: Response): Promise<Response> {
-    const login = request.body.value;
+    const login = request.body;
     const email = login.email;
     const auth = request.headers['authorization'];
     const result = await this.service.logout(email, auth);
