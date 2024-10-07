@@ -40,6 +40,17 @@ export class PrismaOwnerRepository implements IOwnerRepository {
     return parseOwner;
   }
 
+  public async existsOwnerID(id: string): Promise<Boolean> {
+    const owner = await this.prisma.owner.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!owner) return false;
+    else return true;
+  }
+
   public async save(owner: Owner): Promise<Owner | undefined> {
     if (!owner.password) return undefined;
 

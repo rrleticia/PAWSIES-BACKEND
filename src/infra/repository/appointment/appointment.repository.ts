@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import { IAppointmentRepository } from '.';
 import { Appointment } from '../../entities';
-import { getAppointmentStatusEnum, getExaminationEnum } from '../../../shared';
+import {
+  getAppointmentStatusEnum,
+  getDateRangeForDay,
+  getExaminationEnum,
+} from '../../../shared';
 
 export class PrismaAppointmentRepository implements IAppointmentRepository {
   constructor(private readonly prisma: PrismaClient) {}

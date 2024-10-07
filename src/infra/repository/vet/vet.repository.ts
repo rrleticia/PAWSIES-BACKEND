@@ -45,6 +45,17 @@ export class PrismaVetRepository implements IVetRepository {
     return parseVet;
   }
 
+  public async existsVetID(id: string): Promise<Boolean> {
+    const vet = await this.prisma.vet.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!vet) return false;
+    else return true;
+  }
+
   public async save(vet: Vet): Promise<Vet | undefined> {
     if (!vet.password) return undefined;
 

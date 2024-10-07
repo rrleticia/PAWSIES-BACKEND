@@ -47,7 +47,19 @@ export class PrismaPetRepository implements IPetRepository {
     return parsePets;
   }
 
+  public async existsID(id: string): Promise<Boolean> {
+    const pet = await this.prisma.pet.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!pet) return false;
+    else return true;
+  }
+
   public async save(pet: Pet): Promise<Pet> {
+    console.log(pet.ownerID);
     const createdPet = await this.prisma.pet.create({
       data: {
         name: pet.name,
@@ -59,6 +71,8 @@ export class PrismaPetRepository implements IPetRepository {
         ownerID: pet.ownerID,
       },
     });
+
+    console.log(createdPet);
 
     const parsePet = Pet.mapFromPrisma(createdPet);
 

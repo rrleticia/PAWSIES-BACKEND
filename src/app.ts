@@ -4,8 +4,10 @@ import { errorMiddleWare, loggerMiddleWare } from './shared';
 
 const app = express();
 
-routes(app);
 loggerMiddleWare(app);
+
+routes(app);
+
 errorMiddleWare(app);
 
 export default app;

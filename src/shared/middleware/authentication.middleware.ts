@@ -24,7 +24,6 @@ export const authenticateTokenMiddleware = (
 
   jwt.verify(token, SECRET_KEY, (error: any, user: any) => {
     if (error) {
-      console.log(error);
       return next(
         new UserForbiddenError(
           'The user credentials are invalid. There was an error verifying the token.',

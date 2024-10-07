@@ -14,7 +14,7 @@ import {
   IPetRepository,
   IVetRepository,
 } from '../../infra';
-import { UnknownError, validateDate } from '../../shared';
+import { convertToISODate, UnknownError, validateDate } from '../../shared';
 import { _schemaAppointmentValidation } from '../validation';
 
 export class AppointmentService {
@@ -208,7 +208,7 @@ export class AppointmentService {
   }
 
   private async _checkOwner(id: string): Promise<void> {
-    const owner = await this.ownerRepository.findOneByID(id);
+    const owner = await this.ownerRepository.existsOwnerID(id);
     if (!owner)
       throw new OwnerNotFoundError(
         'The owner provided for Appointment could not be found in the database.',
@@ -217,7 +217,7 @@ export class AppointmentService {
   }
 
   private async _checkVet(id: string): Promise<void> {
-    const vet = await this.vetRepository.findOneByID(id);
+    const vet = await this.vetRepository.existsVetID(id);
     if (!vet)
       throw new VetNotFoundError(
         'The vet provided for Appointment could not be found in the database.',
@@ -226,7 +226,7 @@ export class AppointmentService {
   }
 
   private async _checkPet(id: string): Promise<void> {
-    const pet = await this.petRepository.findOneByID(id);
+    const pet = await this.petRepository.existsID(id);
     if (!pet)
       throw new PetNotFoundError(
         'The pet provided for Appointment could not be found in the database.',

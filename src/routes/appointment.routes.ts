@@ -42,6 +42,9 @@ router
   .get('/pet/:petID', authenticateTokenMiddleware, (request, response) => {
     return controller.getAllByPetID(request, response);
   })
+  .get('/date', authenticateTokenMiddleware, (request, response) => {
+    return controller.getAllByDate(request, response);
+  })
   .get('/:id', (request, response) => {
     return controller.getOneByID(request, response);
   })

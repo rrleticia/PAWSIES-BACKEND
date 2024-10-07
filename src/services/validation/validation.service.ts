@@ -81,7 +81,6 @@ export const schemaOwnerValidation = async (data: any): Promise<Owner> => {
     return body.value as Owner;
   } catch (error: any) {
     error = error as ValidationError;
-    console.log(error);
     throw new OwnerValidationError(
       `Invalid input for a field of Owner. Joi raises: ${error.details.map(
         (detail: any) => {

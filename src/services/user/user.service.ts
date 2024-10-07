@@ -43,12 +43,10 @@ export class UserService {
 
   public async create(data: any): Promise<User> {
     try {
-      console.log(data);
       let user = await schemaUserValidation(data);
-      console.log(user);
 
       user = await this._hashPassword(user);
-      console.log(user);
+
       await this._checkValidation(user.email, user.username);
 
       let result = await this.repository.save(user);

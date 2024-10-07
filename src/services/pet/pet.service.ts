@@ -69,8 +69,10 @@ export class PetService {
         );
 
       const result = await this.repository.save(pet);
+
       return result;
     } catch (error) {
+      console.log(error);
       if (error instanceof OwnerNotFoundError) {
         throw error;
       }
@@ -133,7 +135,7 @@ export class PetService {
   }
 
   private async _checkOwner(id: string): Promise<void> {
-    const owner = await this.ownerRepostiory.findOneByID(id);
+    const owner = await this.ownerRepostiory.existsOwnerID(id);
     if (!owner)
       throw new OwnerNotFoundError(
         'The owner provided for Pet could not be found in the database.',
