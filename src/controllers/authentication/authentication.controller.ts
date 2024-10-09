@@ -6,6 +6,7 @@ export class AuthenticationController {
 
   public async login(request: Request, response: Response): Promise<Response> {
     const login = request.body;
+
     const email = login.email;
     const password = login.password;
     const result = await this.service.login(email, password);

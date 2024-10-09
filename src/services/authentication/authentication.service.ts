@@ -26,6 +26,7 @@ export class AuthenticationService {
       });
 
       const user = await this.repository.findOneByEmail(email);
+      
       if (!user)
         throw new UserNotFoundError(
           'The user could not be found in the database.',

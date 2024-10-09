@@ -10,6 +10,7 @@ export const VetModel = Joi.object().keys({
     .trim()
     .valid('cat', 'dog', 'cat_dog', 'CAT', 'DOG', 'CAT_DOG')
     .required(),
+  role: Joi.string().trim().uppercase().valid('VET', 'vet'),
   email: Joi.string()
     .trim()
     .email({
@@ -28,8 +29,7 @@ export const VetModel = Joi.object().keys({
     .minOfNumeric(1)
     .noWhiteSpaces()
     .onlyLatinCharacters()
-    .doesNotInclude(['password', '12345678', 'aaaaaaaa'])
-    .required(),
+    .doesNotInclude(['password', '12345678', 'aaaaaaaa']),
   vetID: Joi.string(),
   createdAt: Joi.date(),
   updatedAt: Joi.date(),
