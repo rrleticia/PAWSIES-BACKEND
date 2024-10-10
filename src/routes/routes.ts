@@ -1,18 +1,27 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import authRoutes from './authentication.routes';
+import userRoutes from './user.routes';
 import ownerRoutes from './owner.routes';
 import vetRoutes from './vet.routes';
 import petRoutes from './pet.routes';
 import appointmentRoutes from './appointment.routes';
 
 export const routes = (app: any) => {
-  //Teste de rota base
+  // Apply middlewares globally
+  app.use(cors());
+  app.use(express.json());
+
+  // Base route for testing
   app.route('/').get((req: Request, res: Response) => {
     res.status(200).send({ title: 'Home page Test Json' });
   });
 
-  app.use(cors()).use(express.json()).use('/owner', ownerRoutes);
-  app.use(cors()).use(express.json()).use('/vet', vetRoutes);
-  app.use(cors()).use(express.json()).use('/pet', petRoutes);
-  app.use(cors()).use(express.json()).use('/appointment', appointmentRoutes);
+  // Register route modules
+  app.use('/auth', authRoutes);
+  app.use('/user', userRoutes);
+  app.use('/owner', ownerRoutes);
+  app.use('/vet', vetRoutes);
+  app.use('/pet', petRoutes);
+  app.use('/appointment', appointmentRoutes);
 };

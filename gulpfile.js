@@ -7,17 +7,17 @@ const gulp = require('gulp'),
   nodemon = require('gulp-nodemon');
 
 // TSLINT
-gulp.task('ts-lint', () => {
-  const config = { formatter: 'verbose' };
-  return gulp
-    .src(['src/**/*.ts'])
-    .pipe(tslint(config))
-    .pipe(
-      tslint.report({
-        reportLimit: 0,
-      })
-    );
-});
+// gulp.task('ts-lint', () => {
+//   const config = { formatter: 'verbose' };
+//   return gulp
+//     .src(['src/**/*.ts'])
+//     .pipe(tslint(config))
+//     .pipe(
+//       tslint.report({
+//         reportLimit: 0,
+//       })
+//     );
+// });
 
 // COPY FILES
 gulp.task('copy-files', () => {
@@ -29,7 +29,7 @@ gulp.task('copy-files', () => {
 gulp.task('watch', (done) => {
   gulp.watch('./**/*.ts');
   nodemon({
-    script: 'dist/server.js',
+    script: 'dist/src/server.js',
     tasks: ['build'],
     ext: 'ts json',
     ignore: ['node_modules/', 'package.json', 'tsconfig.json'],
@@ -51,7 +51,7 @@ gulp.task('watch', (done) => {
 // BUILD DEFAULT
 gulp.task(
   'build',
-  gulp.series(['ts-lint', 'copy-files'], function compiler() {
+  gulp.series(['copy-files'], function compiler() {
     const tsProject = ts.createProject('tsconfig.json', {
       typescript: require('typescript'),
     });
@@ -70,11 +70,11 @@ gulp.task(
 gulp.task('dev', gulp.series(['build', 'watch']));
 
 // START
-// gulp.task('start', function (done) {
-//   nodemon({
-//     script: 'server.js',
-//     ext: 'js html',
-//     env: { NODE_ENV: 'development' },
-//     done: done,
-//   });
-// });
+gulp.task('start', function (done) {
+  nodemon({
+    script: 'server.js',
+    ext: 'js html',
+    env: { NODE_ENV: 'development' },
+    done: done,
+  });
+});

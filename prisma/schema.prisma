@@ -13,32 +13,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id         String     @id @default(cuid())
+
+  name       String     @unique
+
+  role       Role       @default(ANONYMOUS) 
+  username   String     @unique
+
+  email      String     @unique
+  password   String  
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+ 
+  vetID                  String? @unique
+  ownerID                String? @unique
+
+  owner                  Owner? @relation(fields: [ownerID], references: [id]) 
+  vet                    Vet? @relation(fields: [vetID], references: [id]) 
+}
+
 model Vet {
-  id String       @id @default(cuid())
+  id            String         @id @default(cuid())
+  specialty     Specialty      @default(CAT_DOG)
 
-  email String     @unique
-
-  username String  @unique
-  password String @unique
-
-  name String
-  specialty Specialty  @default(CAT_DOG)
-
-  appointments Appointment[]
+  user          User?          @relation
+  appointments  Appointment[]
 }
 
 model Owner {
-  id String       @id @default(cuid())
-  
-  email String     @unique
+  id            String         @id @default(cuid())
 
-  username String  @unique
-  password String @unique
-
-  name String
-
-  pets Pet[]
-  appointments Appointment[]
+  user          User?          @relation
+  pets          Pet[]
+  appointments  Appointment[]
 }
 
 model Pet {
@@ -53,6 +62,9 @@ model Pet {
   age Int
   weight Float
 
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
   ownerID                String
   owner                  Owner @relation(fields: [ownerID], references: [id]) 
 
@@ -64,10 +76,14 @@ model Appointment {
 
   date DateTime
   hour String
-  status Boolean @default(false) 
+  
+  status AppointmentStatus @default(SCHEDULED) 
   examination Examination @default(ROUTINE)
   
   observations String
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
   
   vetID                String
   vet                  Vet @relation(fields: [vetID], references: [id]) 
@@ -77,6 +93,14 @@ model Appointment {
 
   ownerID                String
   owner                  Owner @relation(fields: [ownerID], references: [id]) 
+}
+
+
+enum Role {
+  ADMIN
+  VET 
+  OWNER
+  ANONYMOUS
 }
 
 enum PetType {
@@ -92,9 +116,26 @@ enum Specialty {
 }
 
 enum Examination {
+  CHECK_UP
+  FOLLOW_UP
   ROUTINE
   URGENT
+  EMERGENCY
+  LAB_TESTS
+  X_RAY
+  ULTRASOUND
   SURGERY
+  VACCINATION
 }
 
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  RESCHEDULED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+  IN_PROGRESS
+}
 

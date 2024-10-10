@@ -1,29 +1,36 @@
 import { Router } from 'express';
-import { IVetRepository, prisma, PrismaVetRepository } from '../infra';
+import {
+  IUserRepository,
+  IVetRepository,
+  prisma,
+  PrismaUserRepository,
+  PrismaVetRepository,
+} from '../infra';
 import { VetService } from '../services';
 import { VetController } from '../controllers';
-import { validatorMiddleware } from '../shared';
+import { authenticateTokenMiddleware } from '../shared';
 
+const userRepository: IUserRepository = new PrismaUserRepository(prisma);
 const repository: IVetRepository = new PrismaVetRepository(prisma);
-const service = new VetService(repository);
+const service = new VetService(repository, userRepository);
 const controller = new VetController(service);
 
 const router = Router();
 
 router
-  .get('', (request, response) => {
+  .get('', authenticateTokenMiddleware, (request, response) => {
     return controller.getAll(request, response);
   })
-  .get('/:id', (request, response) => {
+  .get('/:id', authenticateTokenMiddleware, (request, response) => {
     return controller.getOneByID(request, response);
   })
-  .post('/', validatorMiddleware('VetModel'), (request, response) => {
+  .post('/', (request, response) => {
     return controller.create(request, response);
   })
-  .put('/', validatorMiddleware('VetModel'), (request, response) => {
+  .put('/', authenticateTokenMiddleware, (request, response) => {
     return controller.update(request, response);
   })
-  .delete('/:id', (request, response) => {
+  .delete('/:id', authenticateTokenMiddleware, (request, response) => {
     return controller.delete(request, response);
   });
 

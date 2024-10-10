@@ -19,13 +19,13 @@ export class OwnerController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const owner = request.body.value;
+    const owner = request.body;
     const result = await this.service.create(owner);
     return response.status(201).json(result);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const owner = request.body.value;
+    const owner = request.body;
     const result = await this.service.update(owner);
     return response.status(201).json(result);
   }

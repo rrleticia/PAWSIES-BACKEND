@@ -1,28 +1,24 @@
 import { PrismaClient } from '@prisma/client';
 import { IAppointmentRepository } from '.';
 import { Appointment } from '../../entities';
-import { getExaminationEnum } from '../../../shared';
+import {
+  getAppointmentStatusEnum,
+  getDateRangeForDay,
+  getExaminationEnum,
+} from '../../../shared';
 
 export class PrismaAppointmentRepository implements IAppointmentRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   public async findAll(): Promise<Appointment[] | undefined> {
-    const appointments = await this.prisma.appointment.findMany({});
+    const appointments = await this.prisma.appointment.findMany({
+      include: { pet: true },
+    });
 
     if (!appointments) return undefined;
 
     const parseAppointments = appointments.map((appointment) => {
-      return new Appointment(
-        appointment.id,
-        appointment.date,
-        appointment.hour,
-        appointment.status,
-        appointment.examination,
-        appointment.observations,
-        appointment.vetID,
-        appointment.petID,
-        appointment.ownerID
-      );
+      return Appointment.mapFromPrisma(appointment, appointment.pet);
     });
 
     return parseAppointments;
@@ -33,22 +29,13 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
   ): Promise<Appointment[] | undefined> {
     const appointments = await this.prisma.appointment.findMany({
       where: { petID: petID },
+      include: { pet: true },
     });
 
     if (!appointments) return undefined;
 
     const parseAppointments = appointments.map((appointment) => {
-      return new Appointment(
-        appointment.id,
-        appointment.date,
-        appointment.hour,
-        appointment.status,
-        appointment.examination,
-        appointment.observations,
-        appointment.vetID,
-        appointment.petID,
-        appointment.ownerID
-      );
+      return Appointment.mapFromPrisma(appointment, appointment.pet);
     });
 
     return parseAppointments;
@@ -59,20 +46,14 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
       where: {
         id: id,
       },
+      include: { pet: true },
     });
 
     if (!appointment) return undefined;
 
-    const parseAppointment = new Appointment(
-      appointment.id,
-      appointment.date,
-      appointment.hour,
-      appointment.status,
-      appointment.examination,
-      appointment.observations,
-      appointment.vetID,
-      appointment.petID,
-      appointment.ownerID
+    const parseAppointment = Appointment.mapFromPrisma(
+      appointment,
+      appointment.pet
     );
 
     return parseAppointment;
@@ -83,25 +64,19 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
       data: {
         date: appointment.date,
         hour: appointment.hour,
-        status: appointment.status,
+        status: getAppointmentStatusEnum(appointment.status),
         examination: getExaminationEnum(appointment.examination),
         observations: appointment.observations,
         vetID: appointment.vetID,
         petID: appointment.petID,
         ownerID: appointment.ownerID,
       },
+      include: { pet: true },
     });
 
-    const parseAppointment = new Appointment(
-      createdAppointment.id,
-      createdAppointment.date,
-      createdAppointment.hour,
-      createdAppointment.status,
-      createdAppointment.examination,
-      createdAppointment.observations,
-      createdAppointment.vetID,
-      createdAppointment.petID,
-      createdAppointment.ownerID
+    const parseAppointment = Appointment.mapFromPrisma(
+      createdAppointment,
+      createdAppointment.pet
     );
 
     return parseAppointment;
@@ -118,50 +93,38 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
       data: {
         date: appointment.date,
         hour: appointment.hour,
-        status: appointment.status,
+        status: getAppointmentStatusEnum(appointment.status),
         examination: getExaminationEnum(appointment.examination),
         observations: appointment.observations,
         vetID: appointment.vetID,
         petID: appointment.petID,
         ownerID: appointment.ownerID,
       },
+      include: { pet: true },
     });
 
-    const parseAppointment = new Appointment(
-      updatedAppointment.id,
-      updatedAppointment.date,
-      updatedAppointment.hour,
-      updatedAppointment.status,
-      updatedAppointment.examination,
-      updatedAppointment.observations,
-      updatedAppointment.vetID,
-      updatedAppointment.petID,
-      updatedAppointment.ownerID
+    const parseAppointment = Appointment.mapFromPrisma(
+      updatedAppointment,
+      updatedAppointment.pet
     );
 
     return parseAppointment;
   }
 
-  public async updateStatus(id: string, status: boolean): Promise<Appointment> {
+  public async updateStatus(id: string, status: string): Promise<Appointment> {
     const updatedAppointment = await this.prisma.appointment.update({
       where: {
         id: id,
       },
       data: {
-        status: status,
+        status: getAppointmentStatusEnum(status),
       },
+      include: { pet: true },
     });
 
-    const parseAppointment = new Appointment(
-      updatedAppointment.id,
-      updatedAppointment.date,
-      updatedAppointment.hour,
-      updatedAppointment.status,
-      updatedAppointment.examination,
-      updatedAppointment.observations,
-      updatedAppointment.vetID,
-      updatedAppointment.petID,
-      updatedAppointment.ownerID
+    const parseAppointment = Appointment.mapFromPrisma(
+      updatedAppointment,
+      updatedAppointment.pet
     );
 
     return parseAppointment;
@@ -172,18 +135,12 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
       where: {
         id: id,
       },
+      include: { pet: true },
     });
 
-    const parseAppointment = new Appointment(
-      appointment.id,
-      appointment.date,
-      appointment.hour,
-      appointment.status,
-      appointment.examination,
-      appointment.observations,
-      appointment.vetID,
-      appointment.petID,
-      appointment.ownerID
+    const parseAppointment = Appointment.mapFromPrisma(
+      appointment,
+      appointment.pet
     );
 
     return parseAppointment;
@@ -197,38 +154,30 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
   ): Promise<Appointment | undefined> {
     const vetAppointment = await this.prisma.appointment.findFirst({
       where: { vetID: vetID, date: date, hour: hour },
-    });
-
-    const ownerAppointment = await this.prisma.appointment.findFirst({
-      where: { ownerID: ownerID, date: date, hour: hour },
+      include: { pet: true },
     });
 
     if (vetAppointment) {
-      const parseAppointment = new Appointment(
-        vetAppointment.id,
-        vetAppointment.date,
-        vetAppointment.hour,
-        vetAppointment.status,
-        vetAppointment.examination,
-        vetAppointment.observations,
-        vetAppointment.vetID,
-        vetAppointment.petID,
-        vetAppointment.ownerID
+      const parseAppointment = Appointment.mapFromPrisma(
+        vetAppointment,
+        vetAppointment.pet
       );
       return parseAppointment;
-    } else if (ownerAppointment) {
-      const parseAppointment = new Appointment(
-        ownerAppointment.id,
-        ownerAppointment.date,
-        ownerAppointment.hour,
-        ownerAppointment.status,
-        ownerAppointment.examination,
-        ownerAppointment.observations,
-        ownerAppointment.vetID,
-        ownerAppointment.petID,
-        ownerAppointment.ownerID
+    }
+
+    const ownerAppointment = await this.prisma.appointment.findFirst({
+      where: { ownerID: ownerID, date: date, hour: hour },
+      include: { pet: true },
+    });
+
+    if (ownerAppointment) {
+      const parseAppointment = Appointment.mapFromPrisma(
+        ownerAppointment,
+        ownerAppointment.pet
       );
       return parseAppointment;
-    } else return undefined;
+    }
+
+    return undefined;
   }
 }

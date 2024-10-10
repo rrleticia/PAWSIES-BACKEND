@@ -29,13 +29,13 @@ export class AppointmentController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const appontiment = request.body.value;
+    const appontiment = request.body;
     const result = await this.service.create(appontiment);
     return response.status(201).json(result);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const appontiment = request.body.value;
+    const appontiment = request.body;
     const result = await this.service.update(appontiment);
     return response.status(201).json(result);
   }
@@ -45,7 +45,7 @@ export class AppointmentController {
     response: Response
   ): Promise<Response> {
     const id = request.params.id;
-    const status = parseBoolean(request.params.status);
+    const status = request.params.status;
     const result = await this.service.updateStatus(id, status);
     return response.status(201).json(result);
   }

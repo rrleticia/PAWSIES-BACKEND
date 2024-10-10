@@ -19,13 +19,13 @@ export class VetController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const vet = request.body.value;
+    const vet = request.body;
     const result = await this.service.create(vet);
     return response.status(201).json(result);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const vet = request.body.value;
+    const vet = request.body;
     const result = await this.service.update(vet);
     return response.status(201).json(result);
   }

@@ -1,155 +1,124 @@
 import { PrismaClient } from '@prisma/client';
 import { IVetRepository } from '.';
 import { Vet } from '../../entities';
-import { getSpecialtyEnum } from '../../../shared';
+import { getRoleEnum, getSpecialtyEnum } from '../../../shared';
 
 export class PrismaVetRepository implements IVetRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   public async findAll(): Promise<Vet[] | undefined> {
-    const vets = await this.prisma.vet.findMany({});
+    const vets = await this.prisma.user.findMany({
+      where: {
+        vetID: {
+          not: null,
+        },
+      },
+      include: { vet: true },
+    });
 
     if (!vets) return undefined;
 
     const parseVets = vets.map((vet) => {
-      return new Vet(
-        vet.id,
-        vet.name,
-        vet.email,
-        vet.username,
-        vet.password,
-        vet.specialty
-      );
+      const parseVet = Vet.mapFromPrisma(vet, vet.vet!);
+
+      delete parseVet.password;
+      return parseVet;
     });
+
     return parseVets;
   }
 
   public async findOneByID(id: string): Promise<Vet | undefined> {
-    const vet = await this.prisma.vet.findUnique({
+    const vet = await this.prisma.user.findUnique({
       where: {
         id: id,
+        role: getRoleEnum('VET'),
       },
+      include: { vet: true },
     });
 
     if (!vet) return undefined;
 
-    const parseVet = new Vet(
-      vet.id,
-      vet.name,
-      vet.email,
-      vet.username,
-      vet.password,
-      vet.specialty
-    );
+    const parseVet = Vet.mapFromPrisma(vet, vet.vet!);
 
+    delete parseVet.password;
     return parseVet;
   }
 
-  public async save(vet: Vet): Promise<Vet> {
-    const createdVet = await this.prisma.vet.create({
-      data: {
-        email: vet.email,
-        username: vet.username,
-        name: vet.name,
-        password: vet.password,
-        specialty: getSpecialtyEnum(vet.specialty),
+  public async existsVetID(id: string): Promise<Boolean> {
+    const vet = await this.prisma.vet.findFirst({
+      where: {
+        id: id,
       },
     });
 
-    const parseVet = new Vet(
-      createdVet.id,
-      createdVet.name,
-      createdVet.email,
-      createdVet.username,
-      createdVet.password,
-      createdVet.specialty
-    );
+    if (!vet) return false;
+    else return true;
+  }
 
+  public async save(vet: Vet): Promise<Vet | undefined> {
+    if (!vet.password) return undefined;
+
+    const createdVet = await this.prisma.user.create({
+      data: {
+        name: vet.name,
+        role: getRoleEnum('VET'),
+        username: vet.username,
+        email: vet.email,
+        password: vet.password,
+        vet: {
+          create: {
+            specialty: getSpecialtyEnum(vet.specialty),
+          },
+        },
+      },
+      include: { vet: true },
+    });
+
+    if (!createdVet) return undefined;
+
+    const parseVet = Vet.mapFromPrisma(createdVet, createdVet.vet!);
+
+    delete parseVet.password;
     return parseVet;
   }
 
   public async update(id: string, vet: Vet): Promise<Vet> {
-    const updatedVet = await this.prisma.vet.update({
+    const updatedVet = await this.prisma.user.update({
       where: {
         id: id,
       },
       data: {
-        email: vet.email,
-        username: vet.username,
         name: vet.name,
-        specialty: getSpecialtyEnum(vet.specialty),
+        username: vet.username,
+        email: vet.email,
+        password: vet.password || undefined,
+        vet: {
+          create: {
+            specialty: getSpecialtyEnum(vet.specialty),
+          },
+        },
       },
+      include: { vet: true },
     });
 
-    const parseVet = new Vet(
-      updatedVet.id,
-      updatedVet.name,
-      updatedVet.email,
-      updatedVet.username,
-      updatedVet.password,
-      updatedVet.specialty
-    );
+    const parseVet = Vet.mapFromPrisma(updatedVet, updatedVet.vet!);
 
+    delete parseVet.password;
     return parseVet;
   }
 
   public async delete(id: string): Promise<Vet> {
-    const vet = await this.prisma.vet.delete({
+    const vet = await this.prisma.user.delete({
       where: {
         id: id,
       },
+      include: { vet: true },
     });
 
-    const parseVet = new Vet(
-      vet.id,
-      vet.name,
-      vet.email,
-      vet.username,
-      vet.password,
-      vet.specialty
-    );
+    const parseVet = Vet.mapFromPrisma(vet, vet.vet!);
 
+    delete parseVet.password;
     return parseVet;
-  }
-
-  public async findOneByEmailOrUsername(
-    email: string,
-    username: string
-  ): Promise<Vet | undefined> {
-    const vetEmail = await this.prisma.vet.findUnique({
-      where: {
-        email: email,
-      },
-    });
-
-    const vetUsername = await this.prisma.vet.findUnique({
-      where: {
-        username: username,
-      },
-    });
-
-    if (vetEmail) {
-      const parseVet = new Vet(
-        vetEmail.id,
-        vetEmail.name,
-        vetEmail.email,
-        vetEmail.username,
-        vetEmail.password,
-        vetEmail.specialty
-      );
-
-      return parseVet;
-    } else if (vetUsername) {
-      const parseVet = new Vet(
-        vetUsername.id,
-        vetUsername.name,
-        vetUsername.email,
-        vetUsername.username,
-        vetUsername.password,
-        vetUsername.specialty
-      );
-
-      return parseVet;
-    } else return undefined;
   }
 }

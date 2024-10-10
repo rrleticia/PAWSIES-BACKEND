@@ -4,18 +4,24 @@ import { joiPasswordExtendCore } from 'joi-password';
 const joiPassword = Joi.extend(joiPasswordExtendCore);
 
 export const VetModel = Joi.object().keys({
-  id: Joi.string(),
+  id: Joi.string().trim().min(1).allow(''),
+  name: Joi.string().trim().min(1).required(),
+  specialty: Joi.string()
+    .trim()
+    .valid('cat', 'dog', 'cat_dog', 'CAT', 'DOG', 'CAT_DOG')
+    .required(),
+  role: Joi.string().trim().uppercase().valid('VET', 'vet'),
   email: Joi.string()
-
+    .trim()
     .email({
       minDomainSegments: 2,
       tlds: { allow: ['com', 'net', 'br'] },
     })
     .required(),
-  name: Joi.string().min(1).required(),
-  username: Joi.string().min(1).required(),
+  username: Joi.string().trim().min(6).required(),
   password: joiPassword
     .string()
+    .trim()
     .min(8)
     .minOfSpecialCharacters(1)
     .minOfLowercase(1)
@@ -23,10 +29,8 @@ export const VetModel = Joi.object().keys({
     .minOfNumeric(1)
     .noWhiteSpaces()
     .onlyLatinCharacters()
-    .doesNotInclude(['password', '12345678', 'aaaaaaaa'])
-    .required(),
-  specialty: Joi.string()
-    .valid('cat', 'dog', 'cat_dog', 'CAT', 'DOG', 'CAT_DOG')
-    .required(),
-  access_token: [Joi.string(), Joi.number()],
+    .doesNotInclude(['password', '12345678', 'aaaaaaaa']),
+  vetID: Joi.string(),
+  createdAt: Joi.date(),
+  updatedAt: Joi.date(),
 });

@@ -1,32 +1,39 @@
 import { Router } from 'express';
-import { IPetRepository, prisma, PrismaPetRepository } from '../infra';
+import {
+  IOwnerRepository,
+  IPetRepository,
+  prisma,
+  PrismaOwnerRepository,
+  PrismaPetRepository,
+} from '../infra';
 import { PetService } from '../services';
 import { PetController } from '../controllers';
-import { validatorMiddleware } from '../shared';
+import { authenticateTokenMiddleware } from '../shared';
 
 const repository: IPetRepository = new PrismaPetRepository(prisma);
-const service = new PetService(repository);
+const ownerRepository: IOwnerRepository = new PrismaOwnerRepository(prisma);
+const service = new PetService(repository, ownerRepository);
 const controller = new PetController(service);
 
 const router = Router();
 
 router
-  .get('', (request, response) => {
+  .get('', authenticateTokenMiddleware, (request, response) => {
     return controller.getAll(request, response);
   })
-  .get('/:ownerID', (request, response) => {
+  .get('/owner/:ownerID', authenticateTokenMiddleware, (request, response) => {
+    return controller.getAllByOwnerID(request, response);
+  })
+  .get('/:id', authenticateTokenMiddleware, (request, response) => {
     return controller.getOneByID(request, response);
   })
-  .get('/:id', (request, response) => {
-    return controller.getOneByID(request, response);
-  })
-  .post('/', validatorMiddleware('PetModel'), (request, response) => {
+  .post('/', authenticateTokenMiddleware, (request, response) => {
     return controller.create(request, response);
   })
-  .put('/', validatorMiddleware('PetModel'), (request, response) => {
+  .put('/', authenticateTokenMiddleware, (request, response) => {
     return controller.update(request, response);
   })
-  .delete('/:id', (request, response) => {
+  .delete('/:id', authenticateTokenMiddleware, (request, response) => {
     return controller.delete(request, response);
   });
 
