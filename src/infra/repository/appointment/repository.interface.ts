@@ -2,7 +2,7 @@ import { Appointment } from '../../entities';
 
 export interface IAppointmentRepository {
   findAll(): Promise<Appointment[] | undefined>;
-  findAllByPetID(petID: string): Promise<Appointment[] | undefined>;
+  findAllByPetName(petID: string): Promise<Appointment[] | undefined>;
   findOneByID(id: string): Promise<Appointment | undefined>;
   save(owner: Appointment): Promise<Appointment>;
   update(id: string, Appointment: Appointment): Promise<Appointment>;

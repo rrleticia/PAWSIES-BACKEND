@@ -17,10 +17,19 @@ export class PrismaPetRepository implements IPetRepository {
     return parsePets;
   }
 
-  public async findAllByOwnerID(ownerID: string): Promise<Pet[] | undefined> {
+  public async findAllByOwnerUsername(
+    username: string
+  ): Promise<Pet[] | undefined> {
     const pets = await this.prisma.pet.findMany({
       where: {
-        ownerID: ownerID,
+        owner: {
+          user: {
+            username: {
+              contains: username,
+              mode: 'insensitive',
+            },
+          },
+        },
       },
     });
 

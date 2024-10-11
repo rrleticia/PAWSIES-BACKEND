@@ -9,12 +9,12 @@ export class PetController {
     return response.status(200).json(result);
   }
 
-  public async getAllByOwnerID(
+  public async getAllByOwnerUsername(
     request: Request,
     response: Response
   ): Promise<Response> {
-    const ownerID = request.params.ownerID;
-    const result = await this.service.getAllByOwnerID(ownerID);
+    const username = request.params.username;
+    const result = await this.service.getAllByOwnerUsername(username);
     return response.status(200).json(result);
   }
 

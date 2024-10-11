@@ -26,7 +26,7 @@ export class AuthenticationService {
       });
 
       const user = await this.repository.findOneByEmail(email);
-      
+
       if (!user)
         throw new UserNotFoundError(
           'The user could not be found in the database.',
@@ -38,6 +38,8 @@ export class AuthenticationService {
           'Invalid input for password field of User.',
           405
         );
+
+      console.log(password, user.password);
 
       const isMatch = await bcrypt.compare(password, user.password);
 

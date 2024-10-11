@@ -88,6 +88,8 @@ export class UserService {
           404
         );
 
+      if (user.password) user = await this._hashPassword(user);
+
       const result = await this.repository.update(user.id, user);
 
       delete result.password;

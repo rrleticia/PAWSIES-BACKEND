@@ -1,5 +1,6 @@
 import coreJoi from 'joi';
 import joiDate from '@joi/date';
+import { PetModel } from './pet.model';
 
 const Joi = coreJoi.extend(joiDate) as typeof coreJoi;
 
@@ -9,7 +10,7 @@ export const AppointmentModel = Joi.object().keys({
   hour: Joi.string()
     .pattern(new RegExp('^[0-9]{2}:[0-9]{2}$'))
     .custom((value, helpers) => {
-      const [hours, minutes] = value.split('-').map(Number);
+      const [hours, minutes] = value.split(':').map(Number);
       if (hours < 0 || hours > 23) {
         return helpers.error('any.invalid', {
           message: 'Invalid hour value. Must be between 00 and 23.',
@@ -75,4 +76,5 @@ export const AppointmentModel = Joi.object().keys({
   ownerID: Joi.string().required(),
   createdAt: Joi.date(),
   updatedAt: Joi.date(),
+  pet: PetModel,
 });
