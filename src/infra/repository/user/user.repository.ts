@@ -12,6 +12,7 @@ export class PrismaUserRepository implements IUserRepository {
     if (!users) return undefined;
 
     const parseUsers = users.map((user) => {
+      console.log(user);
       return User.mapFromPrisma(user);
     });
     return parseUsers;
@@ -36,7 +37,7 @@ export class PrismaUserRepository implements IUserRepository {
 
     const createdUser = await this.prisma.user.create({
       data: {
-        name: user.role,
+        name: user.name,
         role: getRoleEnum(user.role),
         username: user.username,
         email: user.email,
@@ -57,6 +58,7 @@ export class PrismaUserRepository implements IUserRepository {
         id: id,
       },
       data: {
+        name: user.name,
         username: user.username,
         role: getRoleEnum(user.role),
         email: user.email,

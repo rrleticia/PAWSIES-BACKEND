@@ -24,12 +24,21 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
     return parseAppointments;
   }
 
-  public async findAllByPetID(
-    petID: string
+  public async findAllByPetName(
+    name: string
   ): Promise<Appointment[] | undefined> {
     const appointments = await this.prisma.appointment.findMany({
-      where: { petID: petID },
-      include: { pet: true },
+      where: {
+        pet: {
+          name: {
+            contains: name, // Substitua pelo nome que deseja buscar
+            mode: 'insensitive', // Torna a busca case-insensitive
+          },
+        },
+      },
+      include: {
+        pet: true, // Inclui as informações do Pet na resposta
+      },
     });
 
     if (!appointments) return undefined;

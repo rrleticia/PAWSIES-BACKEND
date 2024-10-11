@@ -10,12 +10,12 @@ export class AppointmentController {
     return response.status(200).json(result);
   }
 
-  public async getAllByPetID(
+  public async getAllByPetName(
     request: Request,
     response: Response
   ): Promise<Response> {
-    const petID = request.params.petID;
-    const result = await this.service.getAllByPetID(petID);
+    const name = request.params.name;
+    const result = await this.service.getAllByPetName(name);
     return response.status(200).json(result);
   }
 

@@ -35,11 +35,11 @@ export class AppointmentService {
     }
   }
 
-  public async getAllByPetID(
-    petID: string
+  public async getAllByPetName(
+    name: string
   ): Promise<Appointment[] | undefined> {
     try {
-      const result = await this.repository.findAllByPetID(petID);
+      const result = await this.repository.findAllByPetName(name);
       return result;
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);

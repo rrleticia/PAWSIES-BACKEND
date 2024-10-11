@@ -24,9 +24,11 @@ export class PetService {
     }
   }
 
-  public async getAllByOwnerID(ownerID: string): Promise<Pet[] | undefined> {
+  public async getAllByOwnerUsername(
+    username: string
+  ): Promise<Pet[] | undefined> {
     try {
-      const result = await this.repository.findAllByOwnerID(ownerID);
+      const result = await this.repository.findAllByOwnerUsername(username);
       return result;
     } catch (error) {
       throw new UnknownError('Internal Server Error.', 500);
