@@ -9,7 +9,6 @@ import {
 import { IOwnerRepository, IUserRepository, Owner } from '../../infra';
 import { UnknownError } from '../../shared';
 import bcrypt from 'bcrypt';
-import { schemaOwnerValidation } from '../validation';
 
 export class OwnerService {
   constructor(
@@ -44,10 +43,8 @@ export class OwnerService {
     }
   }
 
-  public async create(data: any): Promise<Owner> {
+  public async create(owner: any): Promise<Owner> {
     try {
-      let owner = await schemaOwnerValidation(data);
-
       owner = await this._hashPassword(owner);
 
       await this._checkValidation(owner.email, owner.username);
@@ -80,10 +77,8 @@ export class OwnerService {
     }
   }
 
-  public async update(data: any): Promise<Owner> {
+  public async update(owner: any): Promise<Owner> {
     try {
-      let owner = await schemaOwnerValidation(data);
-
       const validation = await this.repository.findOneByID(owner.id);
 
       if (!validation)

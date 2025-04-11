@@ -14,8 +14,7 @@ import {
   IPetRepository,
   IVetRepository,
 } from '../../infra';
-import { convertToISODate, UnknownError, validateDate } from '../../shared';
-import { _schemaAppointmentValidation } from '../validation';
+import { UnknownError, validateDate } from '../../shared';
 
 export class AppointmentService {
   constructor(
@@ -63,10 +62,8 @@ export class AppointmentService {
     }
   }
 
-  public async create(data: any): Promise<Appointment> {
+  public async create(appointment: any): Promise<Appointment> {
     try {
-      let appointment = await _schemaAppointmentValidation(data);
-
       this._checkDate(appointment.date);
 
       await this._checkOwner(appointment.ownerID);
@@ -101,9 +98,7 @@ export class AppointmentService {
       if (error instanceof PetNotFoundError) {
         throw error;
       }
-      if (error instanceof AppointmentValidationError) {
-        throw error;
-      }
+
       if (error instanceof AppointmentAlreadyExistsError) {
         throw error;
       }
@@ -111,11 +106,9 @@ export class AppointmentService {
     }
   }
 
-  public async update(data: any): Promise<Appointment> {
+  public async update(appointment: any): Promise<Appointment> {
     try {
-      let appointment = await _schemaAppointmentValidation(data);
-
-      const validateDate = this._checkDate(appointment.date);
+      this._checkDate(appointment.date);
 
       const validation = await this.repository.findOneByID(appointment.id);
       if (!validation)

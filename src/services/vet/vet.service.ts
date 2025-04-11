@@ -1,4 +1,3 @@
-import { ValidationError } from 'joi';
 import {
   VetNotFoundError,
   VetAlreadyExistsError,
@@ -8,10 +7,8 @@ import {
   VetValidationError,
 } from '../../errors';
 import { IUserRepository, IVetRepository, Vet } from '../../infra';
-import { Validators } from '../../models';
 import { UnknownError } from '../../shared';
 import bcrypt from 'bcrypt';
-import { schemaVetValidation } from '../validation';
 
 export class VetService {
   constructor(
@@ -47,10 +44,8 @@ export class VetService {
     }
   }
 
-  public async create(data: any): Promise<Vet> {
+  public async create(vet: any): Promise<Vet> {
     try {
-      let vet = await schemaVetValidation(data);
-
       vet = await this._hashPassword(vet);
 
       await this._checkValidation(vet.email, vet.username);
@@ -83,10 +78,8 @@ export class VetService {
     }
   }
 
-  public async update(data: any): Promise<Vet> {
+  public async update(vet: any): Promise<Vet> {
     try {
-      let vet = await schemaVetValidation(data);
-
       const validation = await this.repository.findOneByID(vet.id);
 
       if (!validation)

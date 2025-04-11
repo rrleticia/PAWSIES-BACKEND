@@ -8,7 +8,7 @@ import {
 } from '../infra';
 import { VetService } from '../services';
 import { VetController } from '../controllers';
-import { authenticateTokenMiddleware } from '../shared';
+import { authenticateTokenMiddleware, validatorMiddleware } from '../shared';
 
 const userRepository: IUserRepository = new PrismaUserRepository(prisma);
 const repository: IVetRepository = new PrismaVetRepository(prisma);
@@ -24,12 +24,17 @@ router
   .get('/:id', authenticateTokenMiddleware, (request, response) => {
     return controller.getOneByID(request, response);
   })
-  .post('/', (request, response) => {
+  .post('/', validatorMiddleware('VetModel'), (request, response) => {
     return controller.create(request, response);
   })
-  .put('/', authenticateTokenMiddleware, (request, response) => {
-    return controller.update(request, response);
-  })
+  .put(
+    '/',
+    validatorMiddleware('VetModel'),
+    authenticateTokenMiddleware,
+    (request, response) => {
+      return controller.update(request, response);
+    }
+  )
   .delete('/:id', authenticateTokenMiddleware, (request, response) => {
     return controller.delete(request, response);
   });
