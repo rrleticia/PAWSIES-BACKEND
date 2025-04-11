@@ -6,7 +6,6 @@ import {
 } from '../../errors';
 import { IOwnerRepository, IPetRepository, Pet } from '../../infra';
 import { UnknownError } from '../../shared';
-import { schemaPetValidation } from '../validation';
 
 export class PetService {
   constructor(
@@ -52,10 +51,8 @@ export class PetService {
     }
   }
 
-  public async create(data: any): Promise<Pet> {
+  public async create(pet: any): Promise<Pet> {
     try {
-      let pet = await schemaPetValidation(data);
-
       await this._checkOwner(pet.ownerID);
 
       const validation = await this.repository.findOneByOwnerWithNameAndType(
@@ -88,10 +85,8 @@ export class PetService {
     }
   }
 
-  public async update(data: any): Promise<Pet> {
+  public async update(pet: any): Promise<Pet> {
     try {
-      let pet = await schemaPetValidation(data);
-
       const validation = await this.repository.findOneByID(pet.id);
 
       if (!validation)

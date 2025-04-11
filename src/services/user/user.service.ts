@@ -7,7 +7,6 @@ import {
 import { IUserRepository, User } from '../../infra';
 import { UnknownError } from '../../shared';
 import bcrypt from 'bcrypt';
-import { schemaUserValidation } from '../validation';
 
 export class UserService {
   constructor(private readonly repository: IUserRepository) {}
@@ -41,10 +40,8 @@ export class UserService {
     }
   }
 
-  public async create(data: any): Promise<User> {
+  public async create(user: any): Promise<User> {
     try {
-      let user = await schemaUserValidation(data);
-
       user = await this._hashPassword(user);
 
       await this._checkValidation(user.email, user.username);
@@ -76,10 +73,8 @@ export class UserService {
     }
   }
 
-  public async update(data: any): Promise<User> {
+  public async update(user: any): Promise<User> {
     try {
-      let user = await schemaUserValidation(data);
-
       const validation = await this.repository.findOneByID(user.id);
 
       if (!validation)

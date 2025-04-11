@@ -8,7 +8,6 @@ import { IUserRepository, LoginUser, User } from '../../infra';
 import { getToken, UnknownError } from '../../shared';
 import bcrypt from 'bcrypt';
 import { sign } from 'jsonwebtoken';
-import { schemaLoginValidation } from '../validation';
 
 let refreshTokens = [] as string[];
 
@@ -20,11 +19,6 @@ export class AuthenticationService {
     password: string
   ): Promise<{ token: string; loggedUser: LoginUser; expiresIn: string }> {
     try {
-      await schemaLoginValidation({
-        email: email,
-        password: password,
-      });
-
       const user = await this.repository.findOneByEmail(email);
 
       if (!user)
@@ -54,15 +48,9 @@ export class AuthenticationService {
 
       const expirationDate = '31d';
 
-      const token = sign(
-        {
-          userId: user.id,
-        },
-        SECRET_KEY,
-        {
-          expiresIn: expirationDate,
-        }
-      );
+      const token = sign({ userId: user.id }, SECRET_KEY, {
+        expiresIn: expirationDate,
+      });
 
       refreshTokens.push(token);
 
@@ -95,7 +83,6 @@ export class AuthenticationService {
     expiresIn: string | undefined;
   }> {
     try {
-      await schemaLoginValidation({ email: email, access_token: auth });
       const user = await this.repository.findOneByEmail(email);
       if (!user)
         throw new UserNotFoundError(
