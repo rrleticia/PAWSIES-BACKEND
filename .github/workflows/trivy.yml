@@ -29,11 +29,11 @@ jobs:
       - name: Run Trivy Scan
         run: |
           # Se estiver escaneando uma imagem Docker
-          trivy image your-image-name:latest
+          trivy image your-image-name:latest --format json --output trivy-report.json
 
           # Se estiver escaneando arquivos locais (por exemplo, código fonte ou dependências)
-          trivy fs .
-          
+          trivy fs . --format json --output trivy-report.json
+
       - name: Upload Trivy report as artifact
         uses: actions/upload-artifact@v2
         with:
