@@ -44,7 +44,7 @@ jobs:
           fi
 
       - name: Upload Trivy report as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: trivy-report
           path: ./trivy-report.json  # Certifique-se de que o caminho esteja correto
