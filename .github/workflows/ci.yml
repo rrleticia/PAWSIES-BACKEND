@@ -1,26 +1,20 @@
-name: Vulnerability Scan
-
+name: build
 on:
   push:
     branches:
-      - main  # ou a branch que você está monitorando
+    - main
   pull_request:
-    branches:
-      - main  # ou a branch que você está monitorando
-
 jobs:
-  trivy-scan:
-    runs-on: ubuntu-latest
-
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Install Trivy
-        run: |
-          curl -sfL https://github.com/aquasecurity/trivy/releases/download/v0.30.0/trivy_0.30.0_Linux-64bit.deb -o trivy.deb
-          sudo dpkg -i trivy.deb
-
-      - name: Run Trivy Scan
-        run: |
-          trivy fs .    
+    - name: Run Trivy vulnerability scanner in fs mode
+      uses: aquasecurity/trivy-action@0.28.0
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        trivy-config: trivy.yaml
