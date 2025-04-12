@@ -1,0 +1,26 @@
+name: Vulnerability Scan
+
+on:
+  push:
+    branches:
+      - main  # ou a branch que você está monitorando
+  pull_request:
+    branches:
+      - main  # ou a branch que você está monitorando
+
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install Trivy
+        run: |
+          curl -sfL https://github.com/aquasecurity/trivy/releases/download/v0.30.0/trivy_0.30.0_Linux-64bit.deb -o trivy.deb
+          sudo dpkg -i trivy.deb
+
+      - name: Run Trivy Scan
+        run: |
+          trivy fs .    
