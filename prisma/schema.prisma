@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String     @id @default(cuid())
+
+  name       String     @unique
+
+  role       Role       @default(ANONYMOUS) 
+  username   String     @unique
+
+  email      String     @unique
+  password   String  
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+ 
+  vetID                  String? @unique
+  ownerID                String? @unique
+
+  owner                  Owner? @relation(fields: [ownerID], references: [id]) 
+  vet                    Vet? @relation(fields: [vetID], references: [id]) 
+}
+
+model Vet {
+  id            String         @id @default(cuid())
+  specialty     Specialty      @default(CAT_DOG)
+
+  user          User?          @relation
+  appointments  Appointment[]
+}
+
+model Owner {
+  id            String         @id @default(cuid())
+
+  user          User?          @relation
+  pets          Pet[]
+  appointments  Appointment[]
+}
+
+model Pet {
+  id String       @id @default(cuid())
+  
+  type PetType @default(UNKNOWN)
+
+  name String
+  breed String 
+  color String
+
+  age Int
+  weight Float
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  ownerID                String
+  owner                  Owner @relation(fields: [ownerID], references: [id]) 
+
+  appointments Appointment[]
+}
+
+model Appointment {
+  id String @id @default(cuid())
+
+  date DateTime
+  hour String
+  
+  status AppointmentStatus @default(SCHEDULED) 
+  examination Examination @default(ROUTINE)
+  
+  observations String
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  
+  vetID                String
+  vet                  Vet @relation(fields: [vetID], references: [id]) 
+
+  petID                String  
+  pet                  Pet @relation(fields: [petID], references: [id]) 
+
+  ownerID                String
+  owner                  Owner @relation(fields: [ownerID], references: [id]) 
+}
+
+
+enum Role {
+  ADMIN
+  VET 
+  OWNER
+  ANONYMOUS
+}
+
+enum PetType {
+  CAT
+  DOG
+  UNKNOWN
+}
+
+enum Specialty {
+  CAT
+  DOG
+  CAT_DOG
+}
+
+enum Examination {
+  CHECK_UP
+  FOLLOW_UP
+  ROUTINE
+  URGENT
+  EMERGENCY
+  LAB_TESTS
+  X_RAY
+  ULTRASOUND
+  SURGERY
+  VACCINATION
+}
+
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  RESCHEDULED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+  IN_PROGRESS
+}
+
