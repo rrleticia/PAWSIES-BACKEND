@@ -34,8 +34,17 @@ jobs:
           # Se estiver escaneando arquivos locais (por exemplo, código fonte ou dependências)
           trivy fs . --format json --output trivy-report.json
 
+      - name: Check if report exists
+        run: |
+          if [ -f trivy-report.json ]; then
+            echo "Trivy report exists!"
+          else
+            echo "Trivy report not found!"
+            exit 1
+          fi
+
       - name: Upload Trivy report as artifact
         uses: actions/upload-artifact@v2
         with:
           name: trivy-report
-          path: trivy-report.json
+          path: ./trivy-report.json  # Certifique-se de que o caminho esteja correto
