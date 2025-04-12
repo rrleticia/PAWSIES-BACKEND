@@ -2,19 +2,33 @@ name: build
 on:
   push:
     branches:
-    - main
+      - main
   pull_request:
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-20.04
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
 
-    - name: Run Trivy vulnerability scanner in fs mode
-      uses: aquasecurity/trivy-action@0.28.0
-      with:
-        scan-type: 'fs'
-        scan-ref: '.'
-        trivy-config: trivy.yaml
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@v0.28.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          trivy-config: trivy.yaml
+        id: trivy_scan
+
+      - name: Save Trivy scan results as a file
+        run: |
+          mkdir -p results
+          echo "${{ steps.trivy_scan.outputs.result }}" > results/trivy_results.json
+
+      - name: Upload Trivy results
+        uses: actions/upload-artifact@v2
+        with:
+          name: trivy-results
+          path: results/trivy_results.json
